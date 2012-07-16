@@ -15,8 +15,10 @@ import javax.ws.rs.core.Response;
 public class Examples 
 {    
     @POST
+    @Path("/provaPost")
     @Consumes("application/json")
     @Produces("application/json")
+    // http://localhost:8080/birrettaservice/rest/examples/provaPost
     public Response provaPost(User u) 
     {
         Response.ResponseBuilder builder = Response.ok(u, MediaType.APPLICATION_JSON);

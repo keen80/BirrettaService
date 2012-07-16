@@ -12,7 +12,7 @@ import org.codehaus.jackson.map.util.JSONPObject;
  * BirrettaService
  * TODO: Commenti
  */
-@Path("/backlog")
+@Path("/birrettaservice")
 public class BirrettaService
 {
     /**
