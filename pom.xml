@@ -1,0 +1,118 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>it.antreem.birretta</groupId>
+    <artifactId>birrettaservice</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>BirrettaService</name>
+	
+    <build>
+        <finalName>birrettaservice</finalName>
+		
+		<resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+		
+		<!--filters>
+            <filter>../../ant/properties/env/${user.name}.properties</filter>
+        </filters-->
+		
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+			
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.2</version>
+                <!--configuration>
+                    <webResources>
+                    <resource>
+                        <directory>lib</directory>
+                        <targetPath>WEB-INF/lib</targetPath>
+                        <filtering>false</filtering>
+                        <includes>
+                            <include>sf_*.jar</include>
+                        </includes>
+                    </resource>
+                    </webResources>
+                    </configuration-->
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <!-- RESTEasy + Jackson provider (needed for JSONP) -->
+		<dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxrs</artifactId>
+                <version>${resteasy-version}</version>
+                <scope>provided</scope>
+        </dependency>
+	
+	<dependency>
+		<groupId>org.jboss.resteasy</groupId>
+		<artifactId>resteasy-jackson-provider</artifactId>
+		<version>2.3.4.Final</version>
+	</dependency>
+	
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+	<dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.8</version>
+                <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
+	<properties>
+		<!-- Property custom per il build -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		
+		<!-- Versioni delle librerie utilizzate -->
+        	<resteasy-version>2.2.1.GA</resteasy-version>
+		
+		<!-- Property specifiche del progetto -->
+		<!--product.backlog.id>plan1006</product.backlog.id-->
+    </properties>
+	
+    <repositories>
+        <repository>
+            <id>m2.java.net</id>
+            <name>Java.net Maven 2 Repository</name>
+            <url>http://download.java.net/maven/2</url>
+            <layout>default</layout>
+        </repository>    
+	   <repository>
+		  <id>JBoss repository</id>
+		  <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+	   </repository>
+    </repositories>
+	
+    <pluginRepositories>
+        <pluginRepository>
+            <id>m2.java.net</id>
+            <name>Java.net Maven 2 Repository</name>
+            <url>http://download.java.net/maven/2</url>
+            <layout>default</layout>
+        </pluginRepository>  
+    </pluginRepositories>
+</project>
