@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    This web.xml file is not required when using Servlet 3.0 container, 
+     see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 
+-->
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <listener>
+        <listener-class>
+            org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+        </listener-class>
+    </listener>
+
+    <!-- Auto scan REST service -->
+    <context-param>
+            <param-name>resteasy.scan</param-name>
+            <param-value>true</param-value>
+    </context-param>
+
+    <!-- this need same with resteasy servlet url-pattern -->
+    <context-param>
+            <param-name>resteasy.servlet.mapping.prefix</param-name>
+            <param-value>/rest</param-value>
+    </context-param>
+            
+    <servlet>
+        <servlet-name>Resteasy-Servlet</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <!--init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>sample.HelloWorldApplication</param-value>
+        </init-param-->
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Resteasy-Servlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+</web-app>
