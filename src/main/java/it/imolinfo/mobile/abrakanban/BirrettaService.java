@@ -13,7 +13,7 @@ import org.codehaus.jackson.map.util.JSONPObject;
  * TODO: Commenti
  */
 @Path("/backlog")
-public class BacklogService
+public class BirrettaService
 {
     /**
      * Restituisce tutti gli artifact presenti nel product backlog in formato
