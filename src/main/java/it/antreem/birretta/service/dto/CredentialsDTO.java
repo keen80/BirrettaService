@@ -1,5 +1,10 @@
 package it.antreem.birretta.service.dto;
-
+/*
+{
+  "username":"alessio",
+  "password": "puppa"
+}
+ */
 public class CredentialsDTO 
 {
     private String username;

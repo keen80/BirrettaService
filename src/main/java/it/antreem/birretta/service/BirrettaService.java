@@ -52,7 +52,7 @@ public class BirrettaService
         
         String username = c.getUsername() != null ? c.getUsername() : "";
         String password = c.getPassword() != null ? c.getPassword() : "";
-        String hash = Utils.SHAsum(Utils.SALT.concat(password).getBytes());
+        String hash = Utils.SHAsum(Utils.SALT.concat(username).concat(password).getBytes());
         
         if (log.isDebugEnabled()){
             log.debug("Tentativo di login di username: " + username + " con hash pwd: " + hash); 
@@ -115,7 +115,7 @@ public class BirrettaService
         
         String username = r.getUsername() != null ? r.getUsername() : "";
         String password = r.getPassword() != null ? r.getPassword() : "";
-        String hash = Utils.SHAsum(Utils.SALT.concat(password).getBytes());
+        String hash = Utils.SHAsum(Utils.SALT.concat(username).concat(password).getBytes());
         
         if (log.isDebugEnabled()){
             log.debug("Tentativo di registrazione di username: " + username + " con hash pwd: " + hash); 
