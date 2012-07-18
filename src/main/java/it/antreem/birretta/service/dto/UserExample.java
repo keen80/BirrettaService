@@ -1,7 +1,7 @@
 package it.antreem.birretta.service.dto;
 
 
-public class User {
+public class UserExample {
     private String name;
     private int age;
 

@@ -1,6 +1,6 @@
 package it.antreem.birretta.service;
 
-import it.antreem.birretta.service.dto.User;
+import it.antreem.birretta.service.dto.UserExample;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,7 +19,7 @@ public class Examples
     @Consumes("application/json")
     @Produces("application/json")
     // http://localhost:8080/birrettaservice/rest/examples/provaPost
-    public Response provaPost(User u) 
+    public Response provaPost(UserExample u) 
     {
         Response.ResponseBuilder builder = Response.ok(u, MediaType.APPLICATION_JSON);
         return builder.build();

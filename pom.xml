@@ -93,6 +93,7 @@
             <!-- Property specifiche del progetto -->
             <mongodb.host>plan1006</mongodb.host>
             <mongodb.port>27017</mongodb.port>
+            <mongodb.dbname>brrtt</mongodb.dbname>
             
     </properties>
 	

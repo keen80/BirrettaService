@@ -1,6 +1,10 @@
 package it.antreem.birretta.service;
 
 import it.antreem.birretta.service.dto.CredentialsDTO;
+import it.antreem.birretta.service.dto.ErrorDTO;
+import it.antreem.birretta.service.dto.LoginResponseDTO;
+import it.antreem.birretta.service.util.ErrorCodes;
+import it.antreem.birretta.service.util.Utils;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,16 +22,56 @@ public class BirrettaService
 {
     private static final Log log = LogFactory.getLog(BirrettaService.class);
     
-    // http://www.mongodb.org/display/DOCS/Java+Driver+Concurrency
-    
+    /**
+     * Operazione di login dell'utente.<br/>
+     * Nel caso l'utente faccia login correttamente, viene creata una sessione
+     * attiva su DB oppure si continua ad utilizzare quella corrente.<br/>
+     * In caso di login fallito si ritorna esito negativo (possibile estensione
+     * futura con blocco utente, etc.).
+     * 
+     * @param c Credenziali dell'utente, ovvero username + password.
+     * @return Esito della login
+     */
     @POST
     @Path("/login")
     @Consumes("application/json")
     @Produces("application/json")
-    // http://localhost:8080/birrettaservice/rest/bserv/login
     public Response login(CredentialsDTO c) 
     {
-        Response.ResponseBuilder builder = Response.ok(c, MediaType.APPLICATION_JSON);
+        // Pre-conditions
+        if (c == null)
+        {
+            log.debug("Credenziali di login passate a null. Errore.");
+            ErrorDTO err = Utils.createError(ErrorCodes.LOGIN_FAILED.getCode(), 
+                                           ErrorCodes.LOGIN_FAILED.getTitle(),
+                                           ErrorCodes.LOGIN_FAILED.getMessage(), 
+                                           null);
+            Response.ResponseBuilder builder = Response.ok(err, MediaType.APPLICATION_JSON);
+            return builder.build();
+        }
+        
+        LoginResponseDTO response = null;
+        
+        String username = c.getUsername() != null ? c.getUsername() : "";
+        String password = c.getPassword() != null ? c.getPassword() : "";
+        String hash = Utils.SHAsum(Utils.SALT.concat(password).getBytes());
+        
+        if (log.isDebugEnabled()){
+            log.debug("Tentativo di login di username: " + username + " con hash pwd: " + hash); 
+        }
+        
+        /*
+         * Login successful
+         *  - is there an active session? use that one
+         *  - else create a new session
+         */
+        
+        /*
+         * Login failed
+         *  - return an error
+         */
+        
+        Response.ResponseBuilder builder = Response.ok(response, MediaType.APPLICATION_JSON);
         return builder.build();
     }
     
