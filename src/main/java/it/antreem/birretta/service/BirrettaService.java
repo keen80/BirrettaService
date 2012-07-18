@@ -179,6 +179,12 @@ public class BirrettaService
         return builder.build();
     }
     
+    /**
+     * Metodo di echo di prova per verifica di sessione.
+     * 
+     * @param value
+     * @return 
+     */
     @GET
     @Path("/echo")
     @Produces("text/html")

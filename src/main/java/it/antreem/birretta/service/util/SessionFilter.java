@@ -5,7 +5,6 @@ import it.antreem.birretta.service.model.Session;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;

@@ -1,2 +1,11 @@
 Servizio di backend per l'applicazione Birretta.
 
+===========
+TODO List:
+===========
+
+Segue una lista di punti che possono essere migliorati ed implementati in modo più elegante ed organizzato architetturalmente in future versioni dell'applicativo.
+
+- Inserire OAuth come meccanismo di autenticazione
+- Utilizzare Spring Data per MongoDB per ODM (object-document-mapping) anziché il driver fornito direttamente (il codice è disaccoppiato per permettere questa integrazione in futuro)
+ 
