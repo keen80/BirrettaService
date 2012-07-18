@@ -6,7 +6,8 @@ package it.antreem.birretta.service.util;
  */
 public enum ErrorCodes 
 {   
-    LOGIN_FAILED("Login failed", "Error logging in..."),
+    LOGIN_FAILED("Login failed", "Credenziali di login ricevute a null"),
+    LOOUT_FAILED("Logout failed", "Parametri di logout ricevuti a null"),
     REG_FAILED("Registration failed", "Registration failed"),
     REG_U01("Formato username errato", "Lo username deve essere lungo almeno 5 caratteri e contenere solamente caratteri alfanumerici minuscoli e underscore"),
     REG_P01("Formato password errato", "La password deve essere lunga almeno 5 caratteri e contenere solamente caratteri alfanumerici e underscore"),

@@ -87,6 +87,30 @@ public class BirrettaService
         return createJsonOkResponse(response);
     }
     
+    @POST
+    @Path("/logout")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response logout(LogoutRequestDTO req) 
+    {
+        // Pre-conditions
+        if (req == null)
+        {
+            log.debug("Parametri di logout passati a null. Errore.");
+            return createJsonErrorResponse(ErrorCodes.LOOUT_FAILED);
+        }
+        
+        Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(req.getUsername());
+        if (s != null){
+            DaoFactory.getInstance().getSessionDao().deleteSessionBySid(s.getSid());
+        }
+        
+        LogoutResponseDTO res = new LogoutResponseDTO();
+        res.setLogout(true);
+        res.setMessaggio("Logout eseguito con successo");
+        
+        return createJsonOkResponse(res);
+    }
     
     /**
      * Operazione di registrazione di un nuovo utente.<br/>
@@ -188,8 +212,7 @@ public class BirrettaService
     @GET
     @Path("/echo")
     @Produces("text/html")
-    public String echo
-            (@DefaultValue("puppa") @QueryParam("value") String value) 
+    public String echo (@DefaultValue("puppa") @QueryParam("value") String value) 
     {
         return value;
     } 
