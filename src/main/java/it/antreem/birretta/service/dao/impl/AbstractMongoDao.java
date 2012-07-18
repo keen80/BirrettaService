@@ -42,7 +42,7 @@ public abstract class AbstractMongoDao
     {
         try
         {
-            return m.getDB("");
+            return m.getDB(BirrettaServiceProperties.MONGODB_DBNAME);
         }
         catch(MongoException ex){
             log.error("MongoException: " + ex.getLocalizedMessage(), ex);

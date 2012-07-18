@@ -1,5 +1,16 @@
 package it.antreem.birretta.service.dto;
 
+/*
+{
+  "username":"alessio",
+  "password": "puppa",
+  "firstName": "Alessio",
+  "lastName": "DM85",
+  "age": 30,
+  "email": "user@server.com",
+  "sex": "M"
+}
+ */
 /**
  *
  * @author alessio

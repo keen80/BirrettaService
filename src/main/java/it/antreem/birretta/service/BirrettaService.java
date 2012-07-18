@@ -131,7 +131,7 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.REG_P01);
         }
         // ^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$
-        if (!r.getEmail().matches("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$")){
+        if (!r.getEmail().matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")){
             return createJsonErrorResponse(ErrorCodes.REG_INVALID_EMAIL);
         }
         if (r.getSex() == null || (!r.getSex().toUpperCase().equals("M") && !r.getSex().toUpperCase().equals("F"))){

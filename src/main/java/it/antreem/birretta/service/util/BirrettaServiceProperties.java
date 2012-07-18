@@ -14,6 +14,7 @@ public class BirrettaServiceProperties
     // Properties caricate solo in fase di startup
     public static final String MONGODB_HOST;
     public static final String MONGODB_PORT;
+    public static final String MONGODB_DBNAME;
     
     /**
      * Il logger per questa classe.
@@ -42,7 +43,8 @@ public class BirrettaServiceProperties
         if (MONGODB_HOST == null) throw new ExceptionInInitializerError("MONGODB_HOST == null");
         MONGODB_PORT = prop.getProperty("mongodb.port");
         if (MONGODB_PORT == null) throw new ExceptionInInitializerError("MONGODB_PORT == null");
-
+        MONGODB_DBNAME = prop.getProperty("mongodb.dbname");
+        if (MONGODB_DBNAME == null) throw new ExceptionInInitializerError("MONGODB_DBNAME == null");
     }
 
     private BirrettaServiceProperties() {
