@@ -1,9 +1,13 @@
-package it.antreem.birretta.service.model;
+package it.antreem.birretta.service.dto;
 
-public class User 
+/**
+ *
+ * @author alessio
+ */
+public class RegistrationRequestDTO 
 {
     private String username;
-    private String pwdHash;
+    private String password;
     private String firstName;
     private String lastName;
     private String email;
@@ -42,12 +46,12 @@ public class User
         this.lastName = lastName;
     }
 
-    public String getPwdHash() {
-        return pwdHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPwdHash(String pwdHash) {
-        this.pwdHash = pwdHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getSex() {

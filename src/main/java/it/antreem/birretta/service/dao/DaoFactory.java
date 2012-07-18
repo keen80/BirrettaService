@@ -1,8 +1,7 @@
 package it.antreem.birretta.service.dao;
 
+import it.antreem.birretta.service.dao.impl.SessionDaoImpl;
 import it.antreem.birretta.service.dao.impl.UserDaoImpl;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -13,6 +12,12 @@ import org.apache.commons.logging.LogFactory;
 public final class DaoFactory 
 {
     private static final Log log = LogFactory.getLog(DaoFactory.class);
+    
+    private final static DaoFactory factory = new DaoFactory();
+    
+    public static DaoFactory getInstance() {
+        return factory;
+    }
     
     private static <T> T instanciateDao (Class clazz)
     {
@@ -33,4 +38,7 @@ public final class DaoFactory
         return instanciateDao(UserDaoImpl.class);
     }
     
+    public SessionDao getSessionDao() throws DaoException {
+        return instanciateDao(SessionDaoImpl.class);
+    }
 }

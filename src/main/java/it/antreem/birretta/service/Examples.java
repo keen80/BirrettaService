@@ -37,4 +37,26 @@ public class Examples
 //            return response.build();
 //    }
     
+    
+//    /**
+//     * Restituisce tutti gli artifact presenti nel product backlog in formato
+//     * JSONP.
+//     * 
+//     * @param recursive Se includere anche gli artifact delle sottocartelle
+//     * @return Lista di artifact
+//     * @throws RemoteException 
+//     */
+//    @GET
+//    @Path("/jsonp/artifacts")
+//    @Produces("text/javascript")
+//    public String getProductBacklogArtifacts_jsonp
+//            (@DefaultValue("true") @QueryParam("recursive") boolean recursive,
+//             @DefaultValue("callback") @QueryParam("callback") String callbackName) 
+//                throws RemoteException, IOException 
+//    {
+//        JSONPObject obj = new JSONPObject(callbackName, "{prova: 10}");//new JSONPObject(callbackName, Backlog.getProductBacklogArtifacts(recursive));
+//        ObjectMapper mapper = new ObjectMapper();
+//        String s = mapper.writeValueAsString(obj);
+//        return s;
+//    } 
 }

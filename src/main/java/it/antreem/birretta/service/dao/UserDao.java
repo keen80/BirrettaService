@@ -9,4 +9,5 @@ import it.antreem.birretta.service.model.User;
 public interface UserDao
 {
     public User findUserByUsername(String username) throws DaoException;
+    public int saveUser(User s) throws DaoException;
 }

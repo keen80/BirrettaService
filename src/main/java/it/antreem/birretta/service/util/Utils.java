@@ -45,14 +45,14 @@ public class Utils
         return formatter.toString();
     }
     
-    public static ErrorDTO createError (String code, String title, String desc, Object actionType)
+    public static ErrorDTO createError (ErrorCodes err, Object... actionType)
     {
         ErrorDTO error = new ErrorDTO();
         ErrorDTO.Error _e = new ErrorDTO.Error();
-        _e.setCode(code);
-        _e.setDesc(desc);
-        _e.setTitle(title);
-        _e.setActionType(actionType);
+        _e.setCode(err.getCode());
+        _e.setDesc(err.getMessage());
+        _e.setTitle(err.getTitle());
+        _e.setActionType((actionType != null && actionType.length > 0) ? actionType[0] : null);
         error.setError(_e);
         
         return error;
