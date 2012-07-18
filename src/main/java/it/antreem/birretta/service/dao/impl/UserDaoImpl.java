@@ -6,6 +6,7 @@ import it.antreem.birretta.service.dao.UserDao;
 import it.antreem.birretta.service.model.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -30,17 +31,8 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
             
             while (cur.hasNext()){
                 DBObject _u = cur.next();
-                User u = new User();
-                
-                u.setUsername((String) _u.get("username"));
+                User u = createUserFromDBObject(_u);
                 assert u.getUsername().equals(username);
-                u.setFirstName((String) _u.get("first_name"));
-                u.setLastName((String) _u.get("last_name"));
-                u.setSex((String) _u.get("sex"));
-                u.setAge((Integer) _u.get("age"));
-                u.setEmail((String) _u.get("email"));
-                u.setPwdHash((String) _u.get("pwdHash"));
-                
                 return u;
             }
             
@@ -66,7 +58,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
             db = getDB();
             db.requestStart();
             DBCollection users = db.getCollection("users");
-            BasicDBObject user = createUserDBObject(u);
+            BasicDBObject user = createDBObjectFromUser(u);
             return users.insert(user).getN();
         }
         catch(MongoException ex){
@@ -80,7 +72,33 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         }
     }
     
-    protected static BasicDBObject createUserDBObject (User u){
+    @Override
+    public User findById(String id) throws DaoException 
+    {
+        DBObject obj = findById(id, "users");
+        User u = createUserFromDBObject(obj);
+        return u;
+    }
+    
+    protected static User createUserFromDBObject(DBObject obj)
+    {
+        User u = new User();
+
+        u.setId((ObjectId) obj.get("_id"));
+        u.setUsername((String) obj.get("username"));
+        u.setFirstName((String) obj.get("first_name"));
+        u.setLastName((String) obj.get("last_name"));
+        u.setSex((String) obj.get("sex"));
+        u.setAge((Integer) obj.get("age"));
+        u.setEmail((String) obj.get("email"));
+        u.setPwdHash((String) obj.get("pwdHash"));
+        
+        return u;
+    }
+    
+    // For first insert
+    protected static BasicDBObject createDBObjectFromUser (User u)
+    {
         BasicDBObject _u = new BasicDBObject();
         _u.put("username", u.getUsername());
         _u.put("age", u.getAge());

@@ -8,13 +8,15 @@ import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.Utils;
 import java.util.Date;
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-/** 
+/**
  * BirrettaService
  */
 @Path("/bserv")
@@ -91,7 +93,7 @@ public class BirrettaService
     @Path("/logout")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response logout(LogoutRequestDTO req) 
+    public Response logout(LogoutRequestDTO req, @Context HttpServletRequest httpReq) 
     {
         // Pre-conditions
         if (req == null)
@@ -100,6 +102,12 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.LOOUT_FAILED);
         }
         
+        // Blocco richieste di un utente per un altro
+        if (!req.getUsername().equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        
+        // Delete any existing session
         Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(req.getUsername());
         if (s != null){
             DaoFactory.getInstance().getSessionDao().deleteSessionBySid(s.getSid());
@@ -191,6 +199,30 @@ public class BirrettaService
         return createJsonOkResponse(response);
     }
     
+    @GET
+    @Path("/updateLoc")
+    @Produces("application/json")
+    public Response updateLoc (@QueryParam("username") String username,
+                               @QueryParam("lat") Double lat,
+                               @QueryParam("lon") Double lon,
+                               @Context HttpServletRequest httpReq) 
+    {
+        // Pre-conditions
+        if (username == null || lat == null || lon == null){
+            return createJsonErrorResponse(ErrorCodes.UPLOC_MISSED_PARAM);
+        }
+        
+        // Blocco richieste di un utente per un altro
+        if (!username.equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        
+        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
+        DaoFactory.getInstance().getGeoLocDao().updateLoc(u.getId().toString(), lat, lon);
+        
+        return createJsonOkResponse(new UpdateLocResponseDTO());
+    }
+    
     
     protected static Response createJsonOkResponse(Object o) {
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);
@@ -215,5 +247,5 @@ public class BirrettaService
     public String echo (@DefaultValue("puppa") @QueryParam("value") String value) 
     {
         return value;
-    } 
+    }
 }

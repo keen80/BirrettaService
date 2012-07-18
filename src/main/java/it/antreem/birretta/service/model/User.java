@@ -1,6 +1,6 @@
 package it.antreem.birretta.service.model;
 
-public class User 
+public class User extends MongoDBObject
 {
     private String username;
     private String pwdHash;

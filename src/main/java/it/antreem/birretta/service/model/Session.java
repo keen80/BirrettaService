@@ -6,7 +6,7 @@ import java.util.Date;
  *
  * @author alessio
  */
-public class Session 
+public class Session extends MongoDBObject
 {
     private String sid;
     private String username;

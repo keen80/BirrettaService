@@ -7,6 +7,7 @@ import it.antreem.birretta.service.model.Session;
 import java.util.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -31,13 +32,8 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
             
             while (cur.hasNext()){
                 DBObject _s = cur.next();
-                Session s = new Session();
-                
-                s.setUsername((String) _s.get("username"));
+                Session s = createSessionFromDBObject(_s);
                 assert s.getUsername().equals(username);
-                s.setSid((String) _s.get("sid"));
-                s.setTimestamp((Date) _s.get("timestamp"));
-                
                 return s;
             }
             
@@ -69,13 +65,8 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
             
             while (cur.hasNext()){
                 DBObject _s = cur.next();
-                Session s = new Session();
-                
-                s.setUsername((String) _s.get("username"));
-                s.setSid((String) _s.get("sid"));
+                Session s = createSessionFromDBObject(_s);
                 assert s.getSid().equals(sid);
-                s.setTimestamp((Date) _s.get("timestamp"));
-                
                 return s;
             }
             
@@ -101,7 +92,7 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
             db = getDB();
             db.requestStart();
             DBCollection sessions = db.getCollection("sessions");
-            BasicDBObject session = createSessionDBObject(s);
+            BasicDBObject session = createDBObjectFromSession(s);
             return sessions.insert(session).getN();
         }
         catch(MongoException ex){
@@ -139,7 +130,21 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
         }
     }
     
-    protected static BasicDBObject createSessionDBObject (Session s){
+    protected static Session createSessionFromDBObject(DBObject obj)
+    {
+        Session s = new Session();
+
+        s.setId((ObjectId) obj.get("_id"));
+        s.setUsername((String) obj.get("username"));
+        s.setSid((String) obj.get("sid"));
+        s.setTimestamp((Date) obj.get("timestamp"));
+        
+        return s;
+    }
+    
+    // For first insert
+    protected static BasicDBObject createDBObjectFromSession (Session s)
+    {
         BasicDBObject _s = new BasicDBObject();
         _s.put("username", s.getUsername());
         _s.put("sid", s.getSid());
