@@ -17,7 +17,7 @@
             </resource>
         </resources>
 		
-		<!--filters>
+	<!--filters>
             <filter>../../ant/properties/env/${user.name}.properties</filter>
         </filters-->
 		
@@ -37,18 +37,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.2</version>
-                <!--configuration>
-                    <webResources>
-                    <resource>
-                        <directory>lib</directory>
-                        <targetPath>WEB-INF/lib</targetPath>
-                        <filtering>false</filtering>
-                        <includes>
-                            <include>sf_*.jar</include>
-                        </includes>
-                    </resource>
-                    </webResources>
-                    </configuration-->
             </plugin>
         </plugins>
     </build>
@@ -103,7 +91,9 @@
             <resteasy-version>2.2.1.GA</resteasy-version>
 
             <!-- Property specifiche del progetto -->
-            <!--product.backlog.id>plan1006</product.backlog.id-->
+            <mongodb.host>plan1006</mongodb.host>
+            <mongodb.port>27017</mongodb.port>
+            
     </properties>
 	
     <repositories>
@@ -113,10 +103,10 @@
             <url>http://download.java.net/maven/2</url>
             <layout>default</layout>
         </repository>    
-	   <repository>
-		  <id>JBoss repository</id>
-		  <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
-	   </repository>
+        <repository>
+            <id>JBoss repository</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+        </repository>
     </repositories>
 	
     <pluginRepositories>
