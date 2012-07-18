@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Configurazione delle properties statiche.
  */
-public class AbraKanbanProperties 
+public class BirrettaServiceProperties 
 {
     // Properties caricate solo in fase di startup
     public static final String SOURCEFORGE_URL;
@@ -20,7 +20,7 @@ public class AbraKanbanProperties
     /**
      * Il logger per questa classe.
      */
-    private static final Log LOG = LogFactory.getLog(AbraKanbanProperties.class);
+    private static final Log LOG = LogFactory.getLog(BirrettaServiceProperties.class);
 
     static 
     {
@@ -52,7 +52,7 @@ public class AbraKanbanProperties
         if (PRODUCT_BACKLOG_ID == null) throw new ExceptionInInitializerError("PRODUCT_BACKLOG_ID == null");
     }
 
-    private AbraKanbanProperties() {
+    private BirrettaServiceProperties() {
     }
 
     /**

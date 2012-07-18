@@ -4,24 +4,29 @@
      see implementation details http://jersey.java.net/nonav/documentation/latest/jax-rs.html#d4e194 
 -->
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <filter>
+        <filter-name>SessionFilter</filter-name>
+        <filter-class>it.antreem.birretta.service.util.SessionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SessionFilter</filter-name>
+        <servlet-name>Resteasy-Servlet</servlet-name>
+    </filter-mapping>
     <listener>
         <listener-class>
             org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
         </listener-class>
     </listener>
-
     <!-- Auto scan REST service -->
     <context-param>
-            <param-name>resteasy.scan</param-name>
-            <param-value>true</param-value>
+        <param-name>resteasy.scan</param-name>
+        <param-value>true</param-value>
     </context-param>
-
     <!-- this need same with resteasy servlet url-pattern -->
     <context-param>
-            <param-name>resteasy.servlet.mapping.prefix</param-name>
-            <param-value>/rest</param-value>
+        <param-name>resteasy.servlet.mapping.prefix</param-name>
+        <param-value>/rest</param-value>
     </context-param>
-            
     <servlet>
         <servlet-name>Resteasy-Servlet</servlet-name>
         <servlet-class>
@@ -32,7 +37,6 @@
             <param-value>sample.HelloWorldApplication</param-value>
         </init-param-->
     </servlet>
-
     <servlet-mapping>
         <servlet-name>Resteasy-Servlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
