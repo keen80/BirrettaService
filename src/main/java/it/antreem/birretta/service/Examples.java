@@ -1,6 +1,6 @@
-package it.imolinfo.mobile.abrakanban;
+package it.antreem.birretta.service;
 
-import it.imolinfo.mobile.abrakanban.dto.User;
+import it.antreem.birretta.service.dto.User;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;

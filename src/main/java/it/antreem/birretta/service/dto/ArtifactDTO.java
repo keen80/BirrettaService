@@ -1,4 +1,4 @@
-package it.imolinfo.mobile.abrakanban.dto;
+package it.antreem.birretta.service.dto;
 
 /**
  * POJO che rappresenta un'attivit&agrave; base da svolgere.

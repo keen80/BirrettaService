@@ -10,7 +10,7 @@
     <build>
         <finalName>birrettaservice</finalName>
 		
-		<resources>
+	<resources>
             <resource>
                 <directory>src/main/resources/</directory>
                 <filtering>true</filtering>
@@ -54,7 +54,7 @@
     </build>
     <dependencies>
         <!-- RESTEasy + Jackson provider (needed for JSONP) -->
-		<dependency>
+	<dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-jaxrs</artifactId>
                 <version>${resteasy-version}</version>
@@ -67,6 +67,12 @@
 		<version>2.3.4.Final</version>
 	</dependency>
 	
+        <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
+        </dependency>
+
 	<dependency>
 		<groupId>org.mongodb</groupId>
 		<artifactId>mongo-java-driver</artifactId>
@@ -88,16 +94,16 @@
         </dependency>
     </dependencies>
     
-	<properties>
-		<!-- Property custom per il build -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		
-		<!-- Versioni delle librerie utilizzate -->
-        	<resteasy-version>2.2.1.GA</resteasy-version>
-		
-		<!-- Property specifiche del progetto -->
-		<!--product.backlog.id>plan1006</product.backlog.id-->
+    <properties>
+            <!-- Property custom per il build -->
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+            <!-- Versioni delle librerie utilizzate -->
+            <resteasy-version>2.2.1.GA</resteasy-version>
+
+            <!-- Property specifiche del progetto -->
+            <!--product.backlog.id>plan1006</product.backlog.id-->
     </properties>
 	
     <repositories>

@@ -1,4 +1,4 @@
-package it.imolinfo.mobile.abrakanban.util;
+package it.antreem.birretta.service.util;
 
 import java.io.IOException;
 import java.io.InputStream;

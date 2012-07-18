@@ -1,7 +1,7 @@
-package it.imolinfo.mobile.abrakanban;
+package it.antreem.birretta.service;
 
-import it.imolinfo.mobile.abrakanban.dto.ArtifactListDTO;
-import it.imolinfo.mobile.abrakanban.dto.FolderListDTO;
+import it.antreem.birretta.service.dto.ArtifactListDTO;
+import it.antreem.birretta.service.dto.FolderListDTO;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.ws.rs.*;
