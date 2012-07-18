@@ -1,8 +1,11 @@
 package it.antreem.birretta.service.util;
 
+import it.antreem.birretta.service.dao.DaoFactory;
+import it.antreem.birretta.service.model.Session;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
@@ -79,18 +82,33 @@ public class SessionFilter implements Filter {
 
     /**
      * Controllo che sia attiva una sessione.
-     * // TODO: Commenti
+     * Nell'header: 'Cookie: username=<i>username</i>; sid=<i>sid</i>'
      * 
      * 
      * @param request
      * @return 
      */
-    private boolean checkSession(HttpServletRequest request){
+    private boolean checkSession(HttpServletRequest request)
+    {
+        // Per le operazioni di login e register non interessa la sessione
+        if (request.getRequestURI().endsWith("/rest/bserv/login") ||
+                request.getRequestURI().endsWith("/rest/bserv/register")){
+            return true;
+        }
         
-        // TODO: complete!
-        // Do not apply in login or register!!!
+        // Altrimenti per tutto il resto deve esserci una sessione attiva
+        String username = request.getHeader("btUsername");
+        String sid = request.getHeader("btSid");
         
-        return true;
+        if (username == null || sid == null){
+            return false;
+        }
+        
+        Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(username);
+        if (s == null || !s.getSid().equals(sid)){
+            return false;
+        }
+        else return true;
     }
     
     /**
@@ -119,7 +137,7 @@ public class SessionFilter implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             res.setContentType("application/json");
             PrintWriter pw = res.getWriter();
-            pw.println("{ \"error\" : { \"code\": 401, \"title\": \"Http 401 Unauthorized\", \"desc\" : \"No active session\", \"actionType\": null } }");
+            pw.println("{ \"error\" : { \"code\": \"HTTP401\", \"title\": \"Http 401 Unauthorized\", \"desc\" : \"No active session\", \"actionType\": null } }");
             return;
         }
         

@@ -8,10 +8,7 @@ import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.Utils;
 import java.util.Date;
 import java.util.UUID;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.logging.Log;
@@ -54,9 +51,7 @@ public class BirrettaService
         String password = c.getPassword() != null ? c.getPassword() : "";
         String hash = Utils.SHAsum(Utils.SALT.concat(username).concat(password).getBytes());
         
-        if (log.isDebugEnabled()){
-            log.debug("Tentativo di login di username: " + username + " con hash pwd: " + hash); 
-        }
+        log.info("Tentativo di login di username: " + username + " con hash pwd: " + hash); 
         
         /*
          * Login failed
@@ -116,10 +111,8 @@ public class BirrettaService
         String username = r.getUsername() != null ? r.getUsername() : "";
         String password = r.getPassword() != null ? r.getPassword() : "";
         String hash = Utils.SHAsum(Utils.SALT.concat(username).concat(password).getBytes());
-        
-        if (log.isDebugEnabled()){
-            log.debug("Tentativo di registrazione di username: " + username + " con hash pwd: " + hash); 
-        }
+
+        log.info("Tentativo di registrazione di username: " + username + " con hash pwd: " + hash); 
         
         //-----------------------
         // Controlli di validita
@@ -185,4 +178,13 @@ public class BirrettaService
         Response.ResponseBuilder builder = Response.ok(err, MediaType.APPLICATION_JSON);
         return builder.build();
     }
+    
+    @GET
+    @Path("/echo")
+    @Produces("text/html")
+    public String echo
+            (@DefaultValue("puppa") @QueryParam("value") String value) 
+    {
+        return value;
+    } 
 }
