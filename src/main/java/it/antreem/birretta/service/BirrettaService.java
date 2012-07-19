@@ -462,6 +462,19 @@ public class BirrettaService
         return createJsonOkResponse(list);
     }
     
+    @GET
+    @Path("/findUsers")
+    @Produces("application/json")
+    public Response findUsers (@QueryParam("username") String username, 
+                               @QueryParam("first") String first,
+                               @QueryParam("last") String last, 
+                               @Context HttpServletRequest httpReq)
+    {
+        List<User> list = DaoFactory.getInstance().getUserDao().findUsers(username, first, last);
+        return createJsonOkResponse(list);
+    }
+    
+    
     protected static Response createJsonOkResponse(Object o) {
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);
         return builder.build();
