@@ -26,6 +26,8 @@ public enum ErrorCodes
     CHECKIN_WRONG_PARAM("Parametri errati", "Specificare i parametri di check-in in modo corretto"),
     CHECKIN_TOO_MANY_DRINKS("Troppe bevute negli ultimi 10 minuti", "Aspetta un po' brutto alcolizzato!!!"),
     FINDLOCNEAR_WRONG_PARAM("Parametri mancanti", "Specificare entrambe longitudine e latitudine"),
+    USER_NOT_FOUND("Amico inesistente", "Amici immaginari non ammessi"),
+    FRND_MISSED_PARAM("Parametri mancanti", "Parametri mancanti"),
     PUPPA_CODE("PuppaTitle", "PuppaMessage");
     
     private String title;

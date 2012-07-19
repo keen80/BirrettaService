@@ -475,6 +475,127 @@ public class BirrettaService
     }
     
     
+    @POST
+    @Path("/frndReq")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response frndReq(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    {
+        if (c == null){
+            return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
+        }
+        
+        String myid = c.getIdRequestor();
+        String frndid = c.getIdRequested();
+        
+        User me = DaoFactory.getInstance().getUserDao().findById(myid);
+        String username = me.getUsername();
+        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        
+        User frnd = DaoFactory.getInstance().getUserDao().findById(frndid);
+        if (frnd == null){
+            return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
+        }
+        
+        DaoFactory.getInstance().getFriendReqDao().saveFriendReq(myid, frndid);
+        
+        GenericResultDTO result = new GenericResultDTO(true, "Richiesta eseguita con successo");
+        return createJsonOkResponse(result);
+    }
+    
+    @POST
+    @Path("/frndConfirm")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response frndConfirm(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    {
+        if (c == null){
+            return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
+        }
+        
+        String myid = c.getIdRequested();
+        String frndid = c.getIdRequestor();
+        
+        User me = DaoFactory.getInstance().getUserDao().findById(myid);
+        String username = me.getUsername();
+        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        
+        User frnd = DaoFactory.getInstance().getUserDao().findById(frndid);
+        if (frnd == null){
+            return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
+        }
+        
+        // Se esiste la richiesta effettivamente la confermo
+        if (DaoFactory.getInstance().getFriendReqDao().existFriendReq(frndid, myid)){
+            DaoFactory.getInstance().getFriendDao().saveFriendship(myid, frndid);
+            DaoFactory.getInstance().getFriendReqDao().deleteFriendReq(frndid, myid);
+            
+            GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
+            return createJsonOkResponse(result);
+        }
+        else {
+            GenericResultDTO result = new GenericResultDTO(false, "Richiesta di amicizia non presente");
+            return createJsonOkResponse(result);
+        }
+    }
+    
+    @POST
+    @Path("/frndRefuse")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response frndRefuse(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    {
+        if (c == null){
+            return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
+        }
+        
+        String id1 = c.getIdRequested();
+        String id2 = c.getIdRequestor();
+        User me = DaoFactory.getInstance().getUserDao().findById(id1);
+        String username = me.getUsername();
+        if (username != null && username.equals(httpReq.getHeader("btUsername")))
+        {
+            DaoFactory.getInstance().getFriendReqDao().deleteFriendReq(id1, id2);
+            DaoFactory.getInstance().getFriendDao().deleteFriendship(id1, id2);
+            GenericResultDTO result = new GenericResultDTO(true, "Amicizia rimossa con successo");
+            return createJsonOkResponse(result);
+        }
+        
+        me = DaoFactory.getInstance().getUserDao().findById(id2);
+        username = me.getUsername();
+        if (username != null && username.equals(httpReq.getHeader("btUsername")))
+        {
+            DaoFactory.getInstance().getFriendReqDao().deleteFriendReq(id1, id2);
+            DaoFactory.getInstance().getFriendDao().deleteFriendship(id1, id2);
+            GenericResultDTO result = new GenericResultDTO(true, "Amicizia rimossa con successo");
+            return createJsonOkResponse(result);
+        }
+        
+        return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+    }
+    
+    @GET
+    @Path("/findFrndReqs")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response findFrndReqs(@QueryParam("username") final String username, 
+                                 @Context HttpServletRequest httpReq) 
+    {
+        // Blocco richieste di un utente per un altro
+        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
+        List<String> pendingReqs = DaoFactory.getInstance().getFriendReqDao().findPendingReqs(u.getIdUser());
+        return createJsonOkResponse(pendingReqs);
+    }
+    
+    
+    
     protected static Response createJsonOkResponse(Object o) {
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);
         return builder.build();

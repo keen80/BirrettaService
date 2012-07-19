@@ -60,4 +60,12 @@ public final class DaoFactory
     public DrinkDao getDrinkDao() throws DaoException {
         return instanciateDao(DrinkDaoImpl.class);
     }
+    
+    public FriendDao getFriendDao() throws DaoException {
+        return instanciateDao(FriendDaoImpl.class);
+    }
+    
+    public FriendReqDao getFriendReqDao() throws DaoException {
+        return instanciateDao(FriendReqDaoImpl.class);
+    }
 }
