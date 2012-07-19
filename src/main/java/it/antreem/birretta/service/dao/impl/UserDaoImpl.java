@@ -14,6 +14,8 @@ import org.bson.types.ObjectId;
  */
 public class UserDaoImpl extends AbstractMongoDao implements UserDao 
 {
+    public final static String USERS_COLLNAME = "users";
+    
     private static final Log log = LogFactory.getLog(UserDaoImpl.class);
     
     @Override
@@ -24,7 +26,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection("users");
+            DBCollection users = db.getCollection(USERS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("username", username);
             DBCursor cur = users.find(query);
@@ -57,7 +59,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection("users");
+            DBCollection users = db.getCollection(USERS_COLLNAME);
             BasicDBObject user = createDBObjectFromUser(u);
             return users.insert(user).getN();
         }
@@ -75,7 +77,8 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     @Override
     public User findById(String id) throws DaoException 
     {
-        DBObject obj = findById(id, "users");
+        DBObject obj = findById(id, USERS_COLLNAME);
+        if (obj == null) return null;
         User u = createUserFromDBObject(obj);
         return u;
     }

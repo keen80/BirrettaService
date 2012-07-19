@@ -16,6 +16,8 @@ import org.bson.types.ObjectId;
  */
 public class GeoLocDaoImpl extends AbstractMongoDao implements GeoLocDao 
 {
+    public final static String GEOLOC_COLLNAME = "geolocs";
+    
     private static final Log log = LogFactory.getLog(GeoLocDaoImpl.class);
     
     @Override
@@ -26,7 +28,7 @@ public class GeoLocDaoImpl extends AbstractMongoDao implements GeoLocDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection geolocs = db.getCollection("geolocs");
+            DBCollection geolocs = db.getCollection(GEOLOC_COLLNAME);
             GeoLoc _g = new GeoLoc(idUser, lat, lon);
             BasicDBObject geoloc = createDBObjectFromGeoLoc(_g);
             BasicDBObject query = new BasicDBObject();

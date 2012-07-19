@@ -24,4 +24,8 @@ public class LocType extends MongoDBObject
     public void setDesc(String desc) {
         this.desc = desc;
     }
+    
+    public String getIdLocType(){
+        return super.getId().toString();
+    }
 }

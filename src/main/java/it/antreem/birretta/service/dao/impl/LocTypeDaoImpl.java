@@ -6,10 +6,10 @@ import it.antreem.birretta.service.dao.LocTypeDao;
 import it.antreem.birretta.service.model.LocType;
 import java.util.ArrayList;
 import java.util.List;
-import org.bson.types.ObjectId;
 import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -17,6 +17,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LocTypeDaoImpl extends AbstractMongoDao implements LocTypeDao 
 {
+    public final static String LOCTYPE_COLLNAME = "loctypes";
+    
     private static final Log log = LogFactory.getLog(LocTypeDaoImpl.class);
     
     @Override
@@ -29,7 +31,7 @@ public class LocTypeDaoImpl extends AbstractMongoDao implements LocTypeDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection("loctypes");
+            DBCollection users = db.getCollection(LOCTYPE_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             Pattern pattern = Pattern.compile(/*"^" + */cod, Pattern.CASE_INSENSITIVE);
             query.put("cod", pattern);
@@ -52,6 +54,48 @@ public class LocTypeDaoImpl extends AbstractMongoDao implements LocTypeDao
         }
         
         return list;
+    }
+    
+    
+    @Override
+    public LocType findLocTypeByCod(String cod) throws DaoException 
+    {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection users = db.getCollection(LOCTYPE_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("cod", cod);
+            DBCursor cur = users.find(query);
+            
+            while (cur.hasNext()){
+                DBObject _l = cur.next();
+                LocType l = createLocTypeFromDBObject(_l);
+                return l;
+            }
+            
+            return null;
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
+    
+    @Override
+    public LocType findById(String id) throws DaoException 
+    {
+        DBObject obj = findById(id, LOCTYPE_COLLNAME);
+        if (obj == null) return null;
+        LocType l = createLocTypeFromDBObject(obj);
+        return l;
     }
     
     protected static LocType createLocTypeFromDBObject(DBObject obj)

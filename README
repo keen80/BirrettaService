@@ -8,4 +8,6 @@ Segue una lista di punti che possono essere migliorati ed implementati in modo p
 
 - Inserire OAuth come meccanismo di autenticazione
 - Utilizzare Spring Data per MongoDB per ODM (object-document-mapping) anziché il driver fornito direttamente (il codice è disaccoppiato per permettere questa integrazione in futuro)
- 
+- Utilizzati anche gli oggetti di modello come DTO volutamente, eliminati campi non necessari con annotazioni Jackson
+- Si può rendere la gestione degli errori a prova di bomba con dei try/catch delle DaoException nelle operazioni dei dao che per ora sono stati tralasciati
+- 

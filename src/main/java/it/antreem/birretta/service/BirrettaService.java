@@ -3,6 +3,7 @@ package it.antreem.birretta.service;
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.LocType;
+import it.antreem.birretta.service.model.Location;
 import it.antreem.birretta.service.model.Session;
 import it.antreem.birretta.service.model.User;
 import it.antreem.birretta.service.util.ErrorCodes;
@@ -115,9 +116,9 @@ public class BirrettaService
             DaoFactory.getInstance().getSessionDao().deleteSessionBySid(s.getSid());
         }
         
-        LogoutResponseDTO res = new LogoutResponseDTO();
-        res.setLogout(true);
-        res.setMessaggio("Logout eseguito con successo");
+        GenericResultDTO res = new GenericResultDTO();
+        res.setSuccess(true);
+        res.setMessage("Logout eseguito con successo");
         
         return createJsonOkResponse(res);
     }
@@ -140,7 +141,7 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.LOGIN_FAILED);
         }
         
-        RegistrationResponseDTO response = new RegistrationResponseDTO();
+        GenericResultDTO response = new GenericResultDTO();
         
         String username = r.getUsername() != null ? r.getUsername() : "";
         String password = r.getPassword() != null ? r.getPassword() : "";
@@ -211,7 +212,7 @@ public class BirrettaService
     {
         // Pre-conditions
         if (username == null || lat == null || lon == null){
-            return createJsonErrorResponse(ErrorCodes.UPLOC_MISSED_PARAM);
+            return createJsonErrorResponse(ErrorCodes.UPPOS_MISSED_PARAM);
         }
         
         // Blocco richieste di un utente per un altro
@@ -222,7 +223,7 @@ public class BirrettaService
         User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
         DaoFactory.getInstance().getGeoLocDao().updateLoc(u.getId().toString(), lat, lon);
         
-        return createJsonOkResponse(new UpdateLocResponseDTO());
+        return createJsonOkResponse(new GenericResultDTO(true, "Operazione eseguita correttamente"));
     }
     
     @GET
@@ -233,6 +234,42 @@ public class BirrettaService
         String cod = _cod == null ? "" : _cod;
         List<LocType> list = DaoFactory.getInstance().getLocTypeDao().findLocTypesByCodLike(cod);
         return createJsonOkResponse(list);
+    }
+    
+    
+    @POST
+    @Path("/insertLoc")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response insertLoc(Location l) 
+    {
+        // Pre-conditions
+        if (l == null){
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+        }
+        
+        // Validazione parametri di input
+        // TODO: Creare messaggi di errore appositi per ogni errore
+        if (l.getName() == null || l.getName().length() < 2){
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+        }
+        if (l.getPos() == null || l.getPos().size() != 2){
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+        }
+        if (l.getIdLocType() == null){
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+        }
+        // Controllo LocType
+        LocType type = DaoFactory.getInstance().getLocTypeDao().findById(l.getIdLocType());
+        if (type == null){
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+        }
+        
+        // Inserimento su DB
+        DaoFactory.getInstance().getLocationDao().saveLocation(l);
+        
+        GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
+        return createJsonOkResponse(result);
     }
     
     

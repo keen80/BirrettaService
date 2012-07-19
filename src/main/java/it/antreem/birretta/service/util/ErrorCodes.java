@@ -18,7 +18,8 @@ public enum ErrorCodes
     REG_INVALID_LAST("Last name non valido", "Last name non valido"),
     REG_INVALID_AGE("Eta non valida", "Eta non valida"),
     REQ_DELEGATION_BLOCKED("Deleghe non consentite", "L'utente ha effettuato richieste per conto di un altro utente. Non possibile."),
-    UPLOC_MISSED_PARAM("Parametri mancanti", "Specificare la tripletta (username, lat, lon) interamente."),
+    UPPOS_MISSED_PARAM("Parametri mancanti", "Specificare la tripletta (username, lat, lon) interamente."),
+    INSLOC_WRONG_PARAM("Parametri errati", "Specificare i parametri necessari nel modo corretto."),
     PUPPA_CODE("PuppaTitle", "PuppaMessage");
     
     private String title;

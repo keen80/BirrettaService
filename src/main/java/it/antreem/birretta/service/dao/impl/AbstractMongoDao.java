@@ -53,6 +53,8 @@ public abstract class AbstractMongoDao
     
     protected DBObject findById(String id, String collName) throws DaoException
     {
+        if (!ObjectId.isValid(id)) return null;
+        
         ObjectId _id = new ObjectId(id);
         DB db = null;
         try

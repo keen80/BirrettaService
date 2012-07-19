@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface LocTypeDao {
     public List<LocType> findLocTypesByCodLike(String cod) throws DaoException;
+    public LocType findLocTypeByCod(String cod) throws DaoException;
+    public LocType findById(String id) throws DaoException;
 }

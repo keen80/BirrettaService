@@ -1,9 +1,6 @@
 package it.antreem.birretta.service.dao;
 
-import it.antreem.birretta.service.dao.impl.GeoLocDaoImpl;
-import it.antreem.birretta.service.dao.impl.LocTypeDaoImpl;
-import it.antreem.birretta.service.dao.impl.SessionDaoImpl;
-import it.antreem.birretta.service.dao.impl.UserDaoImpl;
+import it.antreem.birretta.service.dao.impl.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -50,5 +47,9 @@ public final class DaoFactory
     
     public LocTypeDao getLocTypeDao() throws DaoException {
         return instanciateDao(LocTypeDaoImpl.class);
+    }
+    
+    public LocationDao getLocationDao() throws DaoException {
+        return instanciateDao(LocationDaoImpl.class);
     }
 }

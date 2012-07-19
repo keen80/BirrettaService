@@ -11,9 +11,15 @@ public class Location extends MongoDBObject
     private String name;
     private String desc;
     private ArrayList<Double> pos;
+    private String idLocType; // link al campo _id di LocType
     private Address address;
-    private LocType type;
-
+    
+    public Location(){ // Assicuro size == 2
+        pos = new ArrayList<Double>();
+        pos.add(0.0);
+        pos.add(0.0);
+    }
+    
     public Address getAddress() {
         return address;
     }
@@ -46,11 +52,15 @@ public class Location extends MongoDBObject
         this.pos = pos;
     }
 
-    public LocType getType() {
-        return type;
+    public String getIdLocType() {
+        return idLocType;
     }
 
-    public void setType(LocType type) {
-        this.type = type;
+    public void setIdLocType(String idLocType) {
+        this.idLocType = idLocType;
+    }
+    
+    public String getIdLocation(){
+        return super.getId().toString();
     }
 }

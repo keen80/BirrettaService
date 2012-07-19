@@ -17,6 +17,8 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
 {
     private static final Log log = LogFactory.getLog(SessionDaoImpl.class);
     
+    public final static String SESSIONS_COLLNAME = "sessions";
+    
     @Override
     public Session findSessionByUsername(String username) throws DaoException 
     {
@@ -25,7 +27,7 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection sessions = db.getCollection("sessions");
+            DBCollection sessions = db.getCollection(SESSIONS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("username", username);
             DBCursor cur = sessions.find(query);
@@ -58,7 +60,7 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection sessions = db.getCollection("sessions");
+            DBCollection sessions = db.getCollection(SESSIONS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("sid", sid);
             DBCursor cur = sessions.find(query);
@@ -91,7 +93,7 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection sessions = db.getCollection("sessions");
+            DBCollection sessions = db.getCollection(SESSIONS_COLLNAME);
             BasicDBObject session = createDBObjectFromSession(s);
             return sessions.insert(session).getN();
         }
@@ -114,7 +116,7 @@ public class SessionDaoImpl extends AbstractMongoDao implements SessionDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection sessions = db.getCollection("sessions");
+            DBCollection sessions = db.getCollection(SESSIONS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("sid", sid);
             return sessions.remove(query).getN();
