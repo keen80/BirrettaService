@@ -19,7 +19,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
 {
     public final static String BEERS_COLLNAME = "beers";
     
-    private static final Log log = LogFactory.getLog(LocationDaoImpl.class);
+    private static final Log log = LogFactory.getLog(BeerDaoImpl.class);
     
     @Override
     public List<Beer> findBeersByNameLike(String name) throws DaoException 

@@ -65,4 +65,8 @@ public class User extends MongoDBObject
     public void setUsername(String username) {
         this.username = username;
     }
+    
+    public String getIdUser(){
+        return super.getId().toString();
+    }
 }

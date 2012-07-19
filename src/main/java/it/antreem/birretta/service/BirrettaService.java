@@ -300,6 +300,36 @@ public class BirrettaService
     
     
     @GET
+    @Path("/findBeerById")
+    @Produces("application/json")
+    public Response findBeerById (@QueryParam("id") final String _id)
+    {
+        String id = _id == null ? "" : _id;
+        Beer b = DaoFactory.getInstance().getBeerDao().findById(id);
+        return createJsonOkResponse(b);
+    }
+    
+    @GET
+    @Path("/findLocById")
+    @Produces("application/json")
+    public Response findLocById (@QueryParam("id") final String _id)
+    {
+        String id = _id == null ? "" : _id;
+        Location l = DaoFactory.getInstance().getLocationDao().findById(id);
+        return createJsonOkResponse(l);
+    }
+    
+    @GET
+    @Path("/findLocTypeById")
+    @Produces("application/json")
+    public Response findLocTypeById (@QueryParam("id") final String _id)
+    {
+        String id = _id == null ? "" : _id;
+        LocType l = DaoFactory.getInstance().getLocTypeDao().findById(id);
+        return createJsonOkResponse(l);
+    }
+    
+    @GET
     @Path("/findBeer")
     @Produces("application/json")
     public Response findBeer (@QueryParam("name") final String _name)
@@ -339,6 +369,79 @@ public class BirrettaService
         return createJsonOkResponse(result);
     }
     
+    /**
+     * Operazione di check-in.
+     * TODO: Controllo di prossimita' location =&gt; future versioni
+     * 
+     * @param c Richiesta di check-in
+     * @param httpReq Header HTTP per blocco richieste cross-user
+     * @return Esito operazione o errore
+     */
+    @POST
+    @Path("/checkIn")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response checkIn(CheckInRequestDTO c, @Context HttpServletRequest httpReq) 
+    {
+        // Pre-conditions + controllo validita' parametri
+        if (c == null){
+            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+        }
+        if (c.getUsername() == null || c.getIdBeer() == null || c.getIdLocation() == null){
+            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+        }
+        // Puo' esserci una bevuta senza voto? per ora si'...
+        // TODO: Eventuale check di check-in senza voto
+        if (c.getScore() != null && (c.getScore() < 0 || c.getScore() > 10)){
+            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+        }
+        
+        // Blocco richieste di un utente per un altro
+        if (!c.getUsername().equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        
+        // Recupero dati necessari (utente dovrebbe essere ok perche' ha passato il controllo precedente)
+        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(c.getUsername());
+        Beer b = DaoFactory.getInstance().getBeerDao().findById(c.getIdBeer());
+        Location l = DaoFactory.getInstance().getLocationDao().findById(c.getIdLocation());
+        
+        // Controllo che location e birra effettivamente esistano
+        if (b == null){
+            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+        }
+        if (l == null){
+            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+        }
+        
+        // Controllo che negli ultimi 10 minuti non ci siano piu' di tre bevute
+        List<Drink> lastDrinks = DaoFactory.getInstance().getDrinkDao().findRecentDrinks(u.getUsername(), 10);
+        if (lastDrinks.size() >= 3){
+            return createJsonErrorResponse(ErrorCodes.CHECKIN_TOO_MANY_DRINKS);
+        }
+        
+        // Preparazione oggetto di modello
+        Drink d = new Drink();
+        d.setComment(c.getComment());
+        d.setIdBeer(c.getIdBeer());
+        d.setIdLocation(c.getIdLocation());
+        d.setIdUser(u.getIdUser());
+        d.setPicture(c.getPicture());
+        d.setScore(c.getScore());
+        d.setTimestamp(new Date());
+        
+        // Scrittura su DB
+        DaoFactory.getInstance().getDrinkDao().saveDrink(d);
+                
+        // Ricerca di nuovi badge e premi da assegnare scatenati da questo check-in
+        // TODO: aggiorna + controlla badge
+        
+        // Controllo mayorships + notifiche a chi le ha perdute
+        // TODO: controllo mayorships + notifiche a chi le ha perdute
+        
+        GenericResultDTO result = new GenericResultDTO(true, "Check-in eseguito con successo");
+        return createJsonOkResponse(result);
+    }
     
     protected static Response createJsonOkResponse(Object o) {
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);

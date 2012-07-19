@@ -23,6 +23,8 @@ public enum ErrorCodes
     INSLOC_LOC_DUP("Location gia presente", "Una location con lo stesso nome e' gia' presente"),
     INSBEER_BEER_DUP("Birra gia presente", "Una birra con lo stesso nome e' gia' presente"),
     INSBEER_WRONG_PARAM("Parametri errati", "Specificare i parametri necessari nel modo corretto."),
+    CHECKIN_WRONG_PARAM("Parametri errati", "Specificare i parametri di check-in in modo corretto"),
+    CHECKIN_TOO_MANY_DRINKS("Troppe bevute negli ultimi 10 minuti", "Aspetta un po' brutto alcolizzato!!!"),
     FINDLOCNEAR_WRONG_PARAM("Parametri mancanti", "Specificare entrambe longitudine e latitudine"),
     PUPPA_CODE("PuppaTitle", "PuppaMessage");
     
