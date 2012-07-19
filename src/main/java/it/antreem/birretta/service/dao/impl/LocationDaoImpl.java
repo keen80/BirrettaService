@@ -58,7 +58,7 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
             db.requestStart();
             DBCollection users = db.getCollection(LOCATIONS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            Pattern pattern = Pattern.compile(/*"^" + */name, Pattern.CASE_INSENSITIVE);
+            Pattern pattern = Pattern.compile(/*"^" + */name.trim(), Pattern.CASE_INSENSITIVE);
             query.put("name", pattern);
             DBCursor cur = users.find(query).limit(10);
             
@@ -81,6 +81,39 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
         return list;
     }
 
+    @Override
+    public Location findLocationByName(String name) throws DaoException 
+    {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection users = db.getCollection(LOCATIONS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("name", name);
+            DBCursor cur = users.find(query);
+            
+            while (cur.hasNext()){
+                DBObject _u = cur.next();
+                Location u = createLocationFromDBObject(_u);
+                assert u.getName().equals(name);
+                return u;
+            }
+            
+            return null;
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
+    
     @Override
     public Location findById(String id) throws DaoException {
         DBObject obj = findById(id, LOCATIONS_COLLNAME);
@@ -154,7 +187,7 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
     protected static BasicDBObject createDBObjectFromLocation (Location l)
     {
         BasicDBObject _l = new BasicDBObject();
-        _l.put("name", l.getName());
+        _l.put("name", l.getName().trim());
         _l.put("desc", l.getDesc());
         _l.put("pos", l.getPos());
         _l.put("id_loctype", l.getIdLocType());

@@ -10,6 +10,7 @@ import java.util.List;
 public interface LocationDao 
 {
     public List<Location> findLocationsByNameLike(String name) throws DaoException;
+    public Location findLocationByName(String name) throws DaoException;
     public Location findById(String id) throws DaoException;
     public List<Location> findLocationNear(Double lat, Double lon, Double radius) throws DaoException;
     public int saveLocation(Location l) throws DaoException;

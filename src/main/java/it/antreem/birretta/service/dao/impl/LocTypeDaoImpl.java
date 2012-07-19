@@ -31,11 +31,11 @@ public class LocTypeDaoImpl extends AbstractMongoDao implements LocTypeDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection(LOCTYPE_COLLNAME);
+            DBCollection loctypes = db.getCollection(LOCTYPE_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             Pattern pattern = Pattern.compile(/*"^" + */cod, Pattern.CASE_INSENSITIVE);
             query.put("cod", pattern);
-            DBCursor cur = users.find(query).limit(10);
+            DBCursor cur = loctypes.find(query).limit(10);
             
             while (cur.hasNext()){
                 DBObject _l = cur.next();
@@ -65,10 +65,10 @@ public class LocTypeDaoImpl extends AbstractMongoDao implements LocTypeDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection(LOCTYPE_COLLNAME);
+            DBCollection loctypes = db.getCollection(LOCTYPE_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("cod", cod);
-            DBCursor cur = users.find(query);
+            DBCursor cur = loctypes.find(query);
             
             while (cur.hasNext()){
                 DBObject _l = cur.next();

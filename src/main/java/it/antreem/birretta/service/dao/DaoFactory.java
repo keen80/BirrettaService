@@ -52,4 +52,8 @@ public final class DaoFactory
     public LocationDao getLocationDao() throws DaoException {
         return instanciateDao(LocationDaoImpl.class);
     }
+    
+    public BeerDao getBeerDao() throws DaoException {
+        return instanciateDao(BeerDaoImpl.class);
+    }
 }

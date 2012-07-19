@@ -2,10 +2,7 @@ package it.antreem.birretta.service;
 
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
-import it.antreem.birretta.service.model.LocType;
-import it.antreem.birretta.service.model.Location;
-import it.antreem.birretta.service.model.Session;
-import it.antreem.birretta.service.model.User;
+import it.antreem.birretta.service.model.*;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.Utils;
 import java.util.Date;
@@ -237,9 +234,19 @@ public class BirrettaService
     }
     
     @GET
+    @Path("/findLocation")
+    @Produces("application/json")
+    public Response findLocation (@QueryParam("name") final String _name)
+    {
+        String name = _name == null ? "" : _name;
+        List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationsByNameLike(name);
+        return createJsonOkResponse(list);
+    }
+    
+    @GET
     @Path("/findLocNear")
     @Produces("application/json")
-    public Response findLocType (@QueryParam("lon") final Double lon,
+    public Response findLocNear (@QueryParam("lon") final Double lon,
                                  @QueryParam("lat") final Double lat,
                                  @DefaultValue("0.8") @QueryParam("radius") final Double radius)
     {
@@ -280,7 +287,53 @@ public class BirrettaService
         }
         
         // Inserimento su DB
+        Location _l = DaoFactory.getInstance().getLocationDao().findLocationByName(l.getName());
+        if (_l != null){
+            return createJsonErrorResponse(ErrorCodes.INSLOC_LOC_DUP);
+        }
+        
         DaoFactory.getInstance().getLocationDao().saveLocation(l);
+        
+        GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
+        return createJsonOkResponse(result);
+    }
+    
+    
+    @GET
+    @Path("/findBeer")
+    @Produces("application/json")
+    public Response findBeer (@QueryParam("name") final String _name)
+    {
+        String name = _name == null ? "" : _name;
+        List<Beer> list = DaoFactory.getInstance().getBeerDao().findBeersByNameLike(name);
+        return createJsonOkResponse(list);
+    }
+    
+    @POST
+    @Path("/insertBeer")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response insertBeer(Beer b) 
+    {
+        // Pre-conditions
+        if (b == null){
+            return createJsonErrorResponse(ErrorCodes.INSBEER_WRONG_PARAM);
+        }
+        
+        // Validazione parametri di input
+        // TODO: Creare messaggi di errore appositi per ogni errore
+        if (b.getName() == null || b.getName().length() < 2){
+            return createJsonErrorResponse(ErrorCodes.INSBEER_WRONG_PARAM);
+        }
+       
+        // Controllo duplicati
+        Beer _b = DaoFactory.getInstance().getBeerDao().findBeerByName(b.getName());
+        if (_b != null){
+            return createJsonErrorResponse(ErrorCodes.INSBEER_BEER_DUP);
+        }
+        
+        // Inserimento su DB
+        DaoFactory.getInstance().getBeerDao().saveBeer(b);
         
         GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
         return createJsonOkResponse(result);
