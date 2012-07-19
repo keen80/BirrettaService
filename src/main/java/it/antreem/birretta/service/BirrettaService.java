@@ -206,8 +206,8 @@ public class BirrettaService
     @Path("/updatePos")
     @Produces("application/json")
     public Response updatePos (@QueryParam("username") String username,
-                               @QueryParam("lat") Double lat,
                                @QueryParam("lon") Double lon,
+                               @QueryParam("lat") Double lat,
                                @Context HttpServletRequest httpReq) 
     {
         // Pre-conditions
@@ -221,7 +221,7 @@ public class BirrettaService
         }
         
         User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
-        DaoFactory.getInstance().getGeoLocDao().updateLoc(u.getId().toString(), lat, lon);
+        DaoFactory.getInstance().getGeoLocDao().updateLoc(u.getId().toString(), lon, lat);
         
         return createJsonOkResponse(new GenericResultDTO(true, "Operazione eseguita correttamente"));
     }
@@ -236,6 +236,20 @@ public class BirrettaService
         return createJsonOkResponse(list);
     }
     
+    @GET
+    @Path("/findLocNear")
+    @Produces("application/json")
+    public Response findLocType (@QueryParam("lon") final Double lon,
+                                 @QueryParam("lat") final Double lat,
+                                 @DefaultValue("0.8") @QueryParam("radius") final Double radius)
+    {
+        if (lon == null || lat == null){
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+        }
+        
+        List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
+        return createJsonOkResponse(list);
+    }
     
     @POST
     @Path("/insertLoc")

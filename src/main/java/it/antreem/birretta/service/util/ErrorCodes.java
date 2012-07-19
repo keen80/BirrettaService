@@ -20,6 +20,7 @@ public enum ErrorCodes
     REQ_DELEGATION_BLOCKED("Deleghe non consentite", "L'utente ha effettuato richieste per conto di un altro utente. Non possibile."),
     UPPOS_MISSED_PARAM("Parametri mancanti", "Specificare la tripletta (username, lat, lon) interamente."),
     INSLOC_WRONG_PARAM("Parametri errati", "Specificare i parametri necessari nel modo corretto."),
+    FINDLOCNEAR_WRONG_PARAM("Parametri mancanti", "Specificare entrambe longitudine e latitudine"),
     PUPPA_CODE("PuppaTitle", "PuppaMessage");
     
     private String title;

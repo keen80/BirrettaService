@@ -1,6 +1,7 @@
 package it.antreem.birretta.service.dao.impl;
 
 import com.mongodb.*;
+import com.mongodb.util.JSON;
 import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.LocationDao;
 import it.antreem.birretta.service.model.Address;
@@ -88,6 +89,41 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
         return l;
     }
     
+    @Override
+    public List<Location> findLocationNear(Double lat, Double lon, Double radius) throws DaoException 
+    {
+        List<Location> list = new ArrayList<Location>();
+        if (lat == null || lon == null) return list;
+        if (radius == null) radius = 0.8;
+        
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection users = db.getCollection(LOCATIONS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("pos", JSON.parse("{$near : [ " + lon + "," + lat + " ] , $maxDistance : " + radius + "}"));
+            DBCursor cur = users.find(query).limit(10);
+            
+            while (cur.hasNext()){
+                DBObject _l = cur.next();
+                Location l = createLocationFromDBObject(_l);
+                list.add(l);
+            }
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+        
+        return list;
+    }
     
     
     protected static Location createLocationFromDBObject(DBObject obj)
@@ -96,7 +132,7 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
         
         l.setId((ObjectId) obj.get("_id"));
         l.setDesc((String) obj.get("desc"));
-        l.setIdLocType((String) obj.get("idLocType"));
+        l.setIdLocType((String) obj.get("id_loctype"));
         l.setName((String) obj.get("name"));
         l.setPos((ArrayList<Double>) obj.get("pos"));
         

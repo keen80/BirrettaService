@@ -20,14 +20,14 @@ public class GeoLoc extends MongoDBObject
         this.timestamp = new Date();
     }
     
-    public GeoLoc(String idUser, double lat, double lon){
+    public GeoLoc(String idUser, double lon, double lat){
         this.pos.clear();
         this.pos.add(0.0);
         this.pos.add(0.0);
         
         this.idUser = idUser;
-        this.pos.set(0, lat);
-        this.pos.set(1, lon);
+        this.pos.set(0, lon);
+        this.pos.set(1, lat);
         this.timestamp = new Date();
     }
     
