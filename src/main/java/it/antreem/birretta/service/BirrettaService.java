@@ -443,6 +443,25 @@ public class BirrettaService
         return createJsonOkResponse(result);
     }
     
+    
+    @GET
+    @Path("/findMyDrinks")
+    @Produces("application/json")
+    public Response findMyDrinks (@QueryParam("username") final String username, 
+                                  @DefaultValue("10") @QueryParam("limit") Integer limit, 
+                                  @Context HttpServletRequest httpReq)
+    {
+        // Blocco richieste di un utente per un altro
+        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        if (limit < 0 || limit > 100) {
+            limit = 10;
+        }
+        List<Drink> list = DaoFactory.getInstance().getDrinkDao().findDrinksByUsername(username, limit);
+        return createJsonOkResponse(list);
+    }
+    
     protected static Response createJsonOkResponse(Object o) {
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);
         return builder.build();
