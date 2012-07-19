@@ -12,4 +12,5 @@ Segue una lista di punti che possono essere migliorati ed implementati in modo p
 - Si può rendere la gestione degli errori a prova di bomba con dei try/catch delle DaoException nelle operazioni dei dao che per ora sono stati tralasciati
 - I campi unique (tipo i codici, nomi birre/locali) potrebbero andare tutti in uppercase
 - Occorre decidere come trattare le immagini ed il trasferimento delle stesse: base64? altro encoding? Per ora si passa un bytearray diretto ma sicuramente non può essere la soluzione finale
-
+- Si dovranno esplicitare più codici di errore dettagliati, anziché i soli attualmente presenti (troppo generici)
+-
