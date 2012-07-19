@@ -1,5 +1,6 @@
 package it.antreem.birretta.service;
 
+import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
@@ -310,6 +311,16 @@ public class BirrettaService
     }
     
     @GET
+    @Path("/findUserById")
+    @Produces("application/json")
+    public Response findUserById (@QueryParam("id") final String _id)
+    {
+        String id = _id == null ? "" : _id;
+        User u = DaoFactory.getInstance().getUserDao().findById(id);
+        return createJsonOkResponse(u);
+    }
+    
+    @GET
     @Path("/findLocById")
     @Produces("application/json")
     public Response findLocById (@QueryParam("id") final String _id)
@@ -499,7 +510,10 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
         }
         
-        DaoFactory.getInstance().getFriendReqDao().saveFriendReq(myid, frndid);
+        if (!DaoFactory.getInstance().getFriendReqDao().existFriendReq(myid, frndid)
+            && !DaoFactory.getInstance().getFriendDao().areFriends(myid, frndid)){
+            DaoFactory.getInstance().getFriendReqDao().saveFriendReq(myid, frndid);
+        }
         
         GenericResultDTO result = new GenericResultDTO(true, "Richiesta eseguita con successo");
         return createJsonOkResponse(result);
