@@ -2,11 +2,13 @@ package it.antreem.birretta.service;
 
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
+import it.antreem.birretta.service.model.LocType;
 import it.antreem.birretta.service.model.Session;
 import it.antreem.birretta.service.model.User;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.Utils;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -200,9 +202,9 @@ public class BirrettaService
     }
     
     @GET
-    @Path("/updateLoc")
+    @Path("/updatePos")
     @Produces("application/json")
-    public Response updateLoc (@QueryParam("username") String username,
+    public Response updatePos (@QueryParam("username") String username,
                                @QueryParam("lat") Double lat,
                                @QueryParam("lon") Double lon,
                                @Context HttpServletRequest httpReq) 
@@ -221,6 +223,16 @@ public class BirrettaService
         DaoFactory.getInstance().getGeoLocDao().updateLoc(u.getId().toString(), lat, lon);
         
         return createJsonOkResponse(new UpdateLocResponseDTO());
+    }
+    
+    @GET
+    @Path("/findLocType")
+    @Produces("application/json")
+    public Response findLocType (@QueryParam("cod") final String _cod)
+    {
+        String cod = _cod == null ? "" : _cod;
+        List<LocType> list = DaoFactory.getInstance().getLocTypeDao().findLocTypesByCodLike(cod);
+        return createJsonOkResponse(list);
     }
     
     

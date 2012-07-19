@@ -1,6 +1,7 @@
 package it.antreem.birretta.service.model;
 
 import org.bson.types.ObjectId;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -10,6 +11,7 @@ public class MongoDBObject
 {
     private ObjectId id;
 
+    @JsonIgnore
     public ObjectId getId() {
         return id;
     }
