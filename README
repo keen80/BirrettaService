@@ -14,3 +14,17 @@ Segue una lista di punti che possono essere migliorati ed implementati in modo p
 - Occorre decidere come trattare le immagini ed il trasferimento delle stesse: base64? altro encoding? Per ora si passa un bytearray diretto ma sicuramente non può essere la soluzione finale
 - Si dovranno esplicitare più codici di errore dettagliati, anziché i soli attualmente presenti (troppo generici)
 -
+
+=====================
+MONGODB
+=====================
+
+INSTALLAZIONE:
+http://docs.mongodb.org/manual/tutorial/install-mongodb-on-redhat-centos-or-fedora-linux/
+
+CONFIGURAZIONE INDEX MONGODB:
+use brrtt;db.locations.ensureIndex( { pos : "2d" } );
+
+
+TEST COMANDI MONGODB:
+http://www.mongodb.org/display/DOCS/Schema+Designhttp://www.mongodb.org/display/DOCS/Geospatial+Indexing/http://www.mongodb.org/display/DOCS/Advanced+QueriesLOCALE    Nome    Indirizzo    Posizione    UTENTE    nickname    first_name    last_nameBEVUTA    id_utente    id_locale    birra-- varieshow dbsshow collections-- indice uniquedb.users.ensureIndex({nickname:1},{unique:true});for (i = 0; i < 10; i++) { db.users.save( {nickname: 'user_' + i, first_name: 'First_' + i, last_name: 'Last_' + i, age: 25} ); };db.users.find();for (i=0; i<5;i++) { db.pubs.save({ nome:'Locale_'+i, indirizzo:'via Birrettina n. '+i, loc: [ 0.0+(i+1)*10, 0.0+(i+1)*10] }); };db.pubs.find();-- query di raggio long(-180,180), lat(-90,90)db.pubs.ensureIndex( { loc : "2d" } );db.pubs.find( { loc: { $near: [30,30], $maxDistance : 15 } } );-- relazionivar mypub = db.pubs.find({nome: "Locale_2"}).limit(1).next();var myuser = db.users.find({nickname: "user_5"}).next();db.drinks.save( { id_user: myuser._id, id_pub: mypub._id, desc: "Bella Bevuta!" } );db.drinks.find( {id_user: myuser._id } );// db.users.ensureIndex => sugli id_pub e id_user
