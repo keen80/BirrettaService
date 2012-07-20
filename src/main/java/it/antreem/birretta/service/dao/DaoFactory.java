@@ -68,4 +68,8 @@ public final class DaoFactory
     public FriendReqDao getFriendReqDao() throws DaoException {
         return instanciateDao(FriendReqDaoImpl.class);
     }
+    
+    public BadgeDao getBadgeDao() throws DaoException {
+        return instanciateDao(BadgeDaoImpl.class);
+    }
 }

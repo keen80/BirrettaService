@@ -40,7 +40,7 @@ public enum ErrorCodes
     }
     
     public String getCode() {
-        return name().replace("_", ".");
+        return name();//.replace("_", ".");
     }
     
     public String getTitle(){

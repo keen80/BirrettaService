@@ -1,5 +1,15 @@
 package it.antreem.birretta.service.dto;
 
+/*
+{
+  "username":"alessio",
+  "idBeer":"5007ffc42318893236d354a4",
+  "idLocation":"5007df8c23180a65db23b70c",
+  "picture":null,
+  "score":9,
+  "comment":"prova"
+}
+ */
 /**
  *
  * @author alessio

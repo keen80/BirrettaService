@@ -1,10 +1,14 @@
 package it.antreem.birretta.service.util;
 
+import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dao.impl.AbstractMongoDao;
 import it.antreem.birretta.service.dto.ErrorDTO;
+import it.antreem.birretta.service.model.Badge;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -56,5 +60,20 @@ public class Utils
         error.setError(_e);
         
         return error;
+    }
+    
+    /*
+     * Logica di assegnazione dei badge. Modificare eventualmente in futuro.
+     */
+    public static List<Badge> checkBadges(String username)
+    {
+        List<Badge> badges = new ArrayList<Badge>();
+        
+        if (DaoFactory.getInstance().getDrinkDao().countDrinksByUsername(username) >= 10
+                && !DaoFactory.getInstance().getBadgeDao().hasBadge(username, Badge.COD_10_BEERS)){
+            badges.add(DaoFactory.getInstance().getBadgeDao().findByCod(Badge.COD_10_BEERS));
+        }
+        
+        return badges;
     }
 }

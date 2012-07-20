@@ -172,6 +172,35 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
         return list;
     }
     
+    @Override
+    public int countDrinksByUsername(String username) throws DaoException 
+    {
+        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
+        if (u == null) return 0;
+        String idUser = u.getIdUser();
+        
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection drinks = db.getCollection(DRINKS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("id_user", idUser);
+            return drinks.find(query).count();
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
+    
+    
     protected static Drink createDrinkFromDBObject(DBObject obj)
     {
         Drink d = new Drink();

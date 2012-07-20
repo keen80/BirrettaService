@@ -445,7 +445,10 @@ public class BirrettaService
         DaoFactory.getInstance().getDrinkDao().saveDrink(d);
                 
         // Ricerca di nuovi badge e premi da assegnare scatenati da questo check-in
-        // TODO: aggiorna + controlla badge
+        List<Badge> newBadges = Utils.checkBadges(c.getUsername());
+        if (newBadges != null && !newBadges.isEmpty()){
+            DaoFactory.getInstance().getBadgeDao().saveUserBadges(c.getUsername(), newBadges);
+        }
         
         // Controllo mayorships + notifiche a chi le ha perdute
         // TODO: controllo mayorships + notifiche a chi le ha perdute
@@ -470,6 +473,21 @@ public class BirrettaService
             limit = 10;
         }
         List<Drink> list = DaoFactory.getInstance().getDrinkDao().findDrinksByUsername(username, limit);
+        return createJsonOkResponse(list);
+    }
+    
+    @GET
+    @Path("/findMyBadges")
+    @Produces("application/json")
+    public Response findMyBadges (@QueryParam("username") final String username, 
+                                  @Context HttpServletRequest httpReq)
+    {
+        // Blocco richieste di un utente per un altro
+        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        
+        List<Badge> list = DaoFactory.getInstance().getBadgeDao().findUserBadges(username);
         return createJsonOkResponse(list);
     }
     
