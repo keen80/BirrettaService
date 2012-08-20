@@ -90,7 +90,6 @@
             <!-- Versioni delle librerie utilizzate -->
             <resteasy-version>2.2.1.GA</resteasy-version>
 
-			
             <!-- Property specifiche del progetto -->
             <mongodb.host>localhost</mongodb.host>
             <mongodb.port>27017</mongodb.port>
