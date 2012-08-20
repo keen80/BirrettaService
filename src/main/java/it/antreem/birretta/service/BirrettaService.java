@@ -273,18 +273,18 @@ public class BirrettaService
         // Validazione parametri di input
         // TODO: Creare messaggi di errore appositi per ogni errore
         if (l.getName() == null || l.getName().length() < 2){
-            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_NAME_PARAM);
         }
         if (l.getPos() == null || l.getPos().size() != 2){
-            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_POS_PARAM);
         }
         if (l.getIdLocType() == null){
-            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_NULL_TIPOLOC_PARAM);
         }
         // Controllo LocType
-        LocType type = DaoFactory.getInstance().getLocTypeDao().findById(l.getIdLocType());
+        LocType type = DaoFactory.getInstance().getLocTypeDao().findLocTypeByCod(l.getIdLocType());
         if (type == null){
-            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_TIPOLOC_PARAM);
         }
         
         // Inserimento su DB
@@ -292,7 +292,7 @@ public class BirrettaService
         if (_l != null){
             return createJsonErrorResponse(ErrorCodes.INSLOC_LOC_DUP);
         }
-        
+        log.debug("location valida");
         DaoFactory.getInstance().getLocationDao().saveLocation(l);
         
         GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
