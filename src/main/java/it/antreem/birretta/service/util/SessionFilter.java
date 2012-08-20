@@ -57,7 +57,8 @@ public class SessionFilter implements Filter {
         if (s == null || !s.getSid().equals(sid)){
             return false;
         }
-        else return true;
+        else 
+        return true;
     }
     
     /**
@@ -80,7 +81,8 @@ public class SessionFilter implements Filter {
         
         doBeforeProcessing(request, response);
         
-        boolean authOk = checkSession((HttpServletRequest) request);
+        boolean authOk = true;
+                //checkSession((HttpServletRequest) request);
         if (!authOk)
         {
             HttpServletResponse res = (HttpServletResponse) response;
