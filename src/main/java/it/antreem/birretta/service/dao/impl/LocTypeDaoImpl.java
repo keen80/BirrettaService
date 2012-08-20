@@ -108,4 +108,37 @@ public class LocTypeDaoImpl extends AbstractMongoDao implements LocTypeDao
         
         return u;
     }
+    
+    @Override
+    public int saveLocType(LocType l) throws DaoException 
+    {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection locTypes = db.getCollection(LOCTYPE_COLLNAME);
+            BasicDBObject loc = createDBObjectFromLocType(l);
+            return locTypes.insert(loc).getN();
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
+    // For first insert
+    protected static BasicDBObject createDBObjectFromLocType (LocType l)
+    {
+        BasicDBObject _l = new BasicDBObject();
+        _l.put("cod", l.getCod().trim());
+        _l.put("desc", l.getDesc());
+        
+        return _l;
+    }
+    
 }
