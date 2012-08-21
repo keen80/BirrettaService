@@ -27,7 +27,7 @@ public class Dummytest
     {
         LocType lt=new LocType();
         lt.setCod("MorlinsCode");
-        lt.setDesc("Morlins Pub  and Grill");
+        lt.setDesc("Morlins Pub  and Grill for all");
         if(DaoFactory.getInstance().getLocTypeDao().findLocTypeByCod(lt.getCod())==null)
           DaoFactory.getInstance().getLocTypeDao().saveLocType(lt);
         BirrettaService service= new BirrettaService();
@@ -41,10 +41,10 @@ public class Dummytest
         l.setDesc("mio località");
         l.setIdLocType(lt.getCod());
         ArrayList<Double> pos=new ArrayList<Double>();
-        pos.add(new Double("0"));
-        pos.add(new Double("0"));
+        pos.add(new Double("10"));
+        pos.add(new Double("10"));
         l.setPos(pos);
-        l.setName("HILM");
+        l.setName("MorlinsRumGrill");
         Response resp= service.insertLoc(l);
         log.debug("inserito: "+ l + "response. " + (resp.getEntity()));
     //    log.debug("inserito: "+ l + "response. " + ((ErrorDTO)resp.getEntity()).getError().getTitle()+" : " +((ErrorDTO)resp.getEntity()).getError().getDesc());

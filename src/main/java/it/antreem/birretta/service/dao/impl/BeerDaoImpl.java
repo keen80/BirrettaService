@@ -130,13 +130,13 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
         
         b.setName((String) obj.get("name"));
         b.setBrewery((String) obj.get("brewery"));
-        String beerStyle=(String)obj.get("beerstyle");
-        b.setBeerstyle((beerStyle.equals("")?0:new Integer(beerStyle)));
-        String beerType=(String)obj.get("beertype");
-        b.setBeertype((beerType.equals("")?0:new Integer(beerType)));
+        b.setBeerstyle((Integer)obj.get("beerstyle"));
+        b.setBeertype((Integer)obj.get("beertype"));
         b.setNationality((String) obj.get("nationality"));
         b.setGrad((String) obj.get("grad"));
-        b.setId((ObjectId) obj.get("_id")); 
+        // id fisico del db
+      //  b.setId((ObjectId) obj.get("_id")); 
+        b.setIdBeer((String)obj.get("idBeer"));
         b.setIdUser((String) obj.get("idUser"));
         b.setUsername((String) obj.get("username"));
         b.setImage((byte[]) obj.get("image"));
@@ -153,6 +153,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
     {
         BasicDBObject _b = new BasicDBObject();
         _b.put("name", b.getName().trim());
+        _b.put("idBeer",b.getIdBeer().trim());
         _b.put("brewery", b.getBrewery());
         _b.put("beerstyle", b.getBeerstyle());
         _b.put("beertype", b.getBeertype());

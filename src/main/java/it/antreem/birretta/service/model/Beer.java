@@ -135,14 +135,11 @@ public class Beer extends MongoDBObject
     }
     
     public String getIdBeer(){
-        return super.getId().toString();
+        return idBeer;
     }
-    /*
-     * generato da mongoDB
-     * 
+
     public void setIdBeer(String idBeer) {
         this.idBeer = idBeer;
     }
-    * 
-    */
+
 }
