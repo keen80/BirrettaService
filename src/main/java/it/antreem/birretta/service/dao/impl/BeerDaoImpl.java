@@ -68,6 +68,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
             DBCollection beers = db.getCollection(BEERS_COLLNAME);
             BasicDBObject param = new BasicDBObject();
             //ordinamento crescente(1) per il nome
+            //decrescente sarebbe stato -1
             param.put("name", 1);
             log.info("sort param:"+param.toString());
             DBCursor cur=null;

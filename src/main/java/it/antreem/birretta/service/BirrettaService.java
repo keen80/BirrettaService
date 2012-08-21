@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.codehaus.jackson.map.util.JSONPObject;
 /**
  * BirrettaService
  */
@@ -354,7 +354,19 @@ public class BirrettaService
         List<Beer> list = DaoFactory.getInstance().getBeerDao().findBeersByNameLike(name);
         return createJsonOkResponse(list);
     }
-    
+    /**
+     * Restituisce tutte le birre in formato JSONP.
+     */
+    @GET
+    @Path("/listBeer_jsonp")
+    @Produces("application/json")
+    public JSONPObject listBeer_jsonp (
+	@QueryParam("maxElement") final String _maxElemet,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listBeer(_maxElemet));
+	}
+	
     @GET
     @Path("/listBeer")
     @Produces("application/json")
