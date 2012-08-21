@@ -69,14 +69,15 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
             BasicDBObject param = new BasicDBObject();
             //ordinamento crescente(1) per il nome
             param.put("name", 1);
+            log.info("sort param:"+param.toString());
             DBCursor cur=null;
+            cur = beers.find();
+            DBCursor curOrdered= cur.sort(param);            
             if(maxElement>0)
-                cur = beers.find().limit(maxElement);
-            else
-                cur=beers.find();
-            cur.sort(param);
-            while (cur.hasNext()){
-                DBObject _b = cur.next();
+                   curOrdered.limit(maxElement);
+
+            while (curOrdered.hasNext()){
+                DBObject _b = curOrdered.next();
                 Beer u = createBeerFromDBObject(_b);
                list.add(u);
             }
