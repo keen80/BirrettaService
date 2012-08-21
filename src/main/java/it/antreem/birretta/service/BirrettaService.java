@@ -281,7 +281,11 @@ public class BirrettaService
         if (l.getIdLocType() == null){
             return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_NULL_TIPOLOC_PARAM);
         }
-        // Controllo LocType
+        // Controllo LocType 
+        /* gmorlini:
+         * in precedenza veniva fatto findLocTypeById
+         * più sensato fare findLocTypeByCod
+         */
         LocType type = DaoFactory.getInstance().getLocTypeDao().findLocTypeByCod(l.getIdLocType());
         if (type == null){
             return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_TIPOLOC_PARAM);
