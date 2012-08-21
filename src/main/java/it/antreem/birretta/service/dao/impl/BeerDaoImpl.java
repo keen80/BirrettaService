@@ -57,6 +57,44 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
     }
 
     @Override
+    public ArrayList<Beer>  listBeer(int maxElement) throws DaoException 
+    {
+        ArrayList<Beer> list = new ArrayList<Beer>();
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection beers = db.getCollection(BEERS_COLLNAME);
+            BasicDBObject param = new BasicDBObject();
+            //ordinamento crescente(1) per il nome
+            param.put("name", 1);
+            DBCursor cur=null;
+            if(maxElement>0)
+                cur = beers.find().limit(maxElement);
+            else
+                cur=beers.find();
+            cur.sort(param);
+            while (cur.hasNext()){
+                DBObject _b = cur.next();
+                Beer u = createBeerFromDBObject(_b);
+               list.add(u);
+            }
+            
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+         return list;
+    }
+
+    @Override
     public Beer findBeerByName(String name) throws DaoException 
     {
         DB db = null;

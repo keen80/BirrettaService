@@ -6,6 +6,7 @@ import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.Utils;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -352,6 +353,29 @@ public class BirrettaService
         String name = _name == null ? "" : _name;
         List<Beer> list = DaoFactory.getInstance().getBeerDao().findBeersByNameLike(name);
         return createJsonOkResponse(list);
+    }
+    
+    @GET
+    @Path("/listBeer")
+    @Produces("application/json")
+    public ResultDTO listBeer (@QueryParam("maxElement") final String _maxElemet)
+    {
+        log.info("reuest list of "+_maxElemet+" beer");
+        int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
+        ArrayList<Beer> list = DaoFactory.getInstance().getBeerDao().listBeer(maxElemet);
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode("OK");
+        status.setMsg("Status OK");
+        status.setSuccess(true);
+        Body body =new Body<Beer>();
+        body.setList(list);
+        Metadata metaData = new Metadata();
+   //     metaData.setBadge("OK", 1, "Notification OK");
+    //    metaData.setNotification("OK", 1, "Notification OK");
+        it.antreem.birretta.service.model.Response response = new it.antreem.birretta.service.model.Response(status, body, metaData);
+        result.setResponse(response);
+        return result;
     }
     
     @POST
