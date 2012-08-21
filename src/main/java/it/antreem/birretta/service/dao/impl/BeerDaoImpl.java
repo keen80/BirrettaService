@@ -124,14 +124,27 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
     protected static Beer createBeerFromDBObject(DBObject obj)
     {
         Beer b = new Beer();
+        /*
+         * Da vedere come gestire valori nulli, vuoti..
+         */
         
-        b.setId((ObjectId) obj.get("_id"));
-        b.setDesc((String) obj.get("desc"));
-        b.setCategory((String) obj.get("category"));
         b.setName((String) obj.get("name"));
-        b.setSubcategory((String) obj.get("subcategory"));
-        b.setPicture((byte[]) obj.get("picture"));
-        
+        b.setBrewery((String) obj.get("brewery"));
+        String beerStyle=(String)obj.get("beerstyle");
+        b.setBeerstyle((beerStyle.equals("")?0:new Integer(beerStyle)));
+        String beerType=(String)obj.get("beertype");
+        b.setBeertype((beerType.equals("")?0:new Integer(beerType)));
+        b.setNationality((String) obj.get("nationality"));
+        b.setGrad((String) obj.get("grad"));
+        b.setId((ObjectId) obj.get("_id")); 
+        b.setIdUser((String) obj.get("idUser"));
+        b.setUsername((String) obj.get("username"));
+        b.setImage((byte[]) obj.get("image"));
+        b.setStatus((String)obj.get("status"));
+        b.setInsertedOn((String)obj.get("insertedOn"));
+        b.setParam1((String) obj.get("param1"));
+        b.setParam2((String)obj.get("param2"));
+        b.setParam3((String)obj.get("param3"));
         return b;
     }
     
@@ -140,10 +153,19 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
     {
         BasicDBObject _b = new BasicDBObject();
         _b.put("name", b.getName().trim());
-        _b.put("desc", b.getDesc());
-        _b.put("category", b.getCategory());
-        _b.put("subcategory", b.getSubcategory());
-        _b.put("picture", b.getPicture());
+        _b.put("brewery", b.getBrewery());
+        _b.put("beerstyle", b.getBeerstyle());
+        _b.put("beertype", b.getBeertype());
+        _b.put("nationality",b.getNationality());
+        _b.put("grad", b.getGrad());
+        _b.put("idUser",b.getIdUser());
+        _b.put("username",b.getUsername());
+        _b.put("image", b.getImage());
+        _b.put("status",b.getStatus());
+        _b.put("insertedOn", b.getInsertedOn());
+        _b.put("param1", b.getParam1());
+        _b.put("param2", b.getParam2());
+        _b.put("param3", b.getParam3());
         
         return _b;
     }
