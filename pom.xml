@@ -92,7 +92,7 @@
 
             <!-- Property specifiche del progetto -->
             <!--mongodb.host>localhost</mongodb.host-->
-			<mongodb.host>192.168.1.75</mongodb.host>
+			<mongodb.host>192.168.1.185</mongodb.host>
             <mongodb.port>27017</mongodb.port>
             <mongodb.dbname>brrtt</mongodb.dbname>
             
