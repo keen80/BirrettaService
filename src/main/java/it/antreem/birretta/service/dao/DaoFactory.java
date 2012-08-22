@@ -32,7 +32,9 @@ public final class DaoFactory
         }
         
     }
-    
+     public ActivityDao getActivityDao() throws DaoException {
+        return instanciateDao(ActivityDaoImpl.class);
+    }
     public UserDao getUserDao() throws DaoException {
         return instanciateDao(UserDaoImpl.class);
     }
