@@ -1,4 +1,4 @@
-package it.antreem.birretta.service.model;
+package it.antreem.birretta.service.model.json;
 
 import java.util.ArrayList;
 

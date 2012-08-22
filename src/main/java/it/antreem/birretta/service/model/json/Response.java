@@ -1,7 +1,5 @@
 package it.antreem.birretta.service.model.json;
 
-import it.antreem.birretta.service.model.Body;
-
 /**
  *
  * @author gmorlini
