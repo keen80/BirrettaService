@@ -5,6 +5,7 @@ import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.UserDao;
 import it.antreem.birretta.service.model.User;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
@@ -138,16 +139,44 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     protected static User createUserFromDBObject(DBObject obj)
     {
         User u = new User();
-
+        u.setIdUser((String) obj.get("id_user"));
         u.setId((ObjectId) obj.get("_id"));
         u.setUsername((String) obj.get("username"));
+        u.setDisplayName((String)obj.get("displayName"));
         u.setFirstName((String) obj.get("first_name"));
         u.setLastName((String) obj.get("last_name"));
-        u.setSex((String) obj.get("sex"));
-        u.setAge((Integer) obj.get("age"));
-        u.setEmail((String) obj.get("email"));
+        u.setDescription((String)obj.get("description"));
+        u.setEmail((String)obj.get("email"));
+        u.setGender((Integer) obj.get("gender"));
+        u.setNationality((String)obj.get("nationality"));
+        
+        String birthDate=(String)obj.get("birthDate");
+        if(birthDate!=null && !birthDate.equals(""))
+             u.setBirthDate(new Date(birthDate));
+        
+        u.setAvatar((String)obj.get("avatar"));
+        
+        u.setShareFacebook((obj.get("shareFacebook")!=null ? (Boolean) obj.get("shareFacebook") : false));
+        u.setShareTwitter((obj.get("shareFacebook")!=null ? (Boolean)obj.get("shareTwitter"): false));
+        u.setEnableNotification(obj.get("enableNotification")!=null?(Boolean)obj.get("enableNotification"): false );
+        u.setRole((Integer) obj.get("role"));
+        u.setStatus((Integer) obj.get("status"));
         u.setPwdHash((String) obj.get("pwdHash"));
         
+        String activatedOn=(String)obj.get("activatedOn");
+        if(activatedOn!=null && !activatedOn.equals(""))
+                u.setActivatedOn(new Date(activatedOn));
+        
+        String lastLoginOn=(String)obj.get("lastLoginOn");
+        if(lastLoginOn!=null && !lastLoginOn.equals(""))
+                u.setActivatedOn(new Date(lastLoginOn));
+        
+        u.setBadges((String)obj.get("badges"));
+        u.setFavorites((String) obj.get("favorites"));
+        u.setLiked((String)obj.get("liked"));
+        u.setCounter_checkIns((Integer)obj.get("counter_checkIns"));
+        u.setCounter_friends((Integer)obj.get("counter_friends"));
+        u.setCounter_badges((Integer)obj.get("coun"));
         return u;
     }
     
@@ -156,12 +185,12 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     {
         BasicDBObject _u = new BasicDBObject();
         _u.put("username", u.getUsername());
-        _u.put("age", u.getAge());
+     //   _u.put("age", u.getAge());
         _u.put("email", u.getEmail());
         _u.put("first_name", u.getFirstName().trim());
         _u.put("last_name", u.getLastName().trim());
         _u.put("pwdHash", u.getPwdHash());
-        _u.put("sex", u.getSex());
+       // _u.put("sex", u.getSex());
         return _u;
     }
 

@@ -42,21 +42,21 @@ public class BirrettaService
      */
     @POST
     @Path("/login")
-    @Consumes("application/json")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public Response login(CredentialsDTO c) 
+    public Response login(@FormParam("username") String username,@FormParam("password") String password) 
     {
         // Pre-conditions
-        if (c == null)
+     /*   if (c == null)
         {
             log.debug("Credenziali di login passate a null. Errore.");
             return createJsonErrorResponse(ErrorCodes.LOGIN_FAILED);
         }
-        
+        */
         LoginResponseDTO response = new LoginResponseDTO();
         
-        String username = c.getUsername() != null ? c.getUsername() : "";
-        String password = c.getPassword() != null ? c.getPassword() : "";
+  //      String username = c.getUsername() != null ? c.getUsername() : "";
+   //     String password = c.getPassword() != null ? c.getPassword() : "";
         String hash = Utils.SHAsum(Utils.SALT.concat(username).concat(password).getBytes());
         
         log.info("Tentativo di login di username: " + username + " con hash pwd: " + hash); 
@@ -189,11 +189,11 @@ public class BirrettaService
         
         // ...altrimenti registrazione con successo.
         User newuser = new User();
-        newuser.setAge(r.getAge());
+//        newuser.setBirthDate(r.getAge());
         newuser.setEmail(r.getEmail());
         newuser.setFirstName(r.getFirstName());
         newuser.setLastName(r.getLastName());
-        newuser.setSex(r.getSex().toUpperCase());
+  //      newuser.setSex(r.getSex().toUpperCase());
         newuser.setUsername(r.getUsername());
         newuser.setPwdHash(hash);
         
