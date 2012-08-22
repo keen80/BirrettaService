@@ -33,6 +33,19 @@
                 </configuration>
             </plugin>
 			
+			 <plugin>
+                 <groupId>org.codehaus.mojo</groupId>
+				<artifactId>jboss-maven-plugin</artifactId>
+                 <version>1.5.0</version>
+				<configuration>
+				  <hostName>192.168.1.185</hostName>
+				<port>8080</port>
+				<fileNames>
+					<fileName>target/birrettaservice.war</fileName>
+				</fileNames>
+				</configuration>
+            </plugin>
+			
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>

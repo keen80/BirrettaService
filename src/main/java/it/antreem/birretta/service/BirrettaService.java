@@ -1,5 +1,8 @@
 package it.antreem.birretta.service;
 
+import it.antreem.birretta.service.model.json.Metadata;
+import it.antreem.birretta.service.model.json.Status;
+import it.antreem.birretta.service.model.json.BeerSingle;
 import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
@@ -355,25 +358,51 @@ public class BirrettaService
         return createJsonOkResponse(list);
     }
     /**
-     * Restituisce tutte le birre in formato JSONP.
+     * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
      */
     @GET
     @Path("/listBeer_jsonp")
     @Produces("application/json")
     public JSONPObject listBeer_jsonp (
 	@QueryParam("maxElement") final String _maxElemet,
-	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+	@DefaultValue("callback") @QueryParam("callback") String callbackName,
+        @DefaultValue("complete") @QueryParam("details") String details)
     {
-		return new JSONPObject(callbackName,listBeer(_maxElemet));
+		return new JSONPObject(callbackName,listBeer(_maxElemet,details));
 	}
-	
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     */
     @GET
     @Path("/listBeer")
     @Produces("application/json")
-    public ResultDTO listBeer (@QueryParam("maxElement") final String _maxElemet)
+    public ResultDTO listBeer (@QueryParam("maxElement") final String _maxElemet,
+                               @DefaultValue("complete") @QueryParam("details") String details)
     {
-        log.info("reuest list of "+_maxElemet+" beer");
+        log.info("reuest list of "+_maxElemet+" beer "+details);
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
+        if(details.equalsIgnoreCase("single"))
+            
+            //lista elementi semplificata
+        {
+        ArrayList<BeerSingle> list = DaoFactory.getInstance().getBeerDao().listBeerSingle(maxElemet);
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode("OK");
+        status.setMsg("Status OK");
+        status.setSuccess(true);
+        Body body =new Body<BeerSingle>();
+        body.setList(list);
+        Metadata metaData = new Metadata();
+        metaData.setBadge("OK", 1, "Notification OK");
+        metaData.setNotification("OK", 1, "Notification OK");       
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
+        result.setResponse(response);
+        return result;
+        }
+        else
+            //details=complete lista completa dettagli birra
+        {
         ArrayList<Beer> list = DaoFactory.getInstance().getBeerDao().listBeer(maxElemet);
         ResultDTO result = new ResultDTO();
         Status status= new Status();
@@ -385,9 +414,12 @@ public class BirrettaService
         Metadata metaData = new Metadata();
    //     metaData.setBadge("OK", 1, "Notification OK");
     //    metaData.setNotification("OK", 1, "Notification OK");
-        it.antreem.birretta.service.model.Response response = new it.antreem.birretta.service.model.Response(status, body, metaData);
+        
+            it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
         result.setResponse(response);
         return result;
+        }
+        
     }
     
     @POST

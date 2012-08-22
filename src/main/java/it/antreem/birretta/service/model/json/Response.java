@@ -1,4 +1,6 @@
-package it.antreem.birretta.service.model;
+package it.antreem.birretta.service.model.json;
+
+import it.antreem.birretta.service.model.Body;
 
 /**
  *

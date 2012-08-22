@@ -4,6 +4,7 @@ import com.mongodb.*;
 import it.antreem.birretta.service.dao.BeerDao;
 import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.model.Beer;
+import it.antreem.birretta.service.model.json.BeerSingle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -95,7 +96,45 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
         }
          return list;
     }
+     @Override
+    public ArrayList<BeerSingle>  listBeerSingle(int maxElement) throws DaoException 
+    {
+        ArrayList<BeerSingle> list = new ArrayList<BeerSingle>();
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection beers = db.getCollection(BEERS_COLLNAME);
+            BasicDBObject param = new BasicDBObject();
+            //ordinamento crescente(1) per il nome
+            //decrescente sarebbe stato -1
+            param.put("name", 1);
+            log.info("sort param:"+param.toString());
+            DBCursor cur=null;
+            cur = beers.find();
+            DBCursor curOrdered= cur.sort(param);            
+            if(maxElement>0)
+                   curOrdered.limit(maxElement);
 
+            while (curOrdered.hasNext()){
+                DBObject _b = curOrdered.next();
+                BeerSingle u = createBeerSingleFromDBObject(_b);
+               list.add(u);
+            }
+            
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+         return list;
+    }
     @Override
     public Beer findBeerByName(String name) throws DaoException 
     {
@@ -209,5 +248,16 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
         _b.put("param3", b.getParam3());
         
         return _b;
+    }
+
+    private BeerSingle createBeerSingleFromDBObject(DBObject obj) {
+         BeerSingle b = new BeerSingle();
+        /*
+         * Da vedere come gestire valori nulli, vuoti..
+         */
+        
+        b.setName((String) obj.get("name"));
+        b.setIdBeer((String)obj.get("idBeer"));
+        return b;
     }
 }
