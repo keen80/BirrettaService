@@ -81,8 +81,7 @@ public class SessionFilter implements Filter {
         
         doBeforeProcessing(request, response);
         
-        boolean authOk = true;
-                //checkSession((HttpServletRequest) request);
+        boolean authOk = checkSession((HttpServletRequest) request);
         if (!authOk)
         {
             HttpServletResponse res = (HttpServletResponse) response;
