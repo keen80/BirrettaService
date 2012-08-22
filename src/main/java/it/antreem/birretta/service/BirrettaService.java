@@ -1,5 +1,6 @@
 package it.antreem.birretta.service;
 
+import it.antreem.birretta.service.model.json.Body;
 import it.antreem.birretta.service.model.json.Metadata;
 import it.antreem.birretta.service.model.json.Status;
 import it.antreem.birretta.service.model.json.BeerSingle;
@@ -459,6 +460,43 @@ public class BirrettaService
         result.setResponse(response);
         return result;
         
+    }
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
+     */
+    @GET
+    @Path("/listActivity_jsonp")
+    @Produces("application/json")
+    public JSONPObject listActivity_jsonp (
+	@QueryParam("maxElement") final String _maxElemet,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listDrink(_maxElemet));
+	}
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     */
+    @GET
+    @Path("/listActivity")
+    @Produces("application/json")
+    public ResultDTO listActivity (@QueryParam("id_user") final String id_user)
+    {
+        log.info("reuest list of "+id_user+" activity");
+        ArrayList<Activity> list = DaoFactory.getInstance().getActivityDao().findByUser(id_user);
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode("OK");
+        status.setMsg("Status OK");
+        status.setSuccess(true);
+        Body body =new Body<Activity>();
+        body.setList(list);
+        Metadata metaData = new Metadata();
+        metaData.setBadge("OK", 1, "Notification OK");
+        metaData.setNotification("OK", 1, "Notification OK");
+     
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
+        result.setResponse(response);
+        return result;
         
     }
     @POST
