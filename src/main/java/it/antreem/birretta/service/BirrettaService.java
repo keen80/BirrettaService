@@ -421,7 +421,46 @@ public class BirrettaService
         }
         
     }
-    
+    /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
+     */
+    @GET
+    @Path("/listDrink_jsonp")
+    @Produces("application/json")
+    public JSONPObject listDrink_jsonp (
+	@QueryParam("maxElement") final String _maxElemet,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listDrink(_maxElemet));
+	}
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     */
+    @GET
+    @Path("/listDrink")
+    @Produces("application/json")
+    public ResultDTO listDrink (@QueryParam("maxElement") final String _maxElemet)
+    {
+        log.info("reuest list of "+_maxElemet+" drink");
+        int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
+        ArrayList<Drink> list = DaoFactory.getInstance().getDrinkDao().getDrinksList(maxElemet);
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode("OK");
+        status.setMsg("Status OK");
+        status.setSuccess(true);
+        Body body =new Body<Drink>();
+        body.setList(list);
+        Metadata metaData = new Metadata();
+        metaData.setBadge("OK", 1, "Notification OK");
+        metaData.setNotification("OK", 1, "Notification OK");
+     
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
+        result.setResponse(response);
+        return result;
+        
+        
+    }
     @POST
     @Path("/insertBeer")
     @Consumes("application/json")
@@ -473,12 +512,12 @@ public class BirrettaService
         if (c.getUsername() == null || c.getIdBeer() == null || c.getIdLocation() == null){
             return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
-        // Puo' esserci una bevuta senza voto? per ora si'...
+        /* Puo' esserci una bevuta senza voto? per ora si'...
         // TODO: Eventuale check di check-in senza voto
-        if (c.getScore() != null && (c.getScore() < 0 || c.getScore() > 10)){
+        if (c.getIdFeedback() != null && (c.getScore() < 0 || c.getScore() > 10)){
             return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
-        
+        */
         // Blocco richieste di un utente per un altro
         if (!c.getUsername().equals(httpReq.getHeader("btUsername"))){
             return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
@@ -505,12 +544,11 @@ public class BirrettaService
         
         // Preparazione oggetto di modello
         Drink d = new Drink();
-        d.setComment(c.getComment());
         d.setIdBeer(c.getIdBeer());
-        d.setIdLocation(c.getIdLocation());
+        d.setIdPlace(c.getIdLocation());
         d.setIdUser(u.getIdUser());
-        d.setPicture(c.getPicture());
-        d.setScore(c.getScore());
+        d.setImage(c.getPicture());
+        d.setIdFeedback(c.getIdFeedback());
         d.setTimestamp(new Date());
         
         // Scrittura su DB

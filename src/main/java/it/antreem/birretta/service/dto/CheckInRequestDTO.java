@@ -6,7 +6,7 @@ package it.antreem.birretta.service.dto;
   "idBeer":"5007ffc42318893236d354a4",
   "idLocation":"5007df8c23180a65db23b70c",
   "picture":null,
-  "score":9,
+  "idFeedback":9,
   "comment":"prova"
 }
  */
@@ -19,26 +19,17 @@ public class CheckInRequestDTO
     private String username;
     private String idBeer;
     private String idLocation;
-    private String comment;
-    private Integer score;
-    private byte[] picture;
+    private String idFeedback;
+    private String picture;
 
-    public byte[] getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(String picture) {
         this.picture = picture;
     }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
+    
     public String getIdBeer() {
         return idBeer;
     }
@@ -55,12 +46,12 @@ public class CheckInRequestDTO
         this.idLocation = idLocation;
     }
 
-    public Integer getScore() {
-        return score;
+    public String getIdFeedback() {
+        return idFeedback;
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setIdFeedback(String idFeedback) {
+        this.idFeedback = idFeedback;
     }
 
     public String getUsername() {

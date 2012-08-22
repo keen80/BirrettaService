@@ -200,20 +200,62 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
         }
     }
     
+    @Override
+    public ArrayList<Drink> getDrinksList(Integer maxElement) throws DaoException 
+    {
+        ArrayList<Drink> list = new ArrayList<Drink>();
+        
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection drinks = db.getCollection(DRINKS_COLLNAME);
+            BasicDBObject param = new BasicDBObject();
+            //ordinamento crescente(1) per il nome
+            //decrescente sarebbe stato -1
+            param.put("username", 1);
+            log.info("sort param:"+param.toString());
+            DBCursor cur=null;
+            cur = drinks.find();
+            DBCursor curOrdered= cur.sort(param);            
+            if(maxElement>0)
+                   curOrdered.limit(maxElement);
+            while (curOrdered.hasNext()){
+                DBObject _d = curOrdered.next();
+                Drink d = createDrinkFromDBObject(_d);
+                list.add(d);
+            }
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+        
+        return list;
+    }
+    
     
     protected static Drink createDrinkFromDBObject(DBObject obj)
     {
         Drink d = new Drink();
         
         d.setId((ObjectId) obj.get("_id"));
+        d.setUsername((String)obj.get("username"));
+        d.setImage((String)obj.get("image"));
         d.setIdUser((String) obj.get("id_user"));
         d.setIdBeer((String) obj.get("id_beer"));
-        d.setIdLocation((String) obj.get("id_location"));
-        d.setScore((Integer) obj.get("score"));
-        d.setComment((String) obj.get("comment"));
-        d.setPicture((byte[]) obj.get("picture"));
-        d.setTimestamp((Date) obj.get("timestamp"));
-        
+        d.setIdPlace((String) obj.get("id_place"));
+        d.setIdActivity((String)obj.get("idActivity"));
+        d.setIdFeedback((String)obj.get("idFeedback"));
+        d.setStatus(new Integer((String)obj.get("status")));
+        d.setScore(new Integer((String)obj.get("score")));
+        d.setTimestamp(new Date((String)obj.get("timestamp")));
         return d;
     }
     
@@ -221,14 +263,16 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
     protected static BasicDBObject createDBObjectFromDrink (Drink d)
     {
         BasicDBObject _d = new BasicDBObject();
+        _d.put("username",d.getUsername());
+        _d.put("image", d.getImage());
         _d.put("id_user", d.getIdUser());
         _d.put("id_beer", d.getIdBeer());
-        _d.put("id_location", d.getIdLocation());
-        _d.put("score", d.getScore());
-        _d.put("comment", d.getComment());
-        _d.put("picture", d.getPicture());
+        _d.put("id_place", d.getIdPlace());
+        _d.put("id_activity", d.getIdActivity());
+        _d.put("id_feedback", d.getIdFeedback());
+        _d.put("status", d.getStatus());
+        _d.put("score",d.getScore());
         _d.put("timestamp", d.getTimestamp());
-        
         return _d;
     }
 }

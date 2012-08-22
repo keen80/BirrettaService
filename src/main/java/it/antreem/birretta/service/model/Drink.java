@@ -9,28 +9,39 @@ import java.util.Date;
  */
 public class Drink extends MongoDBObject
 {
+    private String username;
+    private String image;
     private String idUser;
     private String idBeer;
-    private String idLocation;
-    private String comment;
+    private String idPlace;
+    private String idActivity;
+    private String idFeedback;
+    private Integer status;
     private Integer score;
     private Date timestamp;
-    private byte[] picture;
 
-    public byte[] getPicture() {
-        return picture;
+    public Date getTimestamp() {
+        return timestamp;
     }
 
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+    
+    public Integer getScore() {
+        return score;
     }
 
-    public String getComment() {
-        return comment;
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
-    public void setComment(String comment) {
-        this.comment = comment;
+    public String getIdActivity() {
+        return idActivity;
+    }
+
+    public void setIdActivity(String idActivity) {
+        this.idActivity = idActivity;
     }
 
     public String getIdBeer() {
@@ -41,12 +52,20 @@ public class Drink extends MongoDBObject
         this.idBeer = idBeer;
     }
 
-    public String getIdLocation() {
-        return idLocation;
+    public String getIdFeedback() {
+        return idFeedback;
     }
 
-    public void setIdLocation(String idLocation) {
-        this.idLocation = idLocation;
+    public void setIdFeedback(String idFeedback) {
+        this.idFeedback = idFeedback;
+    }
+
+    public String getIdPlace() {
+        return idPlace;
+    }
+
+    public void setIdPlace(String idPlace) {
+        this.idPlace = idPlace;
     }
 
     public String getIdUser() {
@@ -57,19 +76,28 @@ public class Drink extends MongoDBObject
         this.idUser = idUser;
     }
 
-    public Integer getScore() {
-        return score;
+    public String getImage() {
+        return image;
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 }

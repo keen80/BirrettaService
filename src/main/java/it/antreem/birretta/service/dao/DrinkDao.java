@@ -1,6 +1,7 @@
 package it.antreem.birretta.service.dao;
 
 import it.antreem.birretta.service.model.Drink;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,4 +15,5 @@ public interface DrinkDao
     public int countDrinksByUsername(String username) throws DaoException;
     public List<Drink> findRecentDrinks(String username, Integer minutesAgo) throws DaoException;
     public int saveDrink(Drink d) throws DaoException;
+     public ArrayList<Drink> getDrinksList(Integer maxElement) throws DaoException;
 }
