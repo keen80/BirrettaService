@@ -11,6 +11,8 @@ import it.antreem.birretta.service.model.*;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.JsonHandler;
 import it.antreem.birretta.service.util.Utils;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -316,16 +318,18 @@ public class BirrettaService
     @Produces("application/json")
     public ResultDTO findLocNear (@QueryParam("lon") final Double lon,
                                  @QueryParam("lat") final Double lat,
-                                 @DefaultValue("0.8") @QueryParam("radius") final Double radius)
+                                 @DefaultValue("0.8") @QueryParam("radius") final Double radius) throws MalformedURLException, IOException
     {
         if (lon == null || lat == null){
             return createResultDTOResponseFail(ErrorCodes.INSLOC_WRONG_PARAM);
         }
+        log.info("request loc");
         ArrayList<Location> findLocationNear = JsonHandler.findLocationNear(lat, lon, radius);
       // modalità solo da mongoDB
       //  List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
      //   ArrayList<Location> arrayList= new ArrayList<Location>();
      //   arrayList.addAll(list);
+        log.info("foursquare loc "+findLocationNear.size());
         ArrayList<Place> places= convertToPlace(findLocationNear);
         return createResultDTOResponseOk(places);
     }
@@ -854,8 +858,9 @@ public class BirrettaService
             p.setPlaceName(l.getName());
             p.setLat(l.getPos().get(0).toString());
             p.setLng(l.getPos().get(1).toString());
-            p.setCategory(l.getCategories().get(0));
+            p.setCategory((l.getCategories()!=null?l.getCategories().get(0):null));
             p.setUrl(l.getUrl());
+            list.add(p);
         }
         return list;
     }

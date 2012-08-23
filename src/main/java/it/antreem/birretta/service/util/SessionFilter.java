@@ -103,6 +103,7 @@ public class SessionFilter implements Filter {
             pw.println("{ \"error\" : { \"code\": 999, \"title\": \"Generic Error\", \"desc\" : \"Generic server-side error.\", \"actionType\": null } }");
             return;
         }
+        
         //cross domain..
         ((HttpServletResponse) response).addHeader("Access-Control-Allow-Origin", "*");
          ((HttpServletResponse) response).addHeader("Access-Control-Allow-Headers", "x-requested-with");        

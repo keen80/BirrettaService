@@ -19,22 +19,22 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 public class JsonHandler
 {
-    private static final Log log = LogFactory.getLog(JsonHandler.class);
+ //   private static final Log log = LogFactory.getLog(JsonHandler.class);
     final ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
     final static String URL_FOURSQUARE="https://api.foursquare.com/v2/venues/search";
     final static String CLIENT_ID="J3UL4ADU34TI55K55BUAKVZORNSCT1P1UO2DLYWR1GSB0Y5Q";
     final static String CLIENT_SECRET="FDQWFWTR0PX1M4KOBF2UXPFFS4JLVNOTZ1S0W0J11XMJNJOK";
-    public static void main(String args[]) {
-        try {
+    public static void main(String args[]) throws MalformedURLException, IOException {
+        /*try {
             // Create a URL for the desired page
-            URL url = new URL(URL_FOURSQUARE + "?ll=44.355263,11.711079&radius=100000&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20120822");
-            log.debug("request: "+URL_FOURSQUARE);
+            URL url = new URL(URL_FOURSQUARE + "?ll=44.355263,11.711079&radius=100000&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v=20120823");
+            System.out.println("request: "+URL_FOURSQUARE);
             // Read all the text returned by the server
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String str;
             while ((str = in.readLine()) != null) {
                 // str is one line of text; readLine() strips the newline character(s)
-               log.debug("response: \n"+str);
+               System.out.println("response: \n"+str);
                 DynaBeen dynaBeen = (DynaBeen) PojoMapper.fromJson(str, DynaBeen.class);
                 for (Object obj : ((ArrayList) ((LinkedHashMap) dynaBeen.any().get("response")).get("venues"))) {
                     LinkedHashMap venue = (LinkedHashMap) obj;
@@ -58,28 +58,30 @@ public class JsonHandler
             in.close();
         } catch (MalformedURLException e) {
         } catch (IOException e) {
-        }
+        }*/
+        findLocationNear(44.355263,11.711079,10.0);
     }
     /*
      * Invocazione foursquare per avere località e salvataggio in mongoDB
      * @param radius in metri
      */
-    public static ArrayList<Location> findLocationNear(Double lat, Double lon, Double radius)
+    public static ArrayList<Location> findLocationNear(Double lat, Double lon, Double radius) throws MalformedURLException, IOException
     {
         Date today=new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         String v = formatter.format(today);
         ArrayList<Location> list=new ArrayList<Location>();
-        try {
+            String urlStr=URL_FOURSQUARE + "?ll="+lat+","+lon+"&radius="+radius+"&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v="+v;
             // Create a URL for the desired page
-            URL url = new URL(URL_FOURSQUARE + "?ll="+lat+","+lon+"&radius="+radius+"&client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&v="+v);
-             log.debug("request: "+URL_FOURSQUARE);
+            System.out.println(urlStr);
+            URL url = new URL(urlStr);
+             System.out.println("request: "+URL_FOURSQUARE);
             // Read all the text returned by the server
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String str;
             while ((str = in.readLine()) != null) {
                 // str is one line of text; readLine() strips the newline character(s)
-                log.debug("response: \n"+str);;
+                System.out.println("response: \n"+str);
                 DynaBeen dynaBeen = (DynaBeen) PojoMapper.fromJson(str, DynaBeen.class);
                 for (Object obj : ((ArrayList) ((LinkedHashMap) dynaBeen.any().get("response")).get("venues"))) {
                     LinkedHashMap venue = (LinkedHashMap) obj;
@@ -100,16 +102,18 @@ public class JsonHandler
                         LinkedHashMap category = (LinkedHashMap) o;
                         cats.add((String) category.get("name"));
                     }
+                    l.setCategories(cats);
+                   
                     //attenzione ai duplicati:to do usare id
                     if(DaoFactory.getInstance().getLocationDao().findLocationsByNameLike(l.getName()).isEmpty())
                          DaoFactory.getInstance().getLocationDao().saveLocation(l);
+                         
+                    list.add(l);
                 }
             
             }
             in.close();
-        } catch (MalformedURLException e) {
-        } catch (IOException e) {
-        }
+       
         return list;
     }
     
