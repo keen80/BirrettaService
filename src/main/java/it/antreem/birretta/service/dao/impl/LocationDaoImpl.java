@@ -164,21 +164,14 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
         Location l = new Location();
         
         l.setId((ObjectId) obj.get("_id"));
-        l.setDesc((String) obj.get("desc"));
-        l.setIdLocType((String) obj.get("id_loctype"));
+        l.setIdLocation((String) obj.get("IdLocation"));
+        l.setUrl((String) obj.get("desc"));
+        l.setCategories((ArrayList<String>) obj.get("categories"));
         l.setName((String) obj.get("name"));
         l.setPos((ArrayList<Double>) obj.get("pos"));
-        
-        BasicDBObject _addr = (BasicDBObject) obj.get("address");
-        if (_addr != null){
-            Address addr = new Address();
-            addr.setStreet((String) _addr.get("street"));
-            addr.setNum((Integer) _addr.get("num"));
-            addr.setCap((String) _addr.get("cap"));
-            addr.setState((String) _addr.get("state"));
-            
-            l.setAddress(addr);
-        }
+        l.setAddress((String) obj.get("address"));
+        l.setCity((String) obj.get("city"));
+        l.setCountry((String) obj.get("country"));
         
         return l;
     }
@@ -187,22 +180,15 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
     protected static BasicDBObject createDBObjectFromLocation (Location l)
     {
         BasicDBObject _l = new BasicDBObject();
+        _l.put("id_location", l.getIdLocation());
         _l.put("name", l.getName().trim());
-        _l.put("desc", l.getDesc());
+        _l.put("url", l.getUrl());
         _l.put("pos", l.getPos());
-        _l.put("id_loctype", l.getIdLocType());
-        
-        // Address
-        if (l.getAddress() != null){
-            BasicDBObject addr = new BasicDBObject();
-            addr.put("street", l.getAddress().getStreet());
-            addr.put("num", l.getAddress().getNum());
-            addr.put("cap", l.getAddress().getCap());
-            addr.put("state", l.getAddress().getState());
-            
-            _l.put("address", addr);
-        }
-        
+        _l.put("categories", l.getCategories());
+        _l.put("address", l.getAddress());
+        _l.put("country", l.getCountry());
+        _l.put("city", l.getCity());
+
         return _l;
     }
 }
