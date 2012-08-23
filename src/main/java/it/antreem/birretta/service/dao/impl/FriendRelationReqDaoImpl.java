@@ -2,7 +2,7 @@ package it.antreem.birretta.service.dao.impl;
 
 import com.mongodb.*;
 import it.antreem.birretta.service.dao.DaoException;
-import it.antreem.birretta.service.dao.FriendReqDao;
+import it.antreem.birretta.service.dao.FriendRelationReqDao;
 import it.antreem.birretta.service.model.Location;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,21 +14,21 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author alessio
  */
-public class FriendReqDaoImpl extends AbstractMongoDao implements FriendReqDao
+public class FriendRelationReqDaoImpl extends AbstractMongoDao implements FriendRelationReqDao
 {
-    public final static String FRIENDREQS_COLLNAME = "friendreqs";
+    public final static String FRIEND_RELATIONREQS_COLLNAME = "friendrelationreqs";
     
-    private static final Log log = LogFactory.getLog(FriendReqDaoImpl.class);
+    private static final Log log = LogFactory.getLog(FriendRelationReqDaoImpl.class);
     
     @Override
-    public int saveFriendReq(String id1, String id2) throws DaoException 
+    public int saveFriendRelationReq(String id1, String id2) throws DaoException 
     {
         DB db = null;
         try
         {
             db = getDB();
             db.requestStart();
-            DBCollection friendreqs = db.getCollection(FRIENDREQS_COLLNAME);
+            DBCollection friendreqs = db.getCollection(FRIEND_RELATIONREQS_COLLNAME);
             BasicDBObject req = new BasicDBObject();
             req.put("id_requestor", id1);
             req.put("id_requested", id2);
@@ -46,14 +46,14 @@ public class FriendReqDaoImpl extends AbstractMongoDao implements FriendReqDao
     }
 
     @Override
-    public int deleteFriendReq(String id1, String id2) throws DaoException 
+    public int deleteFriendRelationReq(String id1, String id2) throws DaoException 
     {
         DB db = null;
         try
         {
             db = getDB();
             db.requestStart();
-            DBCollection friendreqs = db.getCollection(FRIENDREQS_COLLNAME);
+            DBCollection friendreqs = db.getCollection(FRIEND_RELATIONREQS_COLLNAME);
             BasicDBObject req = new BasicDBObject();
             req.put("id_requestor", id1);
             req.put("id_requested", id2);
@@ -76,14 +76,14 @@ public class FriendReqDaoImpl extends AbstractMongoDao implements FriendReqDao
     }
 
     @Override
-    public boolean existFriendReq(String idRequestor, String idRequested) throws DaoException 
+    public boolean existFriendRelationReq(String idRequestor, String idRequested) throws DaoException 
     {
         DB db = null;
         try
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection(FRIENDREQS_COLLNAME);
+            DBCollection users = db.getCollection(FRIEND_RELATIONREQS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("id_requestor", idRequestor);
             query.put("id_requested", idRequested);
@@ -113,7 +113,7 @@ public class FriendReqDaoImpl extends AbstractMongoDao implements FriendReqDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection friendreqs = db.getCollection(FRIENDREQS_COLLNAME);
+            DBCollection friendreqs = db.getCollection(FRIEND_RELATIONREQS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("id_requested", idRequested);
             DBCursor cur = friendreqs.find(query);

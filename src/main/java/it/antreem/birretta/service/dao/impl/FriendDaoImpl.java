@@ -3,6 +3,9 @@ package it.antreem.birretta.service.dao.impl;
 import com.mongodb.*;
 import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.FriendDao;
+import it.antreem.birretta.service.model.Friend;
+import java.util.ArrayList;
+import java.util.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -12,19 +15,19 @@ import org.apache.commons.logging.LogFactory;
  */
 public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
 {
-    public final static String FRIENDS_COLLNAME = "friends";
+    public final static String FRIENDS_RELATION_COLLNAME = "users";
     
     private static final Log log = LogFactory.getLog(FriendDaoImpl.class);
     
     @Override
-    public int saveFriendship(String id1, String id2) throws DaoException 
+    public int saveFriend(String id1, String id2) throws DaoException 
     {
         DB db = null;
         try
         {
             db = getDB();
             db.requestStart();
-            DBCollection friends = db.getCollection(FRIENDS_COLLNAME);
+            DBCollection friends = db.getCollection(FRIENDS_RELATION_COLLNAME);
             BasicDBObject req = new BasicDBObject();
             req.put("id_1", id1);
             req.put("id_2", id2);
@@ -42,14 +45,14 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
     }
 
     @Override
-    public int deleteFriendship(String id1, String id2) throws DaoException 
+    public int deleteFriend(String id1, String id2) throws DaoException 
     {
         DB db = null;
         try
         {
             db = getDB();
             db.requestStart();
-            DBCollection friends = db.getCollection(FRIENDS_COLLNAME);
+            DBCollection friends = db.getCollection(FRIENDS_RELATION_COLLNAME);
             BasicDBObject req = new BasicDBObject();
             req.put("id_1", id1);
             req.put("id_2", id2);
@@ -71,28 +74,29 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         }
     }
 
+ 
     @Override
-    public boolean areFriends(String id1, String id2) throws DaoException 
+    public ArrayList<Friend> getAllFriends(int maxElement) throws DaoException 
     {
+        ArrayList<Friend> list=new ArrayList<Friend>();
         DB db = null;
         try
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection(FRIENDS_COLLNAME);
-            BasicDBObject query = new BasicDBObject();
-            query.put("id_1", id1);
-            query.put("id_2", id2);
-            DBCursor cur = users.find(query);
-            if (cur.hasNext()) return true;
-            
-            query = new BasicDBObject();
-            query.put("id_1", id2);
-            query.put("id_2", id1);
-            cur = users.find(query);
-            if (cur.hasNext()) return true;
-            
-            return false;
+            DBCollection users = db.getCollection(FRIENDS_RELATION_COLLNAME);
+      /*      BasicDBObject param = new BasicDBObject();
+            query.put("id_1", maxElement);*/
+            DBCursor cur = users.find();
+       //     DBCursor curOrdered= cur.sort(param);            
+            if(maxElement>0)
+                   cur.limit(maxElement);
+
+            while (cur.hasNext()){
+                DBObject _f = cur.next();
+                Friend f = createFriendFromDBObject(_f);
+               list.add(f);
+            }
         }
         catch(MongoException ex){
             log.error(ex.getLocalizedMessage(), ex);
@@ -103,6 +107,57 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
                 db.requestDone();
             }
         }
+        return list;
+    }
+
+    private Friend createFriendFromDBObject(DBObject obj) {
+        Friend f=new Friend();
+         f.setIdUser((String) obj.get("id_user"));
+   //     f.setId((ObjectId) obj.get("_id"));
+        f.setUsername((String) obj.get("username"));
+        f.setDisplayName((String)obj.get("displayName"));
+        f.setFirstName((String) obj.get("first_name"));
+        f.setLastName((String) obj.get("last_name"));
+        f.setDescription((String)obj.get("description"));
+        f.setEmail((String)obj.get("email"));
+        f.setGender((Integer) obj.get("gender"));
+        f.setNationality((String)obj.get("nationality"));
+        
+        String birthDate=(String)obj.get("birthDate");
+        if(birthDate!=null && !birthDate.equals(""))
+             f.setBirthDate(new Date(birthDate));
+        
+        f.setAvatar((String)obj.get("avatar"));
+        
+      
+        f.setRole((Integer) obj.get("role"));
+        f.setStatus((Integer) obj.get("status"));
+      
+        
+        String activatedOn=(String)obj.get("activatedOn");
+        if(activatedOn!=null && !activatedOn.equals(""))
+                f.setActivatedOn(new Date(activatedOn));
+        
+        String lastLoginOn=(String)obj.get("lastLoginOn");
+        if(lastLoginOn!=null && !lastLoginOn.equals(""))
+                f.setActivatedOn(new Date(lastLoginOn));
+        
+        f.setBadges((String)obj.get("badges"));
+        f.setFavorites((String) obj.get("favorites"));
+        f.setLiked((String)obj.get("liked"));
+        f.setCounter_checkIns((Integer)obj.get("counter_checkIns"));
+        f.setCounter_friends((Integer)obj.get("counter_friends"));
+        f.setCounter_badges((Integer)obj.get("counter_badges"));
+        
+        /** 
+         * campi user non necessari in friend
+         * 
+          f.setShareFacebook((obj.get("shareFacebook")!=null ? (Boolean) obj.get("shareFacebook") : false));
+        f.setShareTwitter((obj.get("shareFacebook")!=null ? (Boolean)obj.get("shareTwitter"): false));
+        f.setEnableNotification(obj.get("enableNotification")!=null?(Boolean)obj.get("enableNotification"): false );
+          f.setPwdHash((String) obj.get("pwdHash"));
+          **/
+        return f;  
     }
     
 }

@@ -22,7 +22,14 @@ MONGODB
 INSTALLAZIONE:
 http://docs.mongodb.org/manual/tutorial/install-mongodb-on-redhat-centos-or-fedora-linux/
 
-CONFIGURAZIONE INDEX MONGODB:
+START-UP
+lanciare macchina centos,
+verificare che mongod stia eseguendo:service mongod status (restart se necessario)
+lanciare jboss: cd /opt/jboss../bin/standalone.bat -b 0.0.0.0
+per deploy copiare war maven in /opt/jboss../standalone/deployments
+
+CONFIGURAZIONE INDEX MONGODB(da fare ogni volta..):
+accedere a shell mongoDB(comando #mongo)
 use brrtt;db.locations.ensureIndex( { pos : "2d" } );
 
 

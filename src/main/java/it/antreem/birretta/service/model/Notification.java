@@ -8,11 +8,20 @@ import java.util.Date;
  */
 public class Notification extends MongoDBObject
 {
+    private String idNotification;
     private String idUser;
-    private String message;
-    private Boolean read;
-    private Date timestamp;
+    private String displayName;
+    private String idBeer;
+    private String beerName;
+    private String idFriend;
+    private String friendName;
+    private String idPlace;
+    private String placeName;
+    private String description;
     private String type;
+    private Boolean read;
+    private Date insertedOn;
+
 
     public String getIdUser() {
         return idUser;
@@ -22,12 +31,12 @@ public class Notification extends MongoDBObject
         this.idUser = idUser;
     }
 
-    public String getMessage() {
-        return message;
+    public String getDescription() {
+        return description;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Boolean getRead() {
@@ -38,12 +47,12 @@ public class Notification extends MongoDBObject
         this.read = read;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public Date getInsertedOn() {
+        return insertedOn;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setInsertedOn(Date insertedOn) {
+        this.insertedOn = insertedOn;
     }
 
     public String getType() {

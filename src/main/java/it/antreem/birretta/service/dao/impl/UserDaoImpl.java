@@ -176,7 +176,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         u.setLiked((String)obj.get("liked"));
         u.setCounter_checkIns((Integer)obj.get("counter_checkIns"));
         u.setCounter_friends((Integer)obj.get("counter_friends"));
-        u.setCounter_badges((Integer)obj.get("coun"));
+        u.setCounter_badges((Integer)obj.get("counter_badges"));
         return u;
     }
     

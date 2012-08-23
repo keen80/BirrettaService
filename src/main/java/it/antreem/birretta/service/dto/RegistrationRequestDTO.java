@@ -3,12 +3,13 @@ package it.antreem.birretta.service.dto;
 /*
 {
   "username":"alessio",
+  "displayName" : "alessio"
   "password": "puppa",
   "firstName": "Alessio",
   "lastName": "DM85",
-  "age": 30,
+  "birthDate": "",
   "email": "user@server.com",
-  "sex": "M"
+  "gender": 1
 }
  */
 /**
@@ -18,20 +19,38 @@ package it.antreem.birretta.service.dto;
 public class RegistrationRequestDTO 
 {
     private String username;
+    private String displayName;
     private String password;
     private String firstName;
     private String lastName;
+    private String birthDate;
     private String email;
-    private String sex;
-    private Integer age;
+    private Integer gender;
 
-    public Integer getAge() {
-        return age;
+    public String getBirthDate() {
+        return birthDate;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
 
     public String getEmail() {
         return email;
@@ -63,14 +82,6 @@ public class RegistrationRequestDTO
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
     }
 
     public String getUsername() {

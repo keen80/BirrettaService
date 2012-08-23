@@ -165,12 +165,14 @@ public class BirrettaService
         if (!r.getEmail().matches("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")){
             return createJsonErrorResponse(ErrorCodes.REG_INVALID_EMAIL);
         }
-        if (r.getSex() == null || (!r.getSex().toUpperCase().equals("M") && !r.getSex().toUpperCase().equals("F"))){
+        if (r.getGender() == null ){
+                //|| (!r.getGender().toUpperCase().equals("M") && !r.getSex().toUpperCase().equals("F"))){
             return createJsonErrorResponse(ErrorCodes.REG_INVALID_SEX);
         }
+        /*
         if (r.getAge() != null && (r.getAge() < 5 || r.getAge() > 110)){
             return createJsonErrorResponse(ErrorCodes.REG_INVALID_AGE);
-        }
+        }*/
         if (r.getFirstName() == null || r.getFirstName().length() < 2){
             return createJsonErrorResponse(ErrorCodes.REG_INVALID_FIRST);
         }
@@ -189,14 +191,17 @@ public class BirrettaService
         
         // ...altrimenti registrazione con successo.
         User newuser = new User();
-//        newuser.setBirthDate(r.getAge());
+        String birthDate=r.getBirthDate();
+        if(birthDate!=null && !birthDate.equals(""))
+                 newuser.setBirthDate(new Date(birthDate));
         newuser.setEmail(r.getEmail());
         newuser.setFirstName(r.getFirstName());
         newuser.setLastName(r.getLastName());
-  //      newuser.setSex(r.getSex().toUpperCase());
+        newuser.setGender(r.getGender());
         newuser.setUsername(r.getUsername());
         newuser.setPwdHash(hash);
-        
+        newuser.setActivatedOn(new Date());
+        newuser.setLastLoginOn(new Date());
         DaoFactory.getInstance().getUserDao().saveUser(newuser);
         
         response.setSuccess(true);
@@ -204,7 +209,63 @@ public class BirrettaService
         
         return createJsonOkResponse(response);
     }
-    
+     /**
+     * Restituisce i  dettagli di un utente in formato JSONP.
+     */
+    @GET
+    @Path("/detailsUserByUsername_jsonp")
+    @Produces("application/json")
+    public JSONPObject detailsUserByUsername_jsonp (
+	@QueryParam("username") final String username,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,detailsUserByUsername(username));
+	}
+     /**
+     *  Restituisce i  dettagli di un utente
+     */
+    @GET
+    @Path("/detailsUserByUsername")
+    @Produces("application/json")
+        public ResultDTO detailsUserByUsername(@QueryParam("username") final String username)
+    {
+        if(username==null)
+            return createResultDTOResponseFail(ErrorCodes.FRND_MISSED_PARAM);
+        log.info("request details of user: "+username);
+        ArrayList<User> list = new ArrayList<User>();
+        list.add(DaoFactory.getInstance().getUserDao().findUserByUsername(username));
+        ResultDTO result = createResultDTOResponseOk(list);
+        return result;
+    }
+
+   
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
+     */
+    @GET
+    @Path("/listFriend_jsonp")
+    @Produces("application/json")
+    public JSONPObject listFriend_jsonp (
+	@QueryParam("maxElement") final String _maxElemet,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listFriend(_maxElemet));
+	}
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     */
+    @GET
+    @Path("/listFriend")
+    @Produces("application/json")
+    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet)
+    {
+        log.info("reuest list of "+_maxElemet+" friend");
+        int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
+        ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
+       
+        return createResultDTOResponseOk(list);
+        
+    }
     @GET
     @Path("/updatePos")
     @Produces("application/json")
@@ -252,16 +313,18 @@ public class BirrettaService
     @GET
     @Path("/findLocNear")
     @Produces("application/json")
-    public Response findLocNear (@QueryParam("lon") final Double lon,
+    public ResultDTO findLocNear (@QueryParam("lon") final Double lon,
                                  @QueryParam("lat") final Double lat,
                                  @DefaultValue("0.8") @QueryParam("radius") final Double radius)
     {
         if (lon == null || lat == null){
-            return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_PARAM);
+            return createResultDTOResponseFail(ErrorCodes.INSLOC_WRONG_PARAM);
         }
         
         List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
-        return createJsonOkResponse(list);
+        ArrayList<Location> arrayList= new ArrayList<Location>();
+        arrayList.addAll(list);
+        return createResultDTOResponseOk(arrayList);
     }
     
     @POST
@@ -387,19 +450,8 @@ public class BirrettaService
             //lista elementi semplificata
         {
         ArrayList<BeerSingle> list = DaoFactory.getInstance().getBeerDao().listBeerSingle(maxElemet);
-        ResultDTO result = new ResultDTO();
-        Status status= new Status();
-        status.setCode("OK");
-        status.setMsg("Status OK");
-        status.setSuccess(true);
-        Body body =new Body<BeerSingle>();
-        body.setList(list);
-        Metadata metaData = new Metadata();
-        metaData.setBadge("OK", 1, "Notification OK");
-        metaData.setNotification("OK", 1, "Notification OK");       
-        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
-        result.setResponse(response);
-        return result;
+      
+        return createResultDTOResponseOk(list);
         }
         else
             //details=complete lista completa dettagli birra
@@ -442,23 +494,10 @@ public class BirrettaService
     @Produces("application/json")
     public ResultDTO listDrink (@QueryParam("maxElement") final String _maxElemet)
     {
-        log.info("reuest list of "+_maxElemet+" drink");
+        log.info("request list of "+_maxElemet+" drink");
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
         ArrayList<Drink> list = DaoFactory.getInstance().getDrinkDao().getDrinksList(maxElemet);
-        ResultDTO result = new ResultDTO();
-        Status status= new Status();
-        status.setCode("OK");
-        status.setMsg("Status OK");
-        status.setSuccess(true);
-        Body body =new Body<Drink>();
-        body.setList(list);
-        Metadata metaData = new Metadata();
-        metaData.setBadge("OK", 1, "Notification OK");
-        metaData.setNotification("OK", 1, "Notification OK");
-     
-        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
-        result.setResponse(response);
-        return result;
+        return createResultDTOResponseOk(list);
         
     }
      /**
@@ -468,7 +507,7 @@ public class BirrettaService
     @Path("/listActivity_jsonp")
     @Produces("application/json")
     public JSONPObject listActivity_jsonp (
-	@QueryParam("maxElement") final String _maxElemet,
+	@QueryParam("id_user") final String _maxElemet,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
 		return new JSONPObject(callbackName,listDrink(_maxElemet));
@@ -483,20 +522,8 @@ public class BirrettaService
     {
         log.info("reuest list of "+id_user+" activity");
         ArrayList<Activity> list = DaoFactory.getInstance().getActivityDao().findByUser(id_user);
-        ResultDTO result = new ResultDTO();
-        Status status= new Status();
-        status.setCode("OK");
-        status.setMsg("Status OK");
-        status.setSuccess(true);
-        Body body =new Body<Activity>();
-        body.setList(list);
-        Metadata metaData = new Metadata();
-        metaData.setBadge("OK", 1, "Notification OK");
-        metaData.setNotification("OK", 1, "Notification OK");
-     
-        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
-        result.setResponse(response);
-        return result;
+       
+        return createResultDTOResponseOk(list);
         
     }
     @POST
@@ -676,9 +703,9 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
         }
         
-        if (!DaoFactory.getInstance().getFriendReqDao().existFriendReq(myid, frndid)
-            && !DaoFactory.getInstance().getFriendDao().areFriends(myid, frndid)){
-            DaoFactory.getInstance().getFriendReqDao().saveFriendReq(myid, frndid);
+        if (!DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(myid, frndid)
+            && !DaoFactory.getInstance().getFriendRelationDao().areFriends(myid, frndid)){
+            DaoFactory.getInstance().getFriendRelationReqDao().saveFriendRelationReq(myid, frndid);
         }
         
         GenericResultDTO result = new GenericResultDTO(true, "Richiesta eseguita con successo");
@@ -710,9 +737,9 @@ public class BirrettaService
         }
         
         // Se esiste la richiesta effettivamente la confermo
-        if (DaoFactory.getInstance().getFriendReqDao().existFriendReq(frndid, myid)){
-            DaoFactory.getInstance().getFriendDao().saveFriendship(myid, frndid);
-            DaoFactory.getInstance().getFriendReqDao().deleteFriendReq(frndid, myid);
+        if (DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(frndid, myid)){
+            DaoFactory.getInstance().getFriendRelationDao().saveFriendship(myid, frndid);
+            DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(frndid, myid);
             
             GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
             return createJsonOkResponse(result);
@@ -739,8 +766,8 @@ public class BirrettaService
         String username = me.getUsername();
         if (username != null && username.equals(httpReq.getHeader("btUsername")))
         {
-            DaoFactory.getInstance().getFriendReqDao().deleteFriendReq(id1, id2);
-            DaoFactory.getInstance().getFriendDao().deleteFriendship(id1, id2);
+            DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(id1, id2);
+            DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(id1, id2);
             GenericResultDTO result = new GenericResultDTO(true, "Amicizia rimossa con successo");
             return createJsonOkResponse(result);
         }
@@ -749,8 +776,8 @@ public class BirrettaService
         username = me.getUsername();
         if (username != null && username.equals(httpReq.getHeader("btUsername")))
         {
-            DaoFactory.getInstance().getFriendReqDao().deleteFriendReq(id1, id2);
-            DaoFactory.getInstance().getFriendDao().deleteFriendship(id1, id2);
+            DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(id1, id2);
+            DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(id1, id2);
             GenericResultDTO result = new GenericResultDTO(true, "Amicizia rimossa con successo");
             return createJsonOkResponse(result);
         }
@@ -770,7 +797,7 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
-        List<String> pendingReqs = DaoFactory.getInstance().getFriendReqDao().findPendingReqs(u.getIdUser());
+        List<String> pendingReqs = DaoFactory.getInstance().getFriendRelationReqDao().findPendingReqs(u.getIdUser());
         return createJsonOkResponse(pendingReqs);
     }
     
@@ -780,7 +807,31 @@ public class BirrettaService
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);
         return builder.build();
     }
-    
+     private ResultDTO createResultDTOResponseOk(ArrayList list) {
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode("OK");
+        status.setMsg("Status OK");
+        status.setSuccess(true);
+        Body body =new Body();
+        body.setList(list);
+        Metadata metaData = new Metadata();
+        metaData.setBadge("OK", 1, "Notification OK");
+        metaData.setNotification("OK", 1, "Notification OK");
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
+        result.setResponse(response);
+        return result;
+    }
+     private ResultDTO createResultDTOResponseFail(ErrorCodes e) {
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode(e.getCode());
+        status.setMsg(e.getMessage());
+        status.setSuccess(false);
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, null);
+        result.setResponse(response);
+        return result;
+    }
     protected static Response createJsonErrorResponse(ErrorCodes e, Object... actionType) {
         ErrorDTO err = Utils.createError(e, actionType);
         Response.ResponseBuilder builder = Response.ok(err, MediaType.APPLICATION_JSON);

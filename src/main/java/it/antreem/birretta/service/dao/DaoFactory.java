@@ -63,14 +63,16 @@ public final class DaoFactory
         return instanciateDao(DrinkDaoImpl.class);
     }
     
+    public FriendRelationDao getFriendRelationDao() throws DaoException {
+        return instanciateDao(FriendRelationDaoImpl.class);
+    }
+    
+    public FriendRelationReqDao getFriendRelationReqDao() throws DaoException {
+        return instanciateDao(FriendRelationReqDaoImpl.class);
+    }
     public FriendDao getFriendDao() throws DaoException {
         return instanciateDao(FriendDaoImpl.class);
     }
-    
-    public FriendReqDao getFriendReqDao() throws DaoException {
-        return instanciateDao(FriendReqDaoImpl.class);
-    }
-    
     public BadgeDao getBadgeDao() throws DaoException {
         return instanciateDao(BadgeDaoImpl.class);
     }
