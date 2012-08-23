@@ -9,6 +9,7 @@ import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
 import it.antreem.birretta.service.util.ErrorCodes;
+import it.antreem.birretta.service.util.JsonHandler;
 import it.antreem.birretta.service.util.Utils;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,12 +48,12 @@ public class BirrettaService
     public Response login(@FormParam("username") String username,@FormParam("password") String password) 
     {
         // Pre-conditions
-     /*   if (c == null)
+        if (username == null || password==null || username.equals("") || password.equals(""))
         {
             log.debug("Credenziali di login passate a null. Errore.");
             return createJsonErrorResponse(ErrorCodes.LOGIN_FAILED);
         }
-        */
+        
         LoginResponseDTO response = new LoginResponseDTO();
         
   //      String username = c.getUsername() != null ? c.getUsername() : "";
@@ -246,10 +247,10 @@ public class BirrettaService
     @Path("/listFriend_jsonp")
     @Produces("application/json")
     public JSONPObject listFriend_jsonp (
-	@QueryParam("maxElement") final String _maxElemet,
+	@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
-		return new JSONPObject(callbackName,listFriend(_maxElemet));
+		return new JSONPObject(callbackName,listFriend(_maxElemet,id_user));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
@@ -257,12 +258,12 @@ public class BirrettaService
     @GET
     @Path("/listFriend")
     @Produces("application/json")
-    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet)
+    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user)
     {
-        log.info("reuest list of "+_maxElemet+" friend");
+        log.info("reuest list of "+_maxElemet+" friend of "+id_user);
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
+       // ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,id_user);
         ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
-       
         return createResultDTOResponseOk(list);
         
     }
@@ -320,11 +321,13 @@ public class BirrettaService
         if (lon == null || lat == null){
             return createResultDTOResponseFail(ErrorCodes.INSLOC_WRONG_PARAM);
         }
-        
-        List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
-        ArrayList<Location> arrayList= new ArrayList<Location>();
-        arrayList.addAll(list);
-        return createResultDTOResponseOk(arrayList);
+        ArrayList<Location> findLocationNear = JsonHandler.findLocationNear(lat, lon, radius);
+      // modalità solo da mongoDB
+      //  List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
+     //   ArrayList<Location> arrayList= new ArrayList<Location>();
+     //   arrayList.addAll(list);
+        ArrayList<Place> places= convertToPlace(findLocationNear);
+        return createResultDTOResponseOk(places);
     }
     
     @POST
@@ -346,6 +349,7 @@ public class BirrettaService
         if (l.getPos() == null || l.getPos().size() != 2){
             return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_POS_PARAM);
         }
+        /**
         if (l.getIdLocType() == null){
             return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_NULL_TIPOLOC_PARAM);
         }
@@ -354,11 +358,11 @@ public class BirrettaService
          * in precedenza veniva fatto findLocTypeById
          * più sensato fare findLocTypeByCod
          */
-        LocType type = DaoFactory.getInstance().getLocTypeDao().findLocTypeByCod(l.getIdLocType());
+        /*LocType type = DaoFactory.getInstance().getLocTypeDao().findLocTypeByCod(l.getIdLocType());
         if (type == null){
             return createJsonErrorResponse(ErrorCodes.INSLOC_WRONG_TIPOLOC_PARAM);
         }
-        
+        */
         // Inserimento su DB
         Location _l = DaoFactory.getInstance().getLocationDao().findLocationByName(l.getName());
         if (_l != null){
@@ -504,13 +508,39 @@ public class BirrettaService
      * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
      */
     @GET
+    @Path("/listNotification_jsonp")
+    @Produces("application/json")
+    public JSONPObject listNotification_jsonp (
+	@QueryParam("id_user") final String id_user,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listDrink(id_user));
+	}
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     */
+    @GET
+    @Path("/listNotification")
+    @Produces("application/json")
+    public ResultDTO listNotification (@QueryParam("id_user") final String id_user)
+    {
+        log.info("reuest list of "+id_user+" activity");
+        ArrayList<Notification> list = DaoFactory.getInstance().getNotificationDao().findByUser(id_user);
+       
+        return createResultDTOResponseOk(list);
+        
+    }
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
+     */
+    @GET
     @Path("/listActivity_jsonp")
     @Produces("application/json")
     public JSONPObject listActivity_jsonp (
-	@QueryParam("id_user") final String _maxElemet,
+	@QueryParam("id_user") final String id_user,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
-		return new JSONPObject(callbackName,listDrink(_maxElemet));
+		return new JSONPObject(callbackName,listDrink(id_user));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
@@ -801,8 +831,35 @@ public class BirrettaService
         return createJsonOkResponse(pendingReqs);
     }
     
-    
-    
+    /**
+     * Metodo di echo di prova per verifica di sessione.
+     * 
+     * @param value
+     * @return 
+     */
+    @GET
+    @Path("/echo")
+    @Produces("text/html")
+    public String echo (@DefaultValue("puppa") @QueryParam("value") String value) 
+    {
+        return value;
+    }
+
+    private ArrayList<Place> convertToPlace(ArrayList<Location> locations) {
+         ArrayList<Place> list = new ArrayList<Place>();
+        for(Location l : locations)
+        {
+            Place p=new Place();
+            p.setIdPlace(l.getIdLocation());
+            p.setPlaceName(l.getName());
+            p.setLat(l.getPos().get(0).toString());
+            p.setLng(l.getPos().get(1).toString());
+            p.setCategory(l.getCategories().get(0));
+            p.setUrl(l.getUrl());
+        }
+        return list;
+    }
+     
     protected static Response createJsonOkResponse(Object o) {
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);
         return builder.build();
@@ -836,19 +893,5 @@ public class BirrettaService
         ErrorDTO err = Utils.createError(e, actionType);
         Response.ResponseBuilder builder = Response.ok(err, MediaType.APPLICATION_JSON);
         return builder.build();
-    }
-    
-    /**
-     * Metodo di echo di prova per verifica di sessione.
-     * 
-     * @param value
-     * @return 
-     */
-    @GET
-    @Path("/echo")
-    @Produces("text/html")
-    public String echo (@DefaultValue("puppa") @QueryParam("value") String value) 
-    {
-        return value;
     }
 }

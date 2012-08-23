@@ -76,4 +76,7 @@ public final class DaoFactory
     public BadgeDao getBadgeDao() throws DaoException {
         return instanciateDao(BadgeDaoImpl.class);
     }
+    public NotificationDao getNotificationDao() throws DaoException {
+        return instanciateDao(NotificationDaoImpl.class);
+    }
 }

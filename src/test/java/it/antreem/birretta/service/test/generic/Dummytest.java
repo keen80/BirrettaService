@@ -38,7 +38,7 @@ public class Dummytest
         a.setState("IT");
         a.setStreet("Via della vittoria");
         l.setAddress(a);
-        l.setDesc("mio località");
+        l.setUrl("mio località");
         l.setIdLocType(lt.getCod());
         ArrayList<Double> pos=new ArrayList<Double>();
         pos.add(new Double("10"));

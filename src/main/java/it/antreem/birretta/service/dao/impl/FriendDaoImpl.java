@@ -109,7 +109,10 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         }
         return list;
     }
-
+     @Override
+    public ArrayList<Friend> getAllMyFriends(int maxElemet, String id_user) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     private Friend createFriendFromDBObject(DBObject obj) {
         Friend f=new Friend();
          f.setIdUser((String) obj.get("id_user"));

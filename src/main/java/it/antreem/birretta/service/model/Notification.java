@@ -22,6 +22,70 @@ public class Notification extends MongoDBObject
     private Boolean read;
     private Date insertedOn;
 
+    public String getBeerName() {
+        return beerName;
+    }
+
+    public void setBeerName(String beerName) {
+        this.beerName = beerName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getFriendName() {
+        return friendName;
+    }
+
+    public void setFriendName(String friendName) {
+        this.friendName = friendName;
+    }
+
+    public String getIdBeer() {
+        return idBeer;
+    }
+
+    public void setIdBeer(String idBeer) {
+        this.idBeer = idBeer;
+    }
+
+    public String getIdFriend() {
+        return idFriend;
+    }
+
+    public void setIdFriend(String idFriend) {
+        this.idFriend = idFriend;
+    }
+
+    public String getIdNotification() {
+        return idNotification;
+    }
+
+    public void setIdNotification(String idNotification) {
+        this.idNotification = idNotification;
+    }
+
+    public String getIdPlace() {
+        return idPlace;
+    }
+
+    public void setIdPlace(String idPlace) {
+        this.idPlace = idPlace;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
 
     public String getIdUser() {
         return idUser;

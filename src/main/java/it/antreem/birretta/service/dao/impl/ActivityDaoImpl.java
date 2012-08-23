@@ -100,19 +100,21 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
     private Activity createActivityFromDBObject(DBObject obj) {
         Activity a = new Activity();
         a.setId((ObjectId) obj.get("_id"));
-        a.setAvatar((String) obj.get("Avatar"));
-        a.setDisplayName((String) obj.get("DisplayName"));
-        a.setIdUser((String) obj.get("IdUser"));
-        a.setIdBeer((String) obj.get("IdBeer"));
-        a.setIdPlace((String) obj.get("IdPlace"));
-        a.setIdFriend((String) obj.get("IdFriend"));
-        a.setBeerName((String) obj.get("BeerName"));
-        a.setPlaceName((String) obj.get("PlaceName"));
-        a.setFriendName((String) obj.get("FriendName"));
-        a.setType((Integer) obj.get("Type"));
-        a.setStatus((Integer) obj.get("Status"));
-        a.setLike((Integer) obj.get("Like"));
-        a.setDate(new Date((String) obj.get("Date")));
+        a.setAvatar((String) obj.get("avatar"));
+        a.setDisplayName((String) obj.get("displayName"));
+        a.setIdUser((String) obj.get("id_User"));
+        a.setIdBeer((String) obj.get("id_Beer"));
+        a.setIdPlace((String) obj.get("id_Place"));
+        a.setIdFriend((String) obj.get("id_Friend"));
+        a.setBeerName((String) obj.get("beerName"));
+        a.setPlaceName((String) obj.get("placeName"));
+        a.setFriendName((String) obj.get("friendName"));
+        a.setType((Integer) obj.get("type"));
+        a.setStatus((Integer) obj.get("status"));
+        a.setLike((Integer) obj.get("like"));
+        String date=(String) obj.get("date");
+        if(date!=null && date!="")
+              a.setDate(new Date(date));
         return a;
     }
     
