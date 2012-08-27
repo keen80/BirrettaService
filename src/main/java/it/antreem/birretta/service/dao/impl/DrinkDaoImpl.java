@@ -244,37 +244,33 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
     protected static Drink createDrinkFromDBObject(DBObject obj)
     {
         Drink d = new Drink();
-        
         d.setId((ObjectId) obj.get("_id"));
-        d.setUsername((String)obj.get("username"));
+        d.setDisplayName((String)obj.get("username"));
         d.setImage((String)obj.get("image"));
-        d.setIdUser((String) obj.get("id_user"));
-        d.setIdBeer((String) obj.get("id_beer"));
-        d.setIdPlace((String) obj.get("id_place"));
-        d.setIdActivity((String)obj.get("idActivity"));
-        d.setIdFeedback((String)obj.get("idFeedback"));
-        d.setStatus((Integer)obj.get("status"));
-        d.setScore((Integer)obj.get("score"));
+        d.setIdUser((String) obj.get("idUser"));
+        d.setIdBeer((String) obj.get("idBeer"));
+        d.setIdPlace((String) obj.get("idPlace"));
+        d.setBeerName((String)obj.get("beerName"));
+        d.setPlaceName((String)obj.get("placeName"));
         String date=(String)obj.get("timestamp");
         if(date!=null && !date.equals(""))
-              d.setTimestamp(new Date(date));
+              d.setInsertedOn(new Date(date));
         return d;
+        
     }
     
     // For first insert
     protected static BasicDBObject createDBObjectFromDrink (Drink d)
     {
         BasicDBObject _d = new BasicDBObject();
-        _d.put("username",d.getUsername());
+        _d.put("username",d.getDisplayName());
         _d.put("image", d.getImage());
         _d.put("id_user", d.getIdUser());
         _d.put("id_beer", d.getIdBeer());
         _d.put("id_place", d.getIdPlace());
-        _d.put("id_activity", d.getIdActivity());
-        _d.put("id_feedback", d.getIdFeedback());
-        _d.put("status", d.getStatus());
-        _d.put("score",d.getScore());
-        _d.put("timestamp", d.getTimestamp());
+        _d.put("id_activity", d.getBeerName());
+        _d.put("id_feedback", d.getPlaceName());
+        _d.put("timestamp", d.getInsertedOn());
         return _d;
     }
 }

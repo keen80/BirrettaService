@@ -585,7 +585,7 @@ public class BirrettaService
         
         // Inserimento su DB
         DaoFactory.getInstance().getBeerDao().saveBeer(b);
-        
+        //inserimento attività
         GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
         return createJsonOkResponse(result);
     }
@@ -667,11 +667,15 @@ public class BirrettaService
         // Preparazione oggetto di modello
         Drink d = new Drink();
         d.setIdBeer(c.getIdBeer());
+        //verificare esistenza birra e impostare nome
         d.setIdPlace(c.getIdLocation());
+         //  d.setPlaceName(c.getPlaceName());
+        //verificare esistenza location e impostare nome
         d.setIdUser(u.getIdUser());
+        //verificare esistenza utnete e set nome
         d.setImage(c.getPicture());
-        d.setIdFeedback(c.getIdFeedback());
-        d.setTimestamp(new Date());
+     
+        d.setInsertedOn(new Date());
         
         // Scrittura su DB
         DaoFactory.getInstance().getDrinkDao().saveDrink(d);
@@ -684,7 +688,7 @@ public class BirrettaService
         
         // Controllo mayorships + notifiche a chi le ha perdute
         // TODO: controllo mayorships + notifiche a chi le ha perdute
-        
+        //TODO: creare attività
         GenericResultDTO result = new GenericResultDTO(true, "Check-in eseguito con successo");
         return createJsonOkResponse(result);
     }
@@ -780,6 +784,7 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
         //viene impostato a true la friendrelations
+        //
         String myid = c.getIdRequested();
         String frndid = c.getIdRequestor();
         

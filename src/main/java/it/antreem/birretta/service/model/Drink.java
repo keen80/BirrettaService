@@ -9,39 +9,34 @@ import java.util.Date;
  */
 public class Drink extends MongoDBObject
 {
-    private String username;
+    private String displayName;
     private String image;
     private String idUser;
     private String idBeer;
     private String idPlace;
-    private String idActivity;
-    private String idFeedback;
-    private Integer status;
-    private Integer score;
-    private Date timestamp;
+    private String beerName;
+    private String placeName;
+    private Date insertedOn;
+    private Integer rate;
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public String getIdDrink() {
+        return super.getId().toString();
     }
     
-    public Integer getScore() {
-        return score;
+    public Date getInsertedOn() {
+        return insertedOn;
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setInsertedOn(Date insertedOn) {
+        this.insertedOn = insertedOn;
     }
 
-    public String getIdActivity() {
-        return idActivity;
+    public String getBeerName() {
+        return beerName;
     }
 
-    public void setIdActivity(String idActivity) {
-        this.idActivity = idActivity;
+    public void setBeerName(String beerName) {
+        this.beerName = beerName;
     }
 
     public String getIdBeer() {
@@ -52,12 +47,12 @@ public class Drink extends MongoDBObject
         this.idBeer = idBeer;
     }
 
-    public String getIdFeedback() {
-        return idFeedback;
+    public String getPlaceName() {
+        return placeName;
     }
 
-    public void setIdFeedback(String idFeedback) {
-        this.idFeedback = idFeedback;
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
     }
 
     public String getIdPlace() {
@@ -84,20 +79,20 @@ public class Drink extends MongoDBObject
         this.image = image;
     }
 
-    public Integer getStatus() {
-        return status;
+     public String getDisplayName() {
+        return displayName;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getRate() {
+        return rate;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setRate(Integer rate) {
+        this.rate = rate;
     }
-
+    
 }

@@ -13,7 +13,8 @@ public class Place {
     private String lng;
     private String url;
     private String category;
-
+    private Integer drinkedIn;
+    
     public String getCategory() {
         return category;
     }
@@ -60,6 +61,14 @@ public class Place {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Integer getDrinkedIn() {
+        return drinkedIn;
+    }
+
+    public void setDrinkedIn(Integer drinkedIn) {
+        this.drinkedIn = drinkedIn;
     }
     
 }

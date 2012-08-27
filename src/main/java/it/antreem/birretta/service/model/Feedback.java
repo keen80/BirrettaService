@@ -6,15 +6,14 @@ import java.util.Date;
  *
  * @author gmorlini
  */
-public class Feedback {
+public class Feedback extends MongoDBObject{
     private String idFeedback;
-			private Integer rate;
-			private String comment;
-			private String idUser;
-			private String idTarget;
-			private String type;
-			private Integer like;
-			private Date insertedOn;
+    private String comment;
+    private String idUser;
+    private String idTarget;//idActivity 
+    private String type;//rate o altro
+    private Integer like;
+    private Date insertedOn;
 
     public String getComment() {
         return comment;
@@ -62,14 +61,6 @@ public class Feedback {
 
     public void setLike(Integer like) {
         this.like = like;
-    }
-
-    public Integer getRate() {
-        return rate;
-    }
-
-    public void setRate(Integer rate) {
-        this.rate = rate;
     }
 
     public String getType() {
