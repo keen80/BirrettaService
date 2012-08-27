@@ -63,13 +63,13 @@ public class Notification extends MongoDBObject
     }
 
     public String getIdNotification() {
-        return idNotification;
+        return super.getId().toString();
     }
-
+/*
     public void setIdNotification(String idNotification) {
         this.idNotification = idNotification;
     }
-
+*/
     public String getIdPlace() {
         return idPlace;
     }

@@ -18,6 +18,8 @@ public class Drink extends MongoDBObject
     private String placeName;
     private Date insertedOn;
     private Integer rate;
+    private Integer rate2;
+    private Integer rate3;
 
     public String getIdDrink() {
         return super.getId().toString();
@@ -93,6 +95,22 @@ public class Drink extends MongoDBObject
 
     public void setRate(Integer rate) {
         this.rate = rate;
+    }
+
+    public Integer getRate2() {
+        return rate2;
+    }
+
+    public void setRate2(Integer rate2) {
+        this.rate2 = rate2;
+    }
+
+    public Integer getRate3() {
+        return rate3;
+    }
+
+    public void setRate3(Integer rate3) {
+        this.rate3 = rate3;
     }
     
 }

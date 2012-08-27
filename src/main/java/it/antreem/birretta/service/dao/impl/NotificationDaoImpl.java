@@ -80,7 +80,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
 
     private BasicDBObject createDBObjectFromNotification(Notification n) {
         BasicDBObject _n = new BasicDBObject();
-        _n.put("id_notification", n.getIdNotification());
+//        _n.put("id_notification", n.getIdNotification());
         _n.put("id_user", n.getIdUser());
         _n.put("displayName", n.getDisplayName());
         _n.put("id_beer", n.getIdBeer());
@@ -109,7 +109,6 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         Notification a = new Notification();
         a.setId((ObjectId) obj.get("_id"));
         //comuni ad Activity
-        a.setIdNotification((String)obj.get("id_notification"));
         a.setIdUser((String) obj.get("id_User"));
         a.setDisplayName((String) obj.get("displayName"));
         a.setIdBeer((String) obj.get("id_Beer"));      

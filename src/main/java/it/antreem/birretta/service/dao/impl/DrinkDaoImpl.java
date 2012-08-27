@@ -9,7 +9,9 @@ import it.antreem.birretta.service.model.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.types.ObjectId;
@@ -245,14 +247,17 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
     {
         Drink d = new Drink();
         d.setId((ObjectId) obj.get("_id"));
-        d.setDisplayName((String)obj.get("username"));
+        d.setDisplayName((String)obj.get("displayName"));
         d.setImage((String)obj.get("image"));
         d.setIdUser((String) obj.get("idUser"));
         d.setIdBeer((String) obj.get("idBeer"));
         d.setIdPlace((String) obj.get("idPlace"));
         d.setBeerName((String)obj.get("beerName"));
         d.setPlaceName((String)obj.get("placeName"));
-        String date=(String)obj.get("timestamp");
+        d.setRate((Integer)obj.get("rate"));
+        d.setRate((Integer)obj.get("rate2"));
+        d.setRate((Integer)obj.get("rate3"));
+        String date=(String)obj.get("insertedOn");
         if(date!=null && !date.equals(""))
               d.setInsertedOn(new Date(date));
         return d;
@@ -270,7 +275,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
         _d.put("id_place", d.getIdPlace());
         _d.put("id_activity", d.getBeerName());
         _d.put("id_feedback", d.getPlaceName());
-        _d.put("timestamp", d.getInsertedOn());
+        _d.put("insertedOn", d.getInsertedOn());
         return _d;
     }
 }

@@ -331,6 +331,7 @@ public class BirrettaService
      //   arrayList.addAll(list);
         log.info("foursquare loc "+findLocationNear.size());
         ArrayList<Place> places= convertToPlace(findLocationNear);
+        //TODO: aggiunta per ogni place del numero di bevute(drink)
         return createResultDTOResponseOk(places);
     }
     
