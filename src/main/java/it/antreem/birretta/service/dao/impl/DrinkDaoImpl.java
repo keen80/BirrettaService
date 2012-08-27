@@ -253,9 +253,11 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
         d.setIdPlace((String) obj.get("id_place"));
         d.setIdActivity((String)obj.get("idActivity"));
         d.setIdFeedback((String)obj.get("idFeedback"));
-        d.setStatus(new Integer((String)obj.get("status")));
-        d.setScore(new Integer((String)obj.get("score")));
-        d.setTimestamp(new Date((String)obj.get("timestamp")));
+        d.setStatus((Integer)obj.get("status"));
+        d.setScore((Integer)obj.get("score"));
+        String date=(String)obj.get("timestamp");
+        if(date!=null && !date.equals(""))
+              d.setTimestamp(new Date(date));
         return d;
     }
     
