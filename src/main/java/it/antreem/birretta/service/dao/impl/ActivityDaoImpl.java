@@ -27,18 +27,17 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
         {
             db = getDB();
             db.requestStart();
-            DBCollection beers = db.getCollection(ACTIVITY_COLLNAME);
+            DBCollection activities = db.getCollection(ACTIVITY_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            query.put("id_user", user);
-            DBCursor cur = beers.find(query);
+            query.put("idUser", user);
+            DBCursor cur = activities.find(query);
             
             while (cur.hasNext()){
                 DBObject _b = cur.next();
                 Activity act = createActivityFromDBObject(_b);
                 list.add(act);
             }
-            
-            return null;
+           
         }
         catch(MongoException ex){
             log.error(ex.getLocalizedMessage(), ex);
@@ -49,6 +48,7 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
                 db.requestDone();
             }
         }
+        return list;
     }
 
     @Override

@@ -538,23 +538,23 @@ public class BirrettaService
      * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
      */
     @GET
-    @Path("/listActivity_jsonp")
+    @Path("/listMyActivity_jsonp")
     @Produces("application/json")
-    public JSONPObject listActivity_jsonp (
+    public JSONPObject listMyActivity_jsonp (
 	@QueryParam("id_user") final String id_user,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
-		return new JSONPObject(callbackName,listDrink(id_user));
+		return new JSONPObject(callbackName,listMyActivity(id_user));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
      */
     @GET
-    @Path("/listActivity")
+    @Path("/listMyActivity")
     @Produces("application/json")
-    public ResultDTO listActivity (@QueryParam("id_user") final String id_user)
+    public ResultDTO listMyActivity (@QueryParam("id_user") final String id_user)
     {
-        log.info("reuest list of "+id_user+" activity");
+        log.info("request list of "+id_user+" activity");
         ArrayList<Activity> list = DaoFactory.getInstance().getActivityDao().findByUser(id_user);
        
         return createResultDTOResponseOk(list);
@@ -589,7 +589,30 @@ public class BirrettaService
         GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
         return createJsonOkResponse(result);
     }
-    
+    @POST
+    @Path("/insertListBeer")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response insertListBeer(ArrayList<Beer> list) 
+    {
+        // Pre-conditions
+        if (list == null){
+            return createJsonErrorResponse(ErrorCodes.INSBEER_WRONG_PARAM);
+        }
+        
+       
+       for(Beer b : list)
+       {
+        // Controllo duplicati
+        Beer _b = DaoFactory.getInstance().getBeerDao().findBeerByName(b.getName());
+        if (_b == null){
+            DaoFactory.getInstance().getBeerDao().saveBeer(b);
+        }
+       }
+        
+        GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
+        return createJsonOkResponse(result);
+    }
     /**
      * Operazione di check-in.
      * TODO: Controllo di prossimita' location =&gt; future versioni
