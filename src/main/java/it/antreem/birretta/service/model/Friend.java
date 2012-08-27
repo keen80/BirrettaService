@@ -19,7 +19,7 @@ public class Friend {
     private Date birthDate;
     private String avatar = "resources/images/defaultAvatar.jpg";
     private Integer role;
-    private Integer status;
+    private Integer status;//valorizzato dinamicamente in base a friendrelations(non amico, pending, amico)
     private Date activatedOn;
     private Date lastLoginOn;
     private String badges = "";

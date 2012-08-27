@@ -759,7 +759,8 @@ public class BirrettaService
         if (frnd == null){
             return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
         }
-        
+        //crea oggetto friendrelation con isFriend=false
+        //crea oggetto notifica e invia notifica
         if (!DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(myid, frndid)
             && !DaoFactory.getInstance().getFriendRelationDao().areFriends(myid, frndid)){
             DaoFactory.getInstance().getFriendRelationReqDao().saveFriendRelationReq(myid, frndid);
@@ -778,7 +779,7 @@ public class BirrettaService
         if (c == null){
             return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
-        
+        //viene impostato a true la friendrelations
         String myid = c.getIdRequested();
         String frndid = c.getIdRequestor();
         
@@ -816,7 +817,7 @@ public class BirrettaService
         if (c == null){
             return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
-        
+        //viene impostato a read la notifica di richiesta d'amicizia
         String id1 = c.getIdRequested();
         String id2 = c.getIdRequestor();
         User me = DaoFactory.getInstance().getUserDao().findById(id1);
