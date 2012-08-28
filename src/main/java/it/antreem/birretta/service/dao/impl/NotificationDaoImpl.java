@@ -119,7 +119,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         a.setFriendName((String) obj.get("friendName"));
         //solo di notification
         a.setImage((String)obj.get("image"));
-        a.setType((String)obj.get("type"));
+        a.setType((Integer)obj.get("type"));
         a.setStatus(obj.get("status")!=null?(Boolean)obj.get("status"): false );
         String insertedOn=(String) obj.get("insertedOn");
         if(insertedOn!=null && !"".equals(insertedOn))

@@ -18,7 +18,7 @@ public class Notification extends MongoDBObject
     private String idPlace;
     private String placeName;
     private String image;
-    private String type;
+    private Integer type;
     private Boolean status;
     private Date insertedOn;
 
@@ -119,11 +119,11 @@ public class Notification extends MongoDBObject
         this.insertedOn = insertedOn;
     }
 
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 }
