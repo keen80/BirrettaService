@@ -7,6 +7,7 @@ import it.antreem.birretta.service.dao.FriendRelationDao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import it.antreem.birretta.service.model.FriendsRelation;
+import java.util.ArrayList;
 
 /**
  *
@@ -42,18 +43,27 @@ public class FriendRelationDaoImpl extends AbstractMongoDao implements FriendRel
     }
     
     @Override
-    public int saveFriendship(String id1, String id2) throws DaoException 
+    public ArrayList<FriendsRelation> getMyFriends(String id_user, int maxElement) throws DaoException 
     {
         DB db = null;
+        ArrayList<FriendsRelation> list= new ArrayList<FriendsRelation>();      
         try
         {
             db = getDB();
             db.requestStart();
-            DBCollection friends = db.getCollection(FRIENDS_RELATION_COLLNAME);
-            BasicDBObject req = new BasicDBObject();
-            req.put("isUser1", id1);
-            req.put("isUser2", id2);
-            return friends.insert(req).getN();
+            DBCollection friendsRelations = db.getCollection(FRIENDS_RELATION_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("idUser1", id_user);
+            DBCursor cur = friendsRelations.find(query);
+           if(maxElement>0)
+                   cur.limit(maxElement);
+           while (cur.hasNext()){
+                DBObject _f = cur.next();
+                FriendsRelation f = createFriendsRelationFromDBObject(_f);
+               list.add(f);
+            }
+            
+           return list;
         }
         catch(MongoException ex){
             log.error(ex.getLocalizedMessage(), ex);
@@ -136,8 +146,16 @@ public class FriendRelationDaoImpl extends AbstractMongoDao implements FriendRel
         BasicDBObject _d = new BasicDBObject();
         _d.put("idUser1",fr.getIdUser1());
         _d.put("idUser2", fr.getIdUser2());
-        _d.put("friend", fr.isFriend()); //METTERE STRINGA
+        _d.put("friend", fr.isFriend());
         return _d;
+    }
+
+    private FriendsRelation createFriendsRelationFromDBObject(DBObject obj) {
+        FriendsRelation f = new FriendsRelation();
+        f.setIdUser1((String)obj.get("idUser1"));
+        f.setIdUser2((String)obj.get("idUser2"));
+        f.setFriend((obj.get("friend")!=null?(Boolean)obj.get("friend"):false));
+        return f;
     }
     
 }

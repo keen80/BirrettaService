@@ -2,8 +2,11 @@ package it.antreem.birretta.service.dao.impl;
 
 import com.mongodb.*;
 import it.antreem.birretta.service.dao.DaoException;
+import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dao.FriendDao;
 import it.antreem.birretta.service.model.Friend;
+import it.antreem.birretta.service.model.FriendsRelation;
+import it.antreem.birretta.service.model.User;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.commons.logging.Log;
@@ -111,16 +114,25 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
     }
      @Override
     public ArrayList<Friend> getAllMyFriends(int maxElemet, String id_user) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        ArrayList<Friend> list= new ArrayList<Friend>();
+        ArrayList<FriendsRelation> myFriends = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(id_user, maxElemet);
+        for(FriendsRelation friendRelation: myFriends)
+        {
+            User user = DaoFactory.getInstance().getUserDao().findById(friendRelation.getIdUser2());
+            
+                    
+        }
+        return list;
     }
     private Friend createFriendFromDBObject(DBObject obj) {
         Friend f=new Friend();
-         f.setIdUser((String) obj.get("id_user"));
+         f.setIdUser((String) obj.get("idUser"));
+         //friend non è un un oggetto mongodb
    //     f.setId((ObjectId) obj.get("_id"));
         f.setUsername((String) obj.get("username"));
         f.setDisplayName((String)obj.get("displayName"));
-        f.setFirstName((String) obj.get("first_name"));
-        f.setLastName((String) obj.get("last_name"));
+        f.setFirstName((String) obj.get("firstName"));
+        f.setLastName((String) obj.get("lastName"));
         f.setDescription((String)obj.get("description"));
         f.setEmail((String)obj.get("email"));
         f.setGender((Integer) obj.get("gender"));
@@ -148,9 +160,9 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         f.setBadges((String)obj.get("badges"));
         f.setFavorites((String) obj.get("favorites"));
         f.setLiked((String)obj.get("liked"));
-        f.setCounter_checkIns((Integer)obj.get("counter_checkIns"));
-        f.setCounter_friends((Integer)obj.get("counter_friends"));
-        f.setCounter_badges((Integer)obj.get("counter_badges"));
+        f.setCounter_checkIns((Integer)obj.get("counterCheckIns"));
+        f.setCounter_friends((Integer)obj.get("counterFriends"));
+        f.setCounter_badges((Integer)obj.get("counterBadges"));
         
         /** 
          * campi user non necessari in friend
