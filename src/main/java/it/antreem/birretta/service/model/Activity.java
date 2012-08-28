@@ -9,7 +9,7 @@ import java.util.Date;
 public class Activity extends MongoDBObject{
 
     private String idActivity;
-    private String avatar;
+    private String image;
     private String displayName;
     private String idUser;
     private String idBeer;
@@ -22,13 +22,14 @@ public class Activity extends MongoDBObject{
     private Integer status;
     private Integer like;
     private Date date;
+    private String jumpTo;
 
-    public String getAvatar() {
-        return avatar;
+    public String getImage() {
+        return image;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getBeerName() {
@@ -135,4 +136,13 @@ public class Activity extends MongoDBObject{
     public void setType(Integer type) {
         this.type = type;
     }
+
+    public String getJumpTo() {
+        return jumpTo;
+    }
+
+    public void setJumpTo(String jumpTo) {
+        this.jumpTo = jumpTo;
+    }
+    
 }

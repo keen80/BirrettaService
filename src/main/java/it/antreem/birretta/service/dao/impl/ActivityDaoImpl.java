@@ -81,7 +81,7 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
     private BasicDBObject createDBObjectFromActivity(Activity a) {
         BasicDBObject _a = new BasicDBObject();
         _a.put("idActivity", a.getIdActivity());
-        _a.put("avatar", a.getAvatar());
+        _a.put("image", a.getImage());
         _a.put("displayName", a.getDisplayName());
         _a.put("idUser", a.getIdUser());
         _a.put("idBeer", a.getIdBeer());
@@ -94,13 +94,14 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
         _a.put("status", a.getStatus());
         _a.put("like", a.getLike());
         _a.put("date", a.getDate());
+        _a.put("jumpTo",a.getJumpTo());
         return _a;
     }
 
     private Activity createActivityFromDBObject(DBObject obj) {
         Activity a = new Activity();
         a.setId((ObjectId) obj.get("_id"));
-        a.setAvatar((String) obj.get("avatar"));
+        a.setImage((String) obj.get("image"));
         a.setDisplayName((String) obj.get("displayName"));
         a.setIdUser((String) obj.get("idUser"));
         a.setIdBeer((String) obj.get("idBeer"));
@@ -112,8 +113,9 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
         a.setType((Integer) obj.get("type"));
         a.setStatus((Integer) obj.get("status"));
         a.setLike((Integer) obj.get("like"));
+        a.setJumpTo((String)obj.get("jumpTo"));
         String date=(String) obj.get("date");
-        if(date!=null && date!="")
+        if(date!=null && !date.equals(""))
               a.setDate(new Date(date));
         return a;
     }
