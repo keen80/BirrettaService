@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class User extends MongoDBObject {
 
-    //private String idUser;
+    private String idUser;
     private String username;
     private String displayName;
     private String firstName;
@@ -170,7 +170,11 @@ public class User extends MongoDBObject {
     }
 
     public String getIdUser() {
-        return super.getId().toString();
+        return idUser;
+    }
+    
+    public void setIdUser(String idUser) {
+        this.idUser=idUser;
     }
 
     public Date getLastLoginOn() {

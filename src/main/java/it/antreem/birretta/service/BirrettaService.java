@@ -1022,9 +1022,17 @@ public class BirrettaService
         String friendid = c.getIdRequestor();
         
         //ERRATO ELIMINARE LA NOTIFICA
-        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, friendid);
+        ArrayList<Notification> an = DaoFactory.getInstance().getNotificationDao().findByUser(myid);
+        for(int i =0 ;i<an.size();i++){
+            Notification n = an.get(i);
+            if(n.getIdFriend().equals(friendid) && n.getType()==NotificationCodes.FRIEND_REQUEST.getType()){
+                DaoFactory.getInstance().getNotificationDao().deleteNotificationByMongoID(n.getId().toString());
+            }
+        }
+        
+        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(friendid, myid);
         if(fr!=null){
-            DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(myid, friendid);
+            DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(friendid, myid);
             return createResultDTOEmptyResponse(InfoCodes.OK_FRNDREFUSE_00);
         }
         else{

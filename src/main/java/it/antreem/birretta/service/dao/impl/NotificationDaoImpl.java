@@ -167,5 +167,30 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
                 */
         return a;
     }
+    
+    @Override
+    public int deleteNotificationByMongoID(String id) throws DaoException 
+    {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection nottab = db.getCollection(NOTIFICATION_COLLNAME);
+            BasicDBObject req = new BasicDBObject();
+            req.put("_id", id);
+            int a = nottab.remove(req).getN();
+            return a;
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
      
 }
