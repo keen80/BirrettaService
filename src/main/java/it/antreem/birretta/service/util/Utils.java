@@ -53,7 +53,7 @@ public class Utils
     {
         ErrorDTO error = new ErrorDTO();
         ErrorDTO.Error _e = new ErrorDTO.Error();
-        _e.setCode(err.getCode());
+        _e.setCode(err.getTitle());
         _e.setDesc(err.getMessage());
         _e.setTitle(err.getTitle());
         _e.setActionType((actionType != null && actionType.length > 0) ? actionType[0] : null);

@@ -8,23 +8,23 @@ package it.antreem.birretta.service.model.json;
 public class Status {
 
     private boolean success = true;
-    private String code = "OK";
+    private int code = 0;
     private String msg = "Status OK";
 
     public Status() {
     }
 
-    public Status(String code, String msg, Boolean success) {
+    public Status(int code, String msg, Boolean success) {
         this.code = code;
         this.msg = msg;
         this.success = success;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

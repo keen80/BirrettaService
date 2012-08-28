@@ -508,7 +508,7 @@ public class BirrettaService
         ArrayList<Beer> list = DaoFactory.getInstance().getBeerDao().listBeer(maxElemet);
         ResultDTO result = new ResultDTO();
         Status status= new Status();
-        status.setCode("OK");
+        status.setCode(100);
         status.setMsg("Status OK");
         status.setSuccess(true);
         Body body =new Body<Beer>();
@@ -1091,7 +1091,7 @@ public class BirrettaService
      *  result.getResponse().getMetaData().setBadge("OK", 1, "Notification OK");
      *   result.getResponse().getMetaData().setNotification("OK", 1, "Notification OK");
      */
-     private ResultDTO createResultDTOEmptyResponse(String code,String msg,Boolean success) {
+     private ResultDTO createResultDTOEmptyResponse(int code,String msg,Boolean success) {
         ResultDTO result = new ResultDTO();
         Status status= new Status();
         status.setCode(code);
@@ -1156,7 +1156,7 @@ public class BirrettaService
      private ResultDTO createResultDTOResponseOk(ArrayList list) {
         ResultDTO result = new ResultDTO();
         Status status= new Status();
-        status.setCode("OK");
+        status.setCode(100);
         status.setMsg("Status OK");
         status.setSuccess(true);
         Body body =new Body();

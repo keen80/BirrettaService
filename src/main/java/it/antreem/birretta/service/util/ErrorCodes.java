@@ -6,51 +6,51 @@ package it.antreem.birretta.service.util;
  */
 public enum ErrorCodes 
 {   
-    LOGIN_FAILED("Login failed", "Credenziali di login ricevute a null"),
-    LOOUT_FAILED("Logout failed", "Parametri di logout ricevuti a null"),
-    REG_FAILED("Registration failed", "Registration failed"),
-    REG_U01("Formato username errato", "Lo username deve essere lungo almeno 5 caratteri e contenere solamente caratteri alfanumerici minuscoli e underscore"),
-    REG_P01("Formato password errato", "La password deve essere lunga almeno 5 caratteri e contenere solamente caratteri alfanumerici e underscore"),
-    REG_USER_DUP("Username gia presente", "Lo username scelto e' gia' presente. Occorre fare una scelta alternativa"),
-    REG_INVALID_EMAIL("Email non valida", "Email non valida"),
-    REG_INVALID_SEX("Sesso non valido", "Deve essere M o F"),
-    REG_INVALID_FIRST("First name non valido", "First name non valido"),
-    REG_INVALID_LAST("Last name non valido", "Last name non valido"),
-    REG_INVALID_AGE("Eta non valida", "Eta non valida"),
-    REQ_DELEGATION_BLOCKED("Deleghe non consentite", "L'utente ha effettuato richieste per conto di un altro utente. Non possibile."),
-    UPPOS_MISSED_PARAM("Parametri mancanti", "Specificare la tripletta (username, lat, lon) interamente."),
-    INSLOC_WRONG_PARAM("Parametri errati", "Specificare i parametri necessari nel modo corretto."),
-    INSLOC_WRONG_NAME_PARAM("Parametri errati", "Specificare il nome in maniera corretta."),
-    INSLOC_WRONG_POS_PARAM("Parametri errati", "Specificare la posizione nel modo corretto."),
-    INSLOC_WRONG_NULL_TIPOLOC_PARAM("Parametri errati", "Tipo località non fornita"),
-    INSLOC_WRONG_TIPOLOC_PARAM("Parametri errati", "Tipo località non esistente"),
-    INSLOC_LOC_DUP("Location gia presente", "Una location con lo stesso nome e' gia' presente"),
-    INSBEER_BEER_DUP("Birra gia presente", "Una birra con lo stesso nome e' gia' presente"),
-    INSBEER_WRONG_PARAM("Parametri errati", "Specificare i parametri necessari nel modo corretto."),
-    CHECKIN_WRONG_PARAM("Parametri errati", "Specificare i parametri di check-in in modo corretto"),
-    CHECKIN_TOO_MANY_DRINKS("Troppe bevute negli ultimi 10 minuti", "Aspetta un po' brutto alcolizzato!!!"),
-    FINDLOCNEAR_WRONG_PARAM("Parametri mancanti", "Specificare entrambe longitudine e latitudine"),
-    USER_NOT_FOUND("Amico inesistente", "Amici immaginari non ammessi"),
-    FRND_MISSED_PARAM("Parametri mancanti", "Parametri mancanti"),
-    FRND_REFUSE_ERROR("Error in Friend Refuse", "Amicizia non presente"),
-    UPDATE_NOTIFICANION_ERROR_00("Error in Update notification", "Notifica non presente"),
-    PUPPA_CODE("PuppaTitle", "PuppaMessage");
+    LOGIN_FAILED(200, "Credenziali di login ricevute a null"),
+    LOOUT_FAILED(201, "Parametri di logout ricevuti a null"),
+    REG_FAILED(202, "Registration failed"),
+    REG_U01(203, "Lo username deve essere lungo almeno 5 caratteri e contenere solamente caratteri alfanumerici minuscoli e underscore"),
+    REG_P01(204, "La password deve essere lunga almeno 5 caratteri e contenere solamente caratteri alfanumerici e underscore"),
+    REG_USER_DUP(205, "Lo username scelto e' gia' presente. Occorre fare una scelta alternativa"),
+    REG_INVALID_EMAIL(206, "Email non valida"),
+    REG_INVALID_SEX(207, "Deve essere M o F"),
+    REG_INVALID_FIRST(208, "First name non valido"),
+    REG_INVALID_LAST(209, "Last name non valido"),
+    REG_INVALID_AGE(210, "Eta non valida"),
+    REQ_DELEGATION_BLOCKED(211, "L'utente ha effettuato richieste per conto di un altro utente. Non possibile."),
+    UPPOS_MISSED_PARAM(212, "Specificare la tripletta (username, lat, lon) interamente."),
+    INSLOC_WRONG_PARAM(213, "Specificare i parametri necessari nel modo corretto."),
+    INSLOC_WRONG_NAME_PARAM(214, "Specificare il nome in maniera corretta."),
+    INSLOC_WRONG_POS_PARAM(215, "Specificare la posizione nel modo corretto."),
+    INSLOC_WRONG_NULL_TIPOLOC_PARAM(16, "Tipo località non fornita"),
+    INSLOC_WRONG_TIPOLOC_PARAM(217, "Tipo località non esistente"),
+    INSLOC_LOC_DUP(218, "Una location con lo stesso nome e' gia' presente"),
+    INSBEER_BEER_DUP(219, "Una birra con lo stesso nome e' gia' presente"),
+    INSBEER_WRONG_PARAM(220, "Specificare i parametri necessari nel modo corretto."),
+    CHECKIN_WRONG_PARAM(221, "Specificare i parametri di check-in in modo corretto"),
+    CHECKIN_TOO_MANY_DRINKS(222, "Aspetta un po' brutto alcolizzato!!!"),
+    FINDLOCNEAR_WRONG_PARAM(223, "Specificare entrambe longitudine e latitudine"),
+    USER_NOT_FOUND(224, "Amici immaginari non ammessi"),
+    FRND_MISSED_PARAM(225, "Parametri mancanti"),
+    FRND_REFUSE_ERROR(226, "Amicizia non presente"),
+    UPDATE_NOTIFICANION_ERROR_00(227, "Notifica non presente"),
+    PUPPA_CODE(9999, "PuppaMessage");
     
-    private String title;
+    private int code;
     private String message;
     
-    ErrorCodes(String title, String message)
+    ErrorCodes(int code, String message)
     {
-        this.title = title;
+        this.code = code;
         this.message = message;
     }
     
-    public String getCode() {
+    public String getTitle() {
         return name();//.replace("_", ".");
     }
     
-    public String getTitle(){
-        return title;
+    public int getCode(){
+        return code;
     }
     
     public String getMessage(){
