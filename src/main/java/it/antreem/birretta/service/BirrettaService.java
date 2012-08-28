@@ -627,6 +627,13 @@ public class BirrettaService
         // Inserimento su DB
         DaoFactory.getInstance().getBeerDao().saveBeer(b);
         //inserimento attività
+        Activity a=new Activity();
+        a.setBeerName(b.getName());
+        a.setIdBeer(b.getIdBeer());
+        a.setDate(new Date());
+        a.setType(ActivityCodes.BEER_CREATED.getType());
+        a.setDisplayName(b.getUsername());
+        DaoFactory.getInstance().getActivityDao().saveActivity(a);
         GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
         return createJsonOkResponse(result);
     }
@@ -666,14 +673,14 @@ public class BirrettaService
     @Path("/checkIn")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response checkIn(CheckInRequestDTO c, @Context HttpServletRequest httpReq) 
+    public ResultDTO checkIn(CheckInRequestDTO c, @Context HttpServletRequest httpReq) 
     {
         // Pre-conditions + controllo validita' parametri
         if (c == null){
-            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
         if (c.getUsername() == null || c.getIdBeer() == null || c.getIdLocation() == null){
-            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
         /* Puo' esserci una bevuta senza voto? per ora si'...
         // TODO: Eventuale check di check-in senza voto
@@ -683,7 +690,7 @@ public class BirrettaService
         */
         // Blocco richieste di un utente per un altro
         if (!c.getUsername().equals(httpReq.getHeader("btUsername"))){
-            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
         // Recupero dati necessari (utente dovrebbe essere ok perche' ha passato il controllo precedente)
@@ -693,16 +700,16 @@ public class BirrettaService
         
         // Controllo che location e birra effettivamente esistano
         if (b == null){
-            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
         if (l == null){
-            return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
         
         // Controllo che negli ultimi 10 minuti non ci siano piu' di tre bevute
         List<Drink> lastDrinks = DaoFactory.getInstance().getDrinkDao().findRecentDrinks(u.getUsername(), 10);
         if (lastDrinks.size() >= 3){
-            return createJsonErrorResponse(ErrorCodes.CHECKIN_TOO_MANY_DRINKS);
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_TOO_MANY_DRINKS);
         }
         
         // Preparazione oggetto di modello
@@ -730,8 +737,32 @@ public class BirrettaService
         // Controllo mayorships + notifiche a chi le ha perdute
         // TODO: controllo mayorships + notifiche a chi le ha perdute
         //TODO: creare attività
-        GenericResultDTO result = new GenericResultDTO(true, "Check-in eseguito con successo");
-        return createJsonOkResponse(result);
+         //inserimento attività
+        Activity a=new Activity();
+        a.setBeerName(b.getName());
+        a.setIdBeer(b.getIdBeer());
+        a.setDate(new Date());
+        a.setType(ActivityCodes.CHECKIN.getType());
+        a.setDisplayName(b.getUsername());
+        a.setIdPlace(l.getIdLocation());
+        a.setPlaceName(l.getName());
+        a.setIdUser(u.getIdUser());
+        String displayName;
+        if(u.getDisplayName()!=null && !u.getDisplayName().trim().equals("")){
+            displayName = u.getDisplayName();
+        }
+        else if((u.getLastName()==null && u.getFirstName()==null) 
+                || (u.getLastName().trim().equals("") && u.getFirstName().trim().equals("")) ){
+            displayName = u.getUsername();
+        }
+        else{
+            String firstname = u.getFirstName()==null?"": u.getFirstName();
+            String lastname = u.getLastName()==null?"": u.getLastName();
+            displayName = firstname + " "+ lastname;
+        }
+        a.setDisplayName(displayName);
+        DaoFactory.getInstance().getActivityDao().saveActivity(a);
+        return createResultDTOEmptyResponse("OK_CHECKIN_00", "Check-in eseguito con successo", Boolean.TRUE);
     }
     
     
