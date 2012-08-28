@@ -995,7 +995,7 @@ public class BirrettaService
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, friendid);
         if(fr!=null){
             DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(myid, friendid);
-            return createResultDTOEmptyResponse("OK_FRNDREFUSE_00","Amicizia rimossa con successo",true);
+            return createResultDTOEmptyResponse(InfoCodes.OK_FRNDREFUSE_00);
         }
         else{
             return createResultDTOEmptyResponse(ErrorCodes.FRND_REFUSE_ERROR);
