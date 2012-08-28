@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class User extends MongoDBObject {
 
-    private String idUser;
+    //private String idUser;
     private String username;
     private String displayName;
     private String firstName;

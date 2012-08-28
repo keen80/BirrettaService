@@ -160,7 +160,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     protected static User createUserFromDBObject(DBObject obj)
     {
         User u = new User();
-        u.setIdUser((String) obj.get("idUser"));
+        //u.setIdUser((String) obj.get("_id"));
         u.setId((ObjectId) obj.get("_id"));
         u.setUsername((String) obj.get("username"));
         u.setDisplayName((String)obj.get("displayName"));
@@ -213,7 +213,10 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         _u.put("email", u.getEmail());
         _u.put("firstName", u.getFirstName().trim());
         _u.put("lastName", u.getLastName().trim());
-        _u.put("pwdHash", u.getPwdHash());
+        _u.put("gender",u.getGender());
+        _u.put("nationality",u.getNationality());
+        _u.put("birthDate",u.getBirthDate());
+        //_u.put("pwdHash", u.getPwdHash());
        // _u.put("sex", u.getSex());
         return _u;
     }
