@@ -989,9 +989,18 @@ public class BirrettaService
             return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
         //viene impostato a read la notifica di richiesta d'amicizia
-        String id1 = c.getIdRequested();
-        String id2 = c.getIdRequestor();
-        User me = DaoFactory.getInstance().getUserDao().findById(id1);
+        String myid = c.getIdRequested();
+        String friendid = c.getIdRequestor();
+        
+        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, friendid);
+        if(fr!=null){
+            DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(myid, friendid);
+            return createResultDTOEmptyResponse("OK_FRNDREFUSE_00","Amicizia rimossa con successo",true);
+        }
+        else{
+            return createResultDTOEmptyResponse(ErrorCodes.FRND_REFUSE_ERROR);
+        }
+        /*User me = DaoFactory.getInstance().getUserDao().findById(id1);
         String username = me.getUsername();
         if (username != null && username.equals(httpReq.getHeader("btUsername")))
         {
@@ -1007,9 +1016,9 @@ public class BirrettaService
             DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(id1, id2);
             DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(id1, id2);
              return createResultDTOEmptyResponse("OK_FRNDREFUSE_00","Amicizia rimossa con successo",true);
-        }
+        }*/
         
-        return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        //return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
     }
     
     @GET
