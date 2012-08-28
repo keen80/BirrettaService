@@ -8,6 +8,7 @@ import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
+import it.antreem.birretta.service.util.ActivityCodes;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.JsonHandler;
 import it.antreem.birretta.service.util.NotificationCodes;
@@ -790,7 +791,7 @@ public class BirrettaService
             String lastname = frnd.getLastName()==null?"": frnd.getLastName();
             friendName = firstname + " "+ lastname;
         }
-
+        
         n.setFriendName(friendName);
         n.setType(NotificationCodes.FRIEND_REQUEST.getType());
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
@@ -809,11 +810,12 @@ public class BirrettaService
         if (c == null){
             return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
-        //viene impostato a true la friendrelations
-        //
         
         String myid = c.getIdRequested();
         String frndid = c.getIdRequestor();
+        
+        User me = DaoFactory.getInstance().getUserDao().findById(myid);
+        User frnd = DaoFactory.getInstance().getUserDao().findById(frndid);
         
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
@@ -822,11 +824,66 @@ public class BirrettaService
             return createJsonOkResponse(result);
         }
         fr.setFriend(true);
-        //FARE UPDATE DELLA FRIENDS RELATION
+        DaoFactory.getInstance().getFriendRelationDao().updateFriendsRelation(fr);
         
         //CERCO LA RELAZIONE DI AMICIZIA INVERSA E LA METTO A TRUE, SE NON C'E' LA CREO
+        FriendsRelation fr_inv = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(frndid, myid);
+        if(fr_inv == null){
+            FriendsRelation friendsRelation = new FriendsRelation();
+            friendsRelation.setFriend(true);
+            friendsRelation.setIdUser1(myid);
+            friendsRelation.setIdUser2(frndid); 
+            DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
+        } else{
+            fr_inv.setFriend(true);
+            DaoFactory.getInstance().getFriendRelationDao().updateFriendsRelation(fr_inv);
+        }
         
         //CREO LE ACTIVITY PER I DUE UTENTI
+        Activity myAct = new Activity();
+        myAct.setDate(new Date());
+        myAct.setIdFriend(frndid);
+        myAct.setIdUser(myid);
+        String friendName;
+        if(frnd.getDisplayName()!=null && !frnd.getDisplayName().trim().equals("")){
+            friendName = frnd.getDisplayName();
+        }
+        else if((frnd.getLastName()==null && frnd.getFirstName()==null) 
+                || (frnd.getLastName().trim().equals("") && frnd.getFirstName().trim().equals("")) ){
+            friendName = frnd.getUsername();
+        }
+        else{
+            String firstname = frnd.getFirstName()==null?"": frnd.getFirstName();
+            String lastname = frnd.getLastName()==null?"": frnd.getLastName();
+            friendName = firstname + " "+ lastname;
+        }
+        myAct.setFriendName(friendName);
+        myAct.setType(ActivityCodes.FRIEND_CONFIRM.getType());
+        DaoFactory.getInstance().getActivityDao().saveActivity(myAct);
+        
+        
+        Activity friendAct = new Activity();
+        friendAct.setDate(new Date());
+        friendAct.setIdFriend(myid);
+        friendAct.setIdUser(frndid);
+        String friendName2;
+        if(me.getDisplayName()!=null && !me.getDisplayName().trim().equals("")){
+            friendName2 = me.getDisplayName();
+        }
+        else if((me.getLastName()==null && me.getFirstName()==null) 
+                || (me.getLastName().trim().equals("") && me.getFirstName().trim().equals("")) ){
+            friendName2 = me.getUsername();
+        }
+        else{
+            String firstname = me.getFirstName()==null?"": me.getFirstName();
+            String lastname = me.getLastName()==null?"": me.getLastName();
+            friendName2 = firstname + " "+ lastname;
+        }
+        friendAct.setFriendName(friendName2);
+        friendAct.setType(ActivityCodes.FRIEND_CONFIRM.getType());
+        DaoFactory.getInstance().getActivityDao().saveActivity(friendAct);
+        
+        //CREO LE DUE NOTIFICHE
         
         
         GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
