@@ -4,11 +4,10 @@ import java.util.Date;
 
 /**
  *
- * @author alessio
+ * @author gmorlini
  */
 public class Notification extends MongoDBObject
 {
-    private String idNotification;
     private String jumpTo;
     private String targetName;
     private String idBeer;
@@ -21,7 +20,16 @@ public class Notification extends MongoDBObject
     private Integer type;
     private Integer status;
     private Date insertedOn;
+    private String idUser;
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+    
     public String getBeerName() {
         return beerName;
     }

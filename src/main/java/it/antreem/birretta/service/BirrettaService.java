@@ -14,12 +14,10 @@ import it.antreem.birretta.service.util.JsonHandler;
 import it.antreem.birretta.service.util.NotificationCodes;
 import it.antreem.birretta.service.util.NotificationStatusCodes;
 import it.antreem.birretta.service.util.Utils;
+import it.antreem.birretta.service.util.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -28,6 +26,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.util.JSONPObject;
+import java.util.Collections;
 /**
  * BirrettaService
  */
@@ -246,7 +245,7 @@ public class BirrettaService
 
    
      /**
-     * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
+     * Restituisce  i miei amici e i relativi dettagli in formato JSONP.
      */
     @GET
     @Path("/listFriend_jsonp")
@@ -258,7 +257,7 @@ public class BirrettaService
 		return new JSONPObject(callbackName,listFriend(_maxElemet,id_user));
 	}
      /**
-     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     * Restituisce i miei amici e i relativi dettagli in formato JSON.
      */
     @GET
     @Path("/listFriend")
@@ -267,11 +266,49 @@ public class BirrettaService
     {
         log.info("reuest list of "+_maxElemet+" friend of "+id_user);
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
-       // ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,id_user);
-        ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
-        return createResultDTOResponseOk(list);
-        
+        ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,id_user);
+   //     ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
+        return createResultDTOResponseOk(list);  
     }
+    
+      /**
+     * Restituisce le le attività dei miei amici in formato JSONP.
+     */
+    @GET
+    @Path("/listFriendActivity_jsonp")
+    @Produces("application/json")
+    public JSONPObject listFriendActivity_jsonp (
+	@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listFriendActivity(_maxElemet,id_user));
+	}
+     /**
+     * Restituisce le attività dei miei amici in formato JSON.
+     */
+    @GET
+    @Path("/listFriendActivity")
+    @Produces("application/json")
+    public ResultDTO listFriendActivity (@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user)
+    {
+        log.info("reuest list of "+_maxElemet+"activity of friend of "+id_user);
+        int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
+        //trovo i miei amici(compresi quelli in pending)
+        ArrayList<FriendsRelation> friendList = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(id_user, maxElemet);
+        //per ognuno dei quali trovo le attività(se non sono in stato pending)
+        ArrayList<Activity> list= new ArrayList<Activity>();
+        for(FriendsRelation fr: friendList)
+        {
+            if(fr.isFriend())
+            {
+                ArrayList<Activity> activities = DaoFactory.getInstance().getActivityDao().findByUser(fr.getIdUser2());
+                list.addAll(activities);
+            }
+        }
+         //ordinamento per data
+        Collections.sort(list, new ActivityComparator());
+        return createResultDTOResponseOk(list);  
+    }        
     @GET
     @Path("/updatePos")
     @Produces("application/json")
