@@ -33,6 +33,7 @@ public enum ErrorCodes
     USER_NOT_FOUND("Amico inesistente", "Amici immaginari non ammessi"),
     FRND_MISSED_PARAM("Parametri mancanti", "Parametri mancanti"),
     FRND_REFUSE_ERROR("Error in Friend Refuse", "Amicizia non presente"),
+    UPDATE_NOTIFICANION_ERROR_00("Error in Update notification", "Notifica non presente"),
     PUPPA_CODE("PuppaTitle", "PuppaMessage");
     
     private String title;
