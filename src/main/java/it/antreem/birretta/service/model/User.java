@@ -26,12 +26,12 @@ public class User extends MongoDBObject {
     private String badges = "";
     private String favorites = "";
     private String liked = "";
-    private Integer counter_checkIns = 0;
-    private Integer counter_friends = 0;
-    private Integer counter_badges = 0;
-    private String hash_beerlist;
-    private String hash_friendlist;
-    private String hash_notificationlist;
+    private Integer counterCheckIns = 0;
+    private Integer counterFriends = 0;
+    private Integer counterBadges = 0;
+    private String hashBeerlist;
+    private String hashFriendlist;
+    private String hashNotificationlist;
 
     public Date getActivatedOn() {
         return activatedOn;
@@ -65,28 +65,28 @@ public class User extends MongoDBObject {
         this.birthDate = birthDate;
     }
 
-    public Integer getCounter_badges() {
-        return counter_badges;
+    public Integer getCounterBadges() {
+        return counterBadges;
     }
 
-    public void setCounter_badges(Integer counter_badges) {
-        this.counter_badges = counter_badges;
+    public void setCounterBadges(Integer counterBadges) {
+        this.counterBadges = counterBadges;
     }
 
-    public Integer getCounter_checkIns() {
-        return counter_checkIns;
+    public Integer getCounterCheckIns() {
+        return counterCheckIns;
     }
 
-    public void setCounter_checkIns(Integer counter_checkIns) {
-        this.counter_checkIns = counter_checkIns;
+    public void setCounterCheckIns(Integer counterCheckIns) {
+        this.counterCheckIns = counterCheckIns;
     }
 
-    public Integer getCounter_friends() {
-        return counter_friends;
+    public Integer getCounterFriends() {
+        return counterFriends;
     }
 
-    public void setCounter_friends(Integer counter_friends) {
-        this.counter_friends = counter_friends;
+    public void setCounterFriends(Integer counterFriends) {
+        this.counterFriends = counterFriends;
     }
 
     public String getDescription() {
@@ -145,28 +145,28 @@ public class User extends MongoDBObject {
         this.gender = gender;
     }
 
-    public String getHash_beerlist() {
-        return hash_beerlist;
+    public String getHashBeerlist() {
+        return hashBeerlist;
     }
 
-    public void setHash_beerlist(String hash_beerlist) {
-        this.hash_beerlist = hash_beerlist;
+    public void setHashBeerlist(String hashBeerlist) {
+        this.hashBeerlist = hashBeerlist;
     }
 
-    public String getHash_friendlist() {
-        return hash_friendlist;
+    public String getHashFriendlist() {
+        return hashFriendlist;
     }
 
-    public void setHash_friendlist(String hash_friendlist) {
-        this.hash_friendlist = hash_friendlist;
+    public void setHashFriendlist(String hashFriendlist) {
+        this.hashFriendlist = hashFriendlist;
     }
 
-    public String getHash_notificationlist() {
-        return hash_notificationlist;
+    public String getHashNotificationlist() {
+        return hashNotificationlist;
     }
 
-    public void setHash_notificationlist(String hash_notificationlist) {
-        this.hash_notificationlist = hash_notificationlist;
+    public void setHashNotificationlist(String hashNotificationlist) {
+        this.hashNotificationlist = hashNotificationlist;
     }
 
     public String getIdUser() {

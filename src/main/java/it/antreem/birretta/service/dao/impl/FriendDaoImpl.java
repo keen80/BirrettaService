@@ -7,6 +7,7 @@ import it.antreem.birretta.service.dao.FriendDao;
 import it.antreem.birretta.service.model.Friend;
 import it.antreem.birretta.service.model.FriendsRelation;
 import it.antreem.birretta.service.model.User;
+import it.antreem.birretta.service.util.FriendStatusCodes;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.commons.logging.Log;
@@ -119,8 +120,8 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         for(FriendsRelation friendRelation: myFriends)
         {
             User user = DaoFactory.getInstance().getUserDao().findById(friendRelation.getIdUser2());
-            
-                    
+            Friend friend = createFriendFromUserAndRelation(user,friendRelation);
+            list.add(friend);
         }
         return list;
     }
@@ -173,6 +174,46 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
           f.setPwdHash((String) obj.get("pwdHash"));
           **/
         return f;  
+    }
+
+    private Friend createFriendFromUserAndRelation(User user, FriendsRelation friendRelation) {
+        Friend f = new Friend();
+        f.setIdUser(user.getIdUser());
+        //friend non è un un oggetto mongodb
+        //     f.setId((ObjectId) obj.get_id());
+        f.setUsername(user.getUsername());
+        f.setDisplayName(user.getDisplayName());
+        f.setFirstName(user.getFirstName());
+        f.setLastName(user.getLastName());
+        f.setDescription(user.getDescription());
+        f.setEmail(user.getEmail());
+        f.setGender(user.getGender());
+        f.setNationality(user.getNationality());
+        f.setBirthDate(user.getBirthDate());
+        f.setAvatar(user.getAvatar());
+        f.setRole(user.getRole());
+
+        //impostazione status:
+        int status = 0;
+        if (friendRelation.isFriend()) //richiesta accettata
+        {
+            status = FriendStatusCodes.FRIEND.getStatus();
+        } else //il mio amico deve ancora accettare
+        {
+            status = FriendStatusCodes.PENDING.getStatus();
+        }
+
+        f.setStatus(status);
+        f.setActivatedOn(user.getActivatedOn());
+        f.setActivatedOn(user.getLastLoginOn());
+        f.setBadges(user.getBadges());
+        f.setFavorites(user.getFavorites());
+        f.setLiked(user.getLiked());
+        f.setCounter_checkIns(user.getCounterCheckIns());
+        f.setCounter_friends(user.getCounterFriends());
+        f.setCounter_badges(user.getCounterBadges());
+
+        return f;
     }
     
 }

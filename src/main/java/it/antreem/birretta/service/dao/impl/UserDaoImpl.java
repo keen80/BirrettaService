@@ -75,12 +75,12 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
             
             if (first != null){
                 Pattern pattern = Pattern.compile(/*"^" + */first.trim(), Pattern.CASE_INSENSITIVE);
-                query.put("first_name", pattern);
+                query.put("firstName", pattern);
             }
             
             if (last != null){
                 Pattern pattern = Pattern.compile(/*"^" + */last.trim(), Pattern.CASE_INSENSITIVE);
-                query.put("last_name", pattern);
+                query.put("lastName", pattern);
             }
             
             DBCursor cur = users.find(query).limit(10);
@@ -139,12 +139,12 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     protected static User createUserFromDBObject(DBObject obj)
     {
         User u = new User();
-        u.setIdUser((String) obj.get("id_user"));
+        u.setIdUser((String) obj.get("idUser"));
         u.setId((ObjectId) obj.get("_id"));
         u.setUsername((String) obj.get("username"));
         u.setDisplayName((String)obj.get("displayName"));
-        u.setFirstName((String) obj.get("first_name"));
-        u.setLastName((String) obj.get("last_name"));
+        u.setFirstName((String) obj.get("firstName"));
+        u.setLastName((String) obj.get("lastName"));
         u.setDescription((String)obj.get("description"));
         u.setEmail((String)obj.get("email"));
         u.setGender((Integer) obj.get("gender"));
@@ -174,9 +174,12 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         u.setBadges((String)obj.get("badges"));
         u.setFavorites((String) obj.get("favorites"));
         u.setLiked((String)obj.get("liked"));
-        u.setCounter_checkIns((Integer)obj.get("counter_checkIns"));
-        u.setCounter_friends((Integer)obj.get("counter_friends"));
-        u.setCounter_badges((Integer)obj.get("counter_badges"));
+        u.setCounterCheckIns((Integer)obj.get("counterCheckIns"));
+        u.setCounterFriends((Integer)obj.get("counterFriends"));
+        u.setCounterBadges((Integer)obj.get("counterBadges"));
+        u.setHashBeerlist((String)obj.get("hashBeerlist"));
+        u.setHashFriendlist((String)obj.get("hashFriendlist"));
+        u.setHashNotificationlist((String)obj.get("hashNotificationlist"));
         return u;
     }
     
@@ -187,8 +190,8 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         _u.put("username", u.getUsername());
      //   _u.put("age", u.getAge());
         _u.put("email", u.getEmail());
-        _u.put("first_name", u.getFirstName().trim());
-        _u.put("last_name", u.getLastName().trim());
+        _u.put("firstName", u.getFirstName().trim());
+        _u.put("lastName", u.getLastName().trim());
         _u.put("pwdHash", u.getPwdHash());
        // _u.put("sex", u.getSex());
         return _u;
