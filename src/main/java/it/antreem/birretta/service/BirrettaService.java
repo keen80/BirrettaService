@@ -765,6 +765,11 @@ public class BirrettaService
             return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
         }
         //crea oggetto friendrelation con isFriend=false
+        FriendsRelation friendsRelation = new FriendsRelation();
+        friendsRelation.setFriend(false);
+        friendsRelation.setIdUser1(myid);
+        friendsRelation.setIdUser2(frndid); 
+        DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
         //crea oggetto notifica e invia notifica
         if (!DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(myid, frndid)
             && !DaoFactory.getInstance().getFriendRelationDao().areFriends(myid, frndid)){
