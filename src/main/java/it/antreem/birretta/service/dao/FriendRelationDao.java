@@ -13,4 +13,5 @@ public interface FriendRelationDao
     public boolean areFriends(String id1, String id2) throws DaoException;
     public int saveFriendsRelation(FriendsRelation fr) throws DaoException;
     public FriendsRelation getFriendsRelation(String id1, String id2) throws DaoException;
+    public boolean updateFriendsRelation(FriendsRelation fr) throws DaoException;
 }
