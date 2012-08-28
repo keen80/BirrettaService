@@ -170,11 +170,7 @@ public class User extends MongoDBObject {
     }
 
     public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+        return super.getId().toString();
     }
 
     public Date getLastLoginOn() {

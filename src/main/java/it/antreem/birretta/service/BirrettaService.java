@@ -214,6 +214,27 @@ public class BirrettaService
         
         return createJsonOkResponse(response);
     }
+    
+    @POST
+    @Path("/saveUser")
+    @Produces("application/json")
+    public ResultDTO saveUser(UpdateUserRequestDTO r){
+        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(r.getUsername());
+        if(u==null){
+            User newuser = new User();
+            newuser.setBirthDate(r.getBirthDate());
+            newuser.setEmail(r.getEmail());
+            newuser.setFirstName(r.getFirstName());
+            newuser.setLastName(r.getLastName());
+            newuser.setGender(r.getGender());
+            newuser.setUsername(r.getUsername());
+            newuser.setNationality(r.getNationality());
+            DaoFactory.getInstance().getUserDao().saveUser(newuser);
+            return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
+        }
+        return createResultDTOEmptyResponse(ErrorCodes.REG_FAILED);
+    }
+    
      /**
      * Restituisce i  dettagli di un utente in formato JSONP.
      */
