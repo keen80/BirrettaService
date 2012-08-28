@@ -829,30 +829,6 @@ public class BirrettaService
         //CREO LE ACTIVITY PER I DUE UTENTI
         
         
-        
-        /*User me = DaoFactory.getInstance().getUserDao().findById(myid);
-        String username = me.getUsername();
-        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
-            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
-        }
-        
-        User frnd = DaoFactory.getInstance().getUserDao().findById(frndid);
-        if (frnd == null){
-            return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
-        }
-        
-        // Se esiste la richiesta effettivamente la confermo
-        if (DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(frndid, myid)){
-            //DaoFactory.getInstance().getFriendRelationDao().saveFriendship(myid, frndid);
-            DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(frndid, myid);
-            
-            GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
-            return createJsonOkResponse(result);
-        }
-        else {
-            GenericResultDTO result = new GenericResultDTO(false, "Richiesta di amicizia non presente");
-            return createJsonOkResponse(result);
-        }*/
         GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
             return createJsonOkResponse(result);
     }
