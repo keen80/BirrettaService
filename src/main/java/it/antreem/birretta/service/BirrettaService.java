@@ -828,7 +828,7 @@ public class BirrettaService
             String lastname = frnd.getLastName()==null?"": frnd.getLastName();
             friendName = firstname + " "+ lastname;
         }
-        
+        n.setIdUser(myid);
         n.setFriendName(friendName);
         n.setType(NotificationCodes.FRIEND_REQUEST.getType());
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
@@ -921,7 +921,21 @@ public class BirrettaService
         DaoFactory.getInstance().getActivityDao().saveActivity(friendAct);
         
         //CREO LE DUE NOTIFICHE
+        Notification n = new Notification();
+        n.setIdFriend(frndid);
+        n.setIdUser(myid);
+        n.setFriendName(friendName);
+        n.setType(NotificationCodes.FRIEND_CONFIRM.getType());
+        n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
+        DaoFactory.getInstance().getNotificationDao().saveNotification(n);
         
+        Notification n2 = new Notification();
+        n2.setIdFriend(myid);
+        n2.setIdUser(frndid);
+        n2.setFriendName(friendName2);
+        n2.setType(NotificationCodes.FRIEND_CONFIRM.getType());
+        n2.setStatus(NotificationStatusCodes.UNREAD.getStatus());
+        DaoFactory.getInstance().getNotificationDao().saveNotification(n2);
         
         GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
             return createJsonOkResponse(result);
