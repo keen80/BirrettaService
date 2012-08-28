@@ -806,11 +806,23 @@ public class BirrettaService
         }
         
         //crea oggetto friendrelation con isFriend=false
-        FriendsRelation friendsRelation = new FriendsRelation();
-        friendsRelation.setFriend(false);
-        friendsRelation.setIdUser1(myid);
-        friendsRelation.setIdUser2(frndid); 
-        DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
+        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
+        if(fr==null){
+            FriendsRelation friendsRelation = new FriendsRelation();
+            friendsRelation.setFriend(false);
+            friendsRelation.setIdUser1(myid);
+            friendsRelation.setIdUser2(frndid);
+            DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
+        }
+        else if(fr.isFriend()==false){
+            GenericResultDTO result = new GenericResultDTO(false, "Richiesta eseguita gia' eseguita e pendente");
+            return createJsonOkResponse(result);
+        }
+        else if(fr.isFriend()==true){
+            GenericResultDTO result = new GenericResultDTO(false, "Amicizia gia' confermata");
+            return createJsonOkResponse(result);
+        } 
+        
         
         //crea oggetto notifica e salvo notifica
         Notification n = new Notification();
