@@ -79,7 +79,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         }
     }
     @Override
-    private boolean setNotificationRead(Notification n)
+    public boolean setNotificationRead(Notification n)
     {
         DB db = null;
         try

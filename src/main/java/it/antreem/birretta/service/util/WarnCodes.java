@@ -6,26 +6,26 @@ package it.antreem.birretta.service.util;
  */
 public enum WarnCodes 
 {   
-    WARN_FRNDREQ_01("", "Richiesta eseguita gia' eseguita e pendente"),
-    WARN_FRNDREQ_02("", "Amicizia gia' confermata"),
-    WARN_FRNDCONFIRM_00("","Richiesta di amicizia non presente"),
-    PUPPA_CODE("PuppaTitle", "PuppaMessage");
+    WARN_FRNDREQ_01(0, "Richiesta eseguita gia' eseguita e pendente"),
+    WARN_FRNDREQ_02(1, "Amicizia gia' confermata"),
+    WARN_FRNDCONFIRM_00(2,"Richiesta di amicizia non presente"),
+    PUPPA_CODE(9999, "PuppaMessage");
     
-    private String title;
+    private int code;
     private String message;
     
-    WarnCodes(String title, String message)
+    WarnCodes(int code, String message)
     {
-        this.title = title;
+        this.code = code;
         this.message = message;
     }
     
-    public String getCode() {
-        return name();//.replace("_", ".");
+    public int getCode() {
+        return code;
     }
     
     public String getTitle(){
-        return title;
+       return name();//.replace("_", ".");
     }
     
     public String getMessage(){
