@@ -9,17 +9,17 @@ import java.util.Date;
 public class Notification extends MongoDBObject
 {
     private String idNotification;
-    private String idUser;
-    private String displayName;
+    private String jumpTo;
+    private String targetName;
     private String idBeer;
     private String beerName;
     private String idFriend;
     private String friendName;
     private String idPlace;
     private String placeName;
-    private String description;
+    private String image;
     private String type;
-    private Boolean read;
+    private Boolean status;
     private Date insertedOn;
 
     public String getBeerName() {
@@ -30,12 +30,12 @@ public class Notification extends MongoDBObject
         this.beerName = beerName;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getTargetName() {
+        return targetName;
     }
 
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
     }
 
     public String getFriendName() {
@@ -87,28 +87,28 @@ public class Notification extends MongoDBObject
     }
 
 
-    public String getIdUser() {
-        return idUser;
+    public String getJumpTo() {
+        return jumpTo;
     }
 
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+    public void setJumpTo(String jumpTo) {
+        this.jumpTo = jumpTo;
     }
 
-    public String getDescription() {
-        return description;
+    public String getImage() {
+        return image;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public Boolean getRead() {
-        return read;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setRead(Boolean read) {
-        this.read = read;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public Date getInsertedOn() {

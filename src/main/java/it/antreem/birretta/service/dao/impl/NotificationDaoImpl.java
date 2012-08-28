@@ -29,7 +29,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
             db.requestStart();
             DBCollection beers = db.getCollection(ACTIVITY_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            query.put("id_user", user);
+            query.put("idUser", user);
             DBCursor cur = beers.find(query);
             
             while (cur.hasNext()){
@@ -81,18 +81,18 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
     private BasicDBObject createDBObjectFromNotification(Notification n) {
         BasicDBObject _n = new BasicDBObject();
 //        _n.put("id_notification", n.getIdNotification());
-        _n.put("id_user", n.getIdUser());
-        _n.put("displayName", n.getDisplayName());
-        _n.put("id_beer", n.getIdBeer());
+        _n.put("jumpTo", n.getJumpTo());
+        _n.put("targetName", n.getTargetName());
+        _n.put("idBeer", n.getIdBeer());
         _n.put("beerName", n.getBeerName());
-        _n.put("id_friend", n.getIdFriend());
+        _n.put("idFriend", n.getIdFriend());
         _n.put("friendName", n.getFriendName());
-        _n.put("id_place", n.getIdPlace());
+        _n.put("idPlace", n.getIdPlace());
         _n.put("placeName", n.getPlaceName());
         //solo di notification
-        _n.put("description", n.getDescription());  
+        _n.put("image", n.getImage());  
         _n.put("type", n.getType());
-        _n.put("read", n.getRead());
+        _n.put("status", n.getStatus());
         _n.put("insertedOn", n.getInsertedOn());
         /*
         _n.put("status", n.getStatus());
@@ -109,18 +109,18 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         Notification a = new Notification();
         a.setId((ObjectId) obj.get("_id"));
         //comuni ad Activity
-        a.setIdUser((String) obj.get("id_User"));
-        a.setDisplayName((String) obj.get("displayName"));
-        a.setIdBeer((String) obj.get("id_Beer"));      
+        a.setJumpTo((String) obj.get("jumpTo"));
+        a.setTargetName((String) obj.get("targetName"));
+        a.setIdBeer((String) obj.get("idBeer"));      
         a.setBeerName((String) obj.get("beerName"));
-        a.setIdPlace((String) obj.get("id_Place"));
+        a.setIdPlace((String) obj.get("idPlace"));
         a.setPlaceName((String) obj.get("placeName"));
-        a.setIdFriend((String) obj.get("id_Friend"));
+        a.setIdFriend((String) obj.get("idFriend"));
         a.setFriendName((String) obj.get("friendName"));
         //solo di notification
-        a.setDescription((String)obj.get("description"));
+        a.setImage((String)obj.get("image"));
         a.setType((String)obj.get("type"));
-        a.setRead(obj.get("isRead")!=null?(Boolean)obj.get("isRead"): false );
+        a.setStatus(obj.get("status")!=null?(Boolean)obj.get("status"): false );
         String insertedOn=(String) obj.get("insertedOn");
         if(insertedOn!=null && !"".equals(insertedOn))
             a.setInsertedOn(new Date(insertedOn));
