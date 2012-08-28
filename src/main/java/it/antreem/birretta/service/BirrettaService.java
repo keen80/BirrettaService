@@ -766,6 +766,7 @@ public class BirrettaService
         if (frnd == null){
             return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
         }
+        
         //crea oggetto friendrelation con isFriend=false
         FriendsRelation friendsRelation = new FriendsRelation();
         friendsRelation.setFriend(false);
@@ -773,7 +774,7 @@ public class BirrettaService
         friendsRelation.setIdUser2(frndid); 
         DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
         
-        //crea oggetto notifica e invia notifica
+        //crea oggetto notifica e salvo notifica
         Notification n = new Notification();
         n.setIdFriend(frndid);
         String friendName;
@@ -793,14 +794,7 @@ public class BirrettaService
         n.setFriendName(friendName);
         n.setType(NotificationCodes.FRIEND_REQUEST.getType());
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
-        
-        //NotificationCodes.FRIEND_REQUEST;
         DaoFactory.getInstance().getNotificationDao().saveNotification(n);
-        
-        if (!DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(myid, frndid)
-            && !DaoFactory.getInstance().getFriendRelationDao().areFriends(myid, frndid)){
-            DaoFactory.getInstance().getFriendRelationReqDao().saveFriendRelationReq(myid, frndid);
-        }
         
         GenericResultDTO result = new GenericResultDTO(true, "Richiesta eseguita con successo");
         return createJsonOkResponse(result);
@@ -824,7 +818,7 @@ public class BirrettaService
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
         if(fr == null){
-            GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
+            GenericResultDTO result = new GenericResultDTO(true, "Richiesta di amicizia non presente");
             return createJsonOkResponse(result);
         }
         fr.setFriend(true);

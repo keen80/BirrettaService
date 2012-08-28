@@ -9,7 +9,8 @@ package it.antreem.birretta.service.util;
  * @author Stefano
  */
 public enum NotificationCodes {
-    FRIEND_REQUEST(0);
+    FRIEND_REQUEST(0),
+    FRIEND_CONFIRM(1);
     
     private final int type;
     
