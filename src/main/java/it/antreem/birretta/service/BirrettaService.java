@@ -785,10 +785,10 @@ public class BirrettaService
     @Path("/frndReq")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response frndReq(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    public ResultDTO frndReq(FriendReqDTO c, @Context HttpServletRequest httpReq) 
     {
         if (c == null){
-            return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
         
         String myid = c.getIdRequestor();
@@ -797,12 +797,12 @@ public class BirrettaService
         User me = DaoFactory.getInstance().getUserDao().findById(myid);
         String username = me.getUsername();
         if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
-            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
         User frnd = DaoFactory.getInstance().getUserDao().findById(frndid);
         if (frnd == null){
-            return createJsonErrorResponse(ErrorCodes.USER_NOT_FOUND);
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NOT_FOUND);
         }
         
         //crea oggetto friendrelation con isFriend=false
@@ -815,12 +815,10 @@ public class BirrettaService
             DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
         }
         else if(fr.isFriend()==false){
-            GenericResultDTO result = new GenericResultDTO(false, "Richiesta eseguita gia' eseguita e pendente");
-            return createJsonOkResponse(result);
+            return createResultDTOEmptyResponse("WARN_FRNDREQ_01","Richiesta eseguita gia' eseguita e pendente",false);
         }
         else if(fr.isFriend()==true){
-            GenericResultDTO result = new GenericResultDTO(false, "Amicizia gia' confermata");
-            return createJsonOkResponse(result);
+            return createResultDTOEmptyResponse("WARN_FRNDREQ_02","Amicizia gia' confermata",false);
         } 
         
         
@@ -846,18 +844,17 @@ public class BirrettaService
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n);
         
-        GenericResultDTO result = new GenericResultDTO(true, "Richiesta eseguita con successo");
-        return createJsonOkResponse(result);
+        return  createResultDTOEmptyResponse("OK_FRNDREQ_00","Richiesta eseguita con successo",true);
     }
     
     @POST
     @Path("/frndConfirm")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response frndConfirm(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    public ResultDTO frndConfirm(FriendReqDTO c, @Context HttpServletRequest httpReq) 
     {
         if (c == null){
-            return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
         
         String myid = c.getIdRequested();
@@ -869,8 +866,7 @@ public class BirrettaService
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
         if(fr == null){
-            GenericResultDTO result = new GenericResultDTO(true, "Richiesta di amicizia non presente");
-            return createJsonOkResponse(result);
+            return  createResultDTOEmptyResponse("WARN_FRNDCONFIRM_00","Richiesta di amicizia non presente",false);
         }
         fr.setFriend(true);
         DaoFactory.getInstance().getFriendRelationDao().updateFriendsRelation(fr);
@@ -948,19 +944,18 @@ public class BirrettaService
         n2.setType(NotificationCodes.FRIEND_CONFIRM.getType());
         n2.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n2);
-        
-        GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
-            return createJsonOkResponse(result);
+       
+        return createResultDTOEmptyResponse("OK_FRNDCONFIRM_00","Amicizia accettata con successo",true);
     }
     
     @POST
     @Path("/frndRefuse")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response frndRefuse(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    public ResultDTO frndRefuse(FriendReqDTO c, @Context HttpServletRequest httpReq) 
     {
         if (c == null){
-            return createJsonErrorResponse(ErrorCodes.FRND_MISSED_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
         //viene impostato a read la notifica di richiesta d'amicizia
         String id1 = c.getIdRequested();
@@ -971,8 +966,7 @@ public class BirrettaService
         {
             DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(id1, id2);
             DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(id1, id2);
-            GenericResultDTO result = new GenericResultDTO(true, "Amicizia rimossa con successo");
-            return createJsonOkResponse(result);
+            return createResultDTOEmptyResponse("OK_FRNDREFUSE_00","Amicizia rimossa con successo",true);
         }
         
         me = DaoFactory.getInstance().getUserDao().findById(id2);
@@ -981,11 +975,10 @@ public class BirrettaService
         {
             DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(id1, id2);
             DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(id1, id2);
-            GenericResultDTO result = new GenericResultDTO(true, "Amicizia rimossa con successo");
-            return createJsonOkResponse(result);
+             return createResultDTOEmptyResponse("OK_FRNDREFUSE_00","Amicizia rimossa con successo",true);
         }
         
-        return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
     }
     
     @GET
@@ -1038,6 +1031,39 @@ public class BirrettaService
         Response.ResponseBuilder builder = Response.ok(o, MediaType.APPLICATION_JSON);
         return builder.build();
     }
+    /*
+     * crea risposta senza body impostando status, per aggiungere metadata eseguire
+     *  result.getResponse().getMetaData().setBadge("OK", 1, "Notification OK");
+     *   result.getResponse().getMetaData().setNotification("OK", 1, "Notification OK");
+     */
+     private ResultDTO createResultDTOEmptyResponse(String code,String msg,Boolean success) {
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode(code);
+        status.setMsg(msg);
+        status.setSuccess(success);
+        Metadata metaData = new Metadata();
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, metaData);
+        result.setResponse(response);
+        return result;
+     }
+      /*
+     * crea risposta senza body impostando status in base all'errore fornito,
+     * per aggiungere metadata eseguire
+     *  result.getResponse().getMetaData().setBadge("OK", 1, "Notification OK");
+     *   result.getResponse().getMetaData().setNotification("OK", 1, "Notification OK");
+     */
+     private ResultDTO createResultDTOEmptyResponse(ErrorCodes e) {
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode(e.getCode());
+        status.setMsg(e.getMessage());
+        status.setSuccess(false);
+        Metadata metaData = new Metadata();
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, metaData);
+        result.setResponse(response);
+        return result;
+     }
      private ResultDTO createResultDTOResponseOk(ArrayList list) {
         ResultDTO result = new ResultDTO();
         Status status= new Status();

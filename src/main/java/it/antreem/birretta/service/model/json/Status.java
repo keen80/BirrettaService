@@ -2,12 +2,23 @@ package it.antreem.birretta.service.model.json;
 
 /**
  * classe status realizzata a partire dal mock di hh
+ *
  * @author gmorlini
  */
 public class Status {
-      private boolean success= true;
-      private String code="OK";
-      private String msg="Status OK";
+
+    private boolean success = true;
+    private String code = "OK";
+    private String msg = "Status OK";
+
+    public Status() {
+    }
+
+    public Status(String code, String msg, Boolean success) {
+        this.code = code;
+        this.msg = msg;
+        this.success = success;
+    }
 
     public String getCode() {
         return code;
@@ -32,5 +43,4 @@ public class Status {
     public void setSuccess(boolean success) {
         this.success = success;
     }
-      
 }
