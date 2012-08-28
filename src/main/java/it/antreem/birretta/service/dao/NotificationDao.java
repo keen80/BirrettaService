@@ -17,7 +17,7 @@ public interface NotificationDao {
     Notification findById(String id) throws DaoException;
 
     ArrayList<Notification> findByUser(String user) throws DaoException;
-
+    boolean setNotificationRead(Notification n) throws DaoException;
     int saveNotification(Notification n) throws DaoException;
     
 }
