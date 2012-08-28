@@ -141,7 +141,7 @@ public class FriendRelationDaoImpl extends AbstractMongoDao implements FriendRel
         }
     }
     @Override
-    public boolean updateFriendsRelation(FriendsRelation fr)  throws DaoException 
+    public boolean updateFriendsRelation(FriendsRelation fr) 
     {
     DB db = null;
         try
@@ -150,10 +150,17 @@ public class FriendRelationDaoImpl extends AbstractMongoDao implements FriendRel
             db.requestStart();
             DBCollection friendsrelations = db.getCollection(FRIENDS_RELATION_COLLNAME);
            DBObject obj= createDBObjectFromFriendsRelation(fr);
-            WriteResult wr = friendsrelations.update(new BasicDBObject().append("_id", fr.getId()),obj);
+               WriteResult wr = friendsrelations.update(new BasicDBObject().append("idUser1", fr.getIdUser1()).append("idUser2",fr.getIdUser2()),obj);
+        
+      //      WriteResult wr = friendsrelations.update(new BasicDBObject().append("_id", fr.getId()),obj);
            if(wr.getN()<1)
            {
                log.error("impossibile fare update");
+               return false;
+           }
+           else if(wr.getN()>1)
+           {
+               log.error("troppi update");
                return false;
            }
             

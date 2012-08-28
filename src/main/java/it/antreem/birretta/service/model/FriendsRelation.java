@@ -9,7 +9,6 @@ public class FriendsRelation extends MongoDBObject {
     private String idUser1;
     private String idUser2;
     private boolean friend;
-
     public boolean isFriend() {
         return friend;
     }

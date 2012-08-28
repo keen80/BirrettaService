@@ -80,7 +80,7 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
 
     private BasicDBObject createDBObjectFromActivity(Activity a) {
         BasicDBObject _a = new BasicDBObject();
-        _a.put("idActivity", a.getIdActivity());
+       // _a.put("idActivity", a.getIdActivity());
         _a.put("image", a.getImage());
         _a.put("displayName", a.getDisplayName());
         _a.put("idUser", a.getIdUser());

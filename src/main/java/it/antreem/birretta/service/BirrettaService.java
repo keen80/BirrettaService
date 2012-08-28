@@ -227,7 +227,7 @@ public class BirrettaService
             newuser.setFirstName(r.getFirstName());
             newuser.setLastName(r.getLastName());
             newuser.setGender(r.getGender());
-            newuser.setUsername(r.getEmail());
+            newuser.setUsername(r.getEmail());//da verificare
             newuser.setNationality(r.getNationality());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
             return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
