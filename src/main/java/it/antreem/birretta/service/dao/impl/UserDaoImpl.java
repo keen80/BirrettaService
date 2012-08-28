@@ -149,9 +149,9 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     }
     
     @Override
-    public User findById(String id) throws DaoException 
+    public User findById(String mongoid) throws DaoException 
     {
-        DBObject obj = findById(id, USERS_COLLNAME);
+        DBObject obj = findById(mongoid, USERS_COLLNAME);
         if (obj == null) return null;
         User u = createUserFromDBObject(obj);
         return u;
@@ -209,6 +209,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     {
         BasicDBObject _u = new BasicDBObject();
         _u.put("username", u.getUsername());
+        _u.put("idUser", u.getIdUser());
      //   _u.put("age", u.getAge());
         _u.put("email", u.getEmail());
         _u.put("firstName", u.getFirstName().trim());
