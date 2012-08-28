@@ -845,10 +845,10 @@ public class BirrettaService
             DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
         }
         else if(fr.isFriend()==false){
-            return createResultDTOEmptyResponse(WarnCodes.WARN_FRNDREQ_01);
+            return createResultDTOEmptyResponse(ErrorCodes.WARN_FRNDREQ_01);
         }
         else if(fr.isFriend()==true){
-            return createResultDTOEmptyResponse(WarnCodes.WARN_FRNDREQ_02);
+            return createResultDTOEmptyResponse(ErrorCodes.WARN_FRNDREQ_02);
         } 
         
         
@@ -896,7 +896,7 @@ public class BirrettaService
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
         if(fr == null){
-            return  createResultDTOEmptyResponse(WarnCodes.WARN_FRNDCONFIRM_00);
+            return  createResultDTOEmptyResponse(ErrorCodes.WARN_FRNDCONFIRM_00);
         }
         fr.setFriend(true);
         DaoFactory.getInstance().getFriendRelationDao().updateFriendsRelation(fr);

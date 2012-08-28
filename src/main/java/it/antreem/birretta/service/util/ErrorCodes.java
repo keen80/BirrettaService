@@ -34,6 +34,9 @@ public enum ErrorCodes
     FRND_MISSED_PARAM(225, "Parametri mancanti"),
     FRND_REFUSE_ERROR(226, "Amicizia non presente"),
     UPDATE_NOTIFICANION_ERROR_00(227, "Notifica non presente"),
+    WARN_FRNDREQ_01(297, "Richiesta eseguita gia' eseguita e pendente"),
+    WARN_FRNDREQ_02(298, "Amicizia gia' confermata"),
+    WARN_FRNDCONFIRM_00(299,"Richiesta di amicizia non presente"),
     PUPPA_CODE(9999, "PuppaMessage");
     
     private int code;
