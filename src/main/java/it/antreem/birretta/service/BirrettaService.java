@@ -11,6 +11,7 @@ import it.antreem.birretta.service.model.*;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.JsonHandler;
 import it.antreem.birretta.service.util.NotificationCodes;
+import it.antreem.birretta.service.util.NotificationStatusCodes;
 import it.antreem.birretta.service.util.Utils;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -774,6 +775,24 @@ public class BirrettaService
         
         //crea oggetto notifica e invia notifica
         Notification n = new Notification();
+        n.setIdFriend(frndid);
+        String friendName;
+        if(frnd.getDisplayName()!=null && !frnd.getDisplayName().trim().equals("")){
+            friendName = frnd.getDisplayName();
+        }
+        else if((frnd.getLastName()==null && frnd.getFirstName()==null) 
+                || (frnd.getLastName().trim().equals("") && frnd.getFirstName().trim().equals("")) ){
+            friendName = frnd.getUsername();
+        }
+        else{
+            String firstname = frnd.getFirstName()==null?"": frnd.getFirstName();
+            String lastname = frnd.getLastName()==null?"": frnd.getLastName();
+            friendName = firstname + " "+ lastname;
+        }
+
+        n.setFriendName(friendName);
+        n.setType(NotificationCodes.FRIEND_REQUEST.getType());
+        n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         
         //NotificationCodes.FRIEND_REQUEST;
         DaoFactory.getInstance().getNotificationDao().saveNotification(n);

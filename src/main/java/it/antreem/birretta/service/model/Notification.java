@@ -19,7 +19,7 @@ public class Notification extends MongoDBObject
     private String placeName;
     private String image;
     private Integer type;
-    private Boolean status;
+    private Integer status;
     private Date insertedOn;
 
     public String getBeerName() {
@@ -103,11 +103,11 @@ public class Notification extends MongoDBObject
         this.image = image;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

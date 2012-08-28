@@ -120,7 +120,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         //solo di notification
         a.setImage((String)obj.get("image"));
         a.setType((Integer)obj.get("type"));
-        a.setStatus(obj.get("status")!=null?(Boolean)obj.get("status"): false );
+        a.setStatus((Integer)obj.get("status"));
         String insertedOn=(String) obj.get("insertedOn");
         if(insertedOn!=null && !"".equals(insertedOn))
             a.setInsertedOn(new Date(insertedOn));
