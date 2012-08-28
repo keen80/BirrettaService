@@ -13,4 +13,5 @@ public interface UserDao
     public User findUserByUsername(String username) throws DaoException;
     public List<User> findUsers(String username, String first, String last) throws DaoException;
     public int saveUser(User s) throws DaoException;
+     public int updateUser(User u) throws DaoException ;
 }
