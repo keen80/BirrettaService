@@ -62,7 +62,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
             db.requestStart();
             DBCollection beers = db.getCollection(DRINKS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            query.put("id_user", idUser);
+            query.put("idUser", idUser);
             DBCursor cur = beers.find(query).sort(new BasicDBObject("timestamp", -1));
             
             while (cur.hasNext()){
@@ -104,7 +104,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
             db.requestStart();
             DBCollection drinks = db.getCollection(DRINKS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            query.put("id_user", idUser);
+            query.put("idUser", idUser);
             DBCursor cur = drinks.find(query).sort(new BasicDBObject("timestamp", -1)).limit(limit);
             
             while (cur.hasNext()){
