@@ -352,7 +352,16 @@ public class BirrettaService
         List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationsByNameLike(name);
         return createJsonOkResponse(list);
     }
-    
+    @GET
+    @Path("/findLocNear_jsonp")
+    @Produces("application/json")
+    public JSONPObject findLocNear_jsonp (@QueryParam("lon") final Double lon,
+                                 @QueryParam("lat") final Double lat,
+                                 @DefaultValue("0.8") @QueryParam("radius") final Double radius,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName) throws MalformedURLException, IOException 
+    {
+       return new JSONPObject(callbackName,findLocNear(lon, lat, radius));
+    }
     @GET
     @Path("/findLocNear")
     @Produces("application/json")
@@ -1019,7 +1028,16 @@ public class BirrettaService
         
         //return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
     }
-    
+   
+    @GET
+    @Path("/setNotificationRead_jsonp")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public JSONPObject setNotificationRead_jsonp(@QueryParam("idNotification") final String idNotification, 
+                                 @Context HttpServletRequest httpReq,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName) {
+        return new JSONPObject(callbackName,setNotificationRead(idNotification,httpReq));
+    }
     @GET
     @Path("/setNotificationRead")
     @Consumes("application/json")
