@@ -151,7 +151,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
             db.requestStart();
             DBCollection drinks = db.getCollection(DRINKS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            query.put("id_user", idUser);
+            query.put("idUser", idUser);
             query.put("timestamp", new BasicDBObject("$gte", _date));
             DBCursor cur = drinks.find(query);
             
@@ -188,7 +188,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
             db.requestStart();
             DBCollection drinks = db.getCollection(DRINKS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            query.put("id_user", idUser);
+            query.put("idUser", idUser);
             return drinks.find(query).count();
         }
         catch(MongoException ex){
@@ -216,7 +216,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
             BasicDBObject param = new BasicDBObject();
             //ordinamento crescente(1) per il nome
             //decrescente sarebbe stato -1
-            param.put("username", 1);
+            param.put("displayName", 1);
             log.info("sort param:"+param.toString());
             DBCursor cur=null;
             cur = drinks.find();
@@ -268,13 +268,16 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
     protected static BasicDBObject createDBObjectFromDrink (Drink d)
     {
         BasicDBObject _d = new BasicDBObject();
-        _d.put("username",d.getDisplayName());
+        _d.put("displayName",d.getDisplayName());
         _d.put("image", d.getImage());
-        _d.put("id_user", d.getIdUser());
-        _d.put("id_beer", d.getIdBeer());
-        _d.put("id_place", d.getIdPlace());
-        _d.put("id_activity", d.getBeerName());
-        _d.put("id_feedback", d.getPlaceName());
+        _d.put("idUser", d.getIdUser());
+        _d.put("idBer", d.getIdBeer());
+        _d.put("idPlace", d.getIdPlace());
+        _d.put("beerName", d.getBeerName());
+        _d.put("placeName", d.getPlaceName());
+        _d.put("rate",d.getRate());
+        _d.put("rate2", d.getRate2());
+        _d.put("rate3", d.getRate3());
         _d.put("insertedOn", d.getInsertedOn());
         return _d;
     }
