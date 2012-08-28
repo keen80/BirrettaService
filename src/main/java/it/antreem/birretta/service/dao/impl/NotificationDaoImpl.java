@@ -4,6 +4,7 @@ import it.antreem.birretta.service.dao.NotificationDao;
 import com.mongodb.*;
 import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.model.Notification;
+import it.antreem.birretta.service.util.NotificationStatusCodes;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.commons.logging.Log;
@@ -15,7 +16,7 @@ import org.bson.types.ObjectId;
  * @author gmorlini
  */
 public class NotificationDaoImpl extends AbstractMongoDao implements NotificationDao{
-    public final static String ACTIVITY_COLLNAME = "notifications";
+    public final static String NOTIFICATION_COLLNAME = "notifications";
      
      private static final Log log = LogFactory.getLog(NotificationDaoImpl.class);
      
@@ -27,7 +28,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         {
             db = getDB();
             db.requestStart();
-            DBCollection beers = db.getCollection(ACTIVITY_COLLNAME);
+            DBCollection beers = db.getCollection(NOTIFICATION_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("idUser", user);
             DBCursor cur = beers.find(query);
@@ -63,7 +64,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         {
             db = getDB();
             db.requestStart();
-            DBCollection activities = db.getCollection(ACTIVITY_COLLNAME);
+            DBCollection activities = db.getCollection(NOTIFICATION_COLLNAME);
             BasicDBObject activity = createDBObjectFromNotification(n);
             return activities.insert(activity).getN();
         }
@@ -77,7 +78,36 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
             }
         }
     }
-
+    private boolean setNotificationRead(Notification n)
+    {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection friendsrelations = db.getCollection(NOTIFICATION_COLLNAME);
+            n.setStatus(NotificationStatusCodes.READ.getStatus());
+            DBObject obj= createDBObjectFromNotification(n);
+             WriteResult wr = friendsrelations.update(new BasicDBObject().append("_id", n.getIdNotification()),obj);
+           if(wr.getN()<1)
+           {
+               log.error("impossibile fare update");
+               return false;
+           }
+            
+            
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+        return true;
+    }
     private BasicDBObject createDBObjectFromNotification(Notification n) {
         BasicDBObject _n = new BasicDBObject();
 //        _n.put("id_notification", n.getIdNotification());
