@@ -10,6 +10,7 @@ import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.JsonHandler;
+import it.antreem.birretta.service.util.NotificationCodes;
 import it.antreem.birretta.service.util.Utils;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -770,7 +771,13 @@ public class BirrettaService
         friendsRelation.setIdUser1(myid);
         friendsRelation.setIdUser2(frndid); 
         DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
+        
         //crea oggetto notifica e invia notifica
+        Notification n = new Notification();
+        
+        //NotificationCodes.FRIEND_REQUEST;
+        DaoFactory.getInstance().getNotificationDao().saveNotification(n);
+        
         if (!DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(myid, frndid)
             && !DaoFactory.getInstance().getFriendRelationDao().areFriends(myid, frndid)){
             DaoFactory.getInstance().getFriendRelationReqDao().saveFriendRelationReq(myid, frndid);
