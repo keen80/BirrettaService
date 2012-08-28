@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import it.antreem.birretta.service.model.FriendsRelation;
 import java.util.ArrayList;
+import org.bson.types.ObjectId;
 
 /**
  *
@@ -148,11 +149,11 @@ public class FriendRelationDaoImpl extends AbstractMongoDao implements FriendRel
         {
             db = getDB();
             db.requestStart();
-            DBCollection users = db.getCollection(FRIENDS_RELATION_COLLNAME);
+            DBCollection friendsrelations = db.getCollection(FRIENDS_RELATION_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("idUser1", id1);
             query.put("idUser2", id2);
-            DBCursor cur = users.find(query);
+            DBCursor cur = friendsrelations.find(query);
             
             if(cur.hasNext()){
                 DBObject _d = cur.next();
@@ -185,6 +186,7 @@ public class FriendRelationDaoImpl extends AbstractMongoDao implements FriendRel
 
     private FriendsRelation createFriendsRelationFromDBObject(DBObject obj) {
         FriendsRelation f = new FriendsRelation();
+        f.setId((ObjectId)obj.get("_id"));
         f.setIdUser1((String)obj.get("idUser1"));
         f.setIdUser2((String)obj.get("idUser2"));
         f.setFriend((obj.get("friend")!=null?(Boolean)obj.get("friend"):false));

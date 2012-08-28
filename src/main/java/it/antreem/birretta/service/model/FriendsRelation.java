@@ -5,7 +5,7 @@ package it.antreem.birretta.service.model;
  * il campo friend valorizzato a true se il rapporto è stato accettato
  * @author gmorlini
  */
-public class FriendsRelation {
+public class FriendsRelation extends MongoDBObject {
     private String idUser1;
     private String idUser2;
     private boolean friend;
