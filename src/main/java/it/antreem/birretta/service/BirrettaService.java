@@ -219,7 +219,7 @@ public class BirrettaService
     @Path("/saveUser")
     @Produces("application/json")
     public ResultDTO saveUser(UpdateUserRequestDTO r){
-        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(r.getUsername());
+        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(r.getEmail());
         if(u==null){
             User newuser = new User();
             newuser.setBirthDate(r.getBirthDate());
@@ -227,7 +227,7 @@ public class BirrettaService
             newuser.setFirstName(r.getFirstName());
             newuser.setLastName(r.getLastName());
             newuser.setGender(r.getGender());
-            newuser.setUsername(r.getUsername());
+            newuser.setUsername(r.getEmail());
             newuser.setNationality(r.getNationality());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
             return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);

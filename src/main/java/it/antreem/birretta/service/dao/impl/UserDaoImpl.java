@@ -171,9 +171,9 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         u.setGender((Integer) obj.get("gender"));
         u.setNationality((String)obj.get("nationality"));
         
-        String birthDate=(String)obj.get("birthDate");
-        if(birthDate!=null && !birthDate.equals(""))
-             u.setBirthDate(new Date(birthDate));
+        Object birthDate= obj.get("birthDate");
+        if(birthDate!=null &&  obj.get("birthDate").getClass().equals(Date.class))
+             u.setBirthDate((Date)birthDate);
         
         u.setAvatar((String)obj.get("avatar"));
         
