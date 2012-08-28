@@ -1119,23 +1119,6 @@ public class BirrettaService
         return result;
      }
       /*
-     * crea risposta senza body impostando status in base al warning fornito,
-     * per aggiungere metadata eseguire
-     *  result.getResponse().getMetaData().setBadge("OK", 1, "Notification OK");
-     *   result.getResponse().getMetaData().setNotification("OK", 1, "Notification OK");
-     */
-     private ResultDTO createResultDTOEmptyResponse(WarnCodes w) {
-        ResultDTO result = new ResultDTO();
-        Status status= new Status();
-        status.setCode(w.getCode());
-        status.setMsg(w.getMessage());
-        status.setSuccess(false);
-        Metadata metaData = new Metadata();
-        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, metaData);
-        result.setResponse(response);
-        return result;
-     }
-      /*
      * crea risposta senza body impostando status in base all'info fornita,
      * per aggiungere metadata eseguire
      *  result.getResponse().getMetaData().setBadge("OK", 1, "Notification OK");
