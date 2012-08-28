@@ -762,7 +762,7 @@ public class BirrettaService
         }
         a.setDisplayName(displayName);
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
-        return createResultDTOEmptyResponse("OK_CHECKIN_00", "Check-in eseguito con successo", Boolean.TRUE);
+        return createResultDTOEmptyResponse(InfoCodes.OK_CHECKIN_00);
     }
     
     
@@ -846,10 +846,10 @@ public class BirrettaService
             DaoFactory.getInstance().getFriendRelationDao().saveFriendsRelation(friendsRelation);
         }
         else if(fr.isFriend()==false){
-            return createResultDTOEmptyResponse("WARN_FRNDREQ_01","Richiesta eseguita gia' eseguita e pendente",false);
+            return createResultDTOEmptyResponse(WarnCodes.WARN_FRNDREQ_01);
         }
         else if(fr.isFriend()==true){
-            return createResultDTOEmptyResponse("WARN_FRNDREQ_02","Amicizia gia' confermata",false);
+            return createResultDTOEmptyResponse(WarnCodes.WARN_FRNDREQ_02);
         } 
         
         
@@ -875,7 +875,7 @@ public class BirrettaService
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n);
         
-        return  createResultDTOEmptyResponse("OK_FRNDREQ_00","Richiesta eseguita con successo",true);
+        return  createResultDTOEmptyResponse(InfoCodes.OK_FRNDREQ_00);
     }
     
     @POST
@@ -897,7 +897,7 @@ public class BirrettaService
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
         if(fr == null){
-            return  createResultDTOEmptyResponse("WARN_FRNDCONFIRM_00","Richiesta di amicizia non presente",false);
+            return  createResultDTOEmptyResponse(WarnCodes.WARN_FRNDCONFIRM_00);
         }
         fr.setFriend(true);
         DaoFactory.getInstance().getFriendRelationDao().updateFriendsRelation(fr);
@@ -976,7 +976,7 @@ public class BirrettaService
         n2.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n2);
        
-        return createResultDTOEmptyResponse("OK_FRNDCONFIRM_00","Amicizia accettata con successo",true);
+        return createResultDTOEmptyResponse(InfoCodes.OK_FRNDCONFIRM_00);
     }
     
     @POST
@@ -1099,6 +1099,40 @@ public class BirrettaService
         status.setCode(e.getCode());
         status.setMsg(e.getMessage());
         status.setSuccess(false);
+        Metadata metaData = new Metadata();
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, metaData);
+        result.setResponse(response);
+        return result;
+     }
+      /*
+     * crea risposta senza body impostando status in base al warning fornito,
+     * per aggiungere metadata eseguire
+     *  result.getResponse().getMetaData().setBadge("OK", 1, "Notification OK");
+     *   result.getResponse().getMetaData().setNotification("OK", 1, "Notification OK");
+     */
+     private ResultDTO createResultDTOEmptyResponse(WarnCodes w) {
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode(w.getCode());
+        status.setMsg(w.getMessage());
+        status.setSuccess(false);
+        Metadata metaData = new Metadata();
+        it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, metaData);
+        result.setResponse(response);
+        return result;
+     }
+      /*
+     * crea risposta senza body impostando status in base all'info fornita,
+     * per aggiungere metadata eseguire
+     *  result.getResponse().getMetaData().setBadge("OK", 1, "Notification OK");
+     *   result.getResponse().getMetaData().setNotification("OK", 1, "Notification OK");
+     */
+     private ResultDTO createResultDTOEmptyResponse(InfoCodes i) {
+        ResultDTO result = new ResultDTO();
+        Status status= new Status();
+        status.setCode(i.getCode());
+        status.setMsg(i.getMessage());
+        status.setSuccess(true);
         Metadata metaData = new Metadata();
         it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, metaData);
         result.setResponse(response);
