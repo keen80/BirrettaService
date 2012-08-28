@@ -817,10 +817,26 @@ public class BirrettaService
         }
         //viene impostato a true la friendrelations
         //
+        
         String myid = c.getIdRequested();
         String frndid = c.getIdRequestor();
         
-        User me = DaoFactory.getInstance().getUserDao().findById(myid);
+        //IMPOSTO A TRUE LA RELATION DI AMICIZIA
+        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
+        if(fr == null){
+            GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
+            return createJsonOkResponse(result);
+        }
+        fr.setFriend(true);
+        //FARE UPDATE DELLA FRIENDS RELATION
+        
+        //CERCO LA RELAZIONE DI AMICIZIA INVERSA E LA METTO A TRUE, SE NON C'E' LA CREO
+        
+        //CREO LE ACTIVITY PER I DUE UTENTI
+        
+        
+        
+        /*User me = DaoFactory.getInstance().getUserDao().findById(myid);
         String username = me.getUsername();
         if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
             return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
@@ -833,7 +849,7 @@ public class BirrettaService
         
         // Se esiste la richiesta effettivamente la confermo
         if (DaoFactory.getInstance().getFriendRelationReqDao().existFriendRelationReq(frndid, myid)){
-            DaoFactory.getInstance().getFriendRelationDao().saveFriendship(myid, frndid);
+            //DaoFactory.getInstance().getFriendRelationDao().saveFriendship(myid, frndid);
             DaoFactory.getInstance().getFriendRelationReqDao().deleteFriendRelationReq(frndid, myid);
             
             GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
@@ -842,7 +858,9 @@ public class BirrettaService
         else {
             GenericResultDTO result = new GenericResultDTO(false, "Richiesta di amicizia non presente");
             return createJsonOkResponse(result);
-        }
+        }*/
+        GenericResultDTO result = new GenericResultDTO(true, "Amicizia accettata con successo");
+            return createJsonOkResponse(result);
     }
     
     @POST

@@ -140,6 +140,39 @@ public class FriendRelationDaoImpl extends AbstractMongoDao implements FriendRel
         }
     }
     
+    @Override
+    public FriendsRelation getFriendsRelation(String id1, String id2) throws DaoException 
+    {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection users = db.getCollection(FRIENDS_RELATION_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("idUser1", id1);
+            query.put("idUser2", id2);
+            DBCursor cur = users.find(query);
+            
+            if(cur.hasNext()){
+                DBObject _d = cur.next();
+                FriendsRelation d = createFriendsRelationFromDBObject(_d);
+                return d;
+            }
+            return null;
+            
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
+    
     // For first insert
     protected static BasicDBObject createDBObjectFromFriendsRelation (FriendsRelation fr)
     {
