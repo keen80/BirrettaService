@@ -605,23 +605,23 @@ public class BirrettaService
     @Path("/insertBeer")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response insertBeer(Beer b) 
+    public ResultDTO insertBeer(Beer b) 
     {
         // Pre-conditions
         if (b == null){
-            return createJsonErrorResponse(ErrorCodes.INSBEER_WRONG_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.INSBEER_WRONG_PARAM);
         }
         
         // Validazione parametri di input
         // TODO: Creare messaggi di errore appositi per ogni errore
         if (b.getName() == null || b.getName().length() < 2){
-            return createJsonErrorResponse(ErrorCodes.INSBEER_WRONG_PARAM);
+            return createResultDTOEmptyResponse(ErrorCodes.INSBEER_WRONG_PARAM);
         }
        
         // Controllo duplicati
         Beer _b = DaoFactory.getInstance().getBeerDao().findBeerByName(b.getName());
         if (_b != null){
-            return createJsonErrorResponse(ErrorCodes.INSBEER_BEER_DUP);
+            return createResultDTOEmptyResponse(ErrorCodes.INSBEER_BEER_DUP);
         }
         
         // Inserimento su DB
@@ -634,8 +634,7 @@ public class BirrettaService
         a.setType(ActivityCodes.BEER_CREATED.getType());
         a.setDisplayName(b.getUsername());
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
-        GenericResultDTO result = new GenericResultDTO(true, "Inserimento eseguito con successo");
-        return createJsonOkResponse(result);
+        return createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00);
     }
     @POST
     @Path("/insertListBeer")
