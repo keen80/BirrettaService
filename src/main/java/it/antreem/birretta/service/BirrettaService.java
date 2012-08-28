@@ -1022,6 +1022,12 @@ public class BirrettaService
     }
     
     @GET
+    @Path("/setNotificationRead")
+    @Consumes("application/json")
+    @Produces("application/json")
+    public ResultDTO setNotificationRead
+    
+    @GET
     @Path("/findFrndReqs")
     @Consumes("application/json")
     @Produces("application/json")
