@@ -219,20 +219,46 @@ public class BirrettaService
     @Path("/saveUser")
     @Produces("application/json")
     public ResultDTO saveUser(UpdateUserRequestDTO r){
-        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(r.getEmail());
+        User u = DaoFactory.getInstance().getUserDao().findUserByIdUser(r.getIdUser());
         if(u==null){
             User newuser = new User();
             newuser.setIdUser(r.getIdUser());
             newuser.setBirthDate(r.getBirthDate());
             newuser.setEmail(r.getEmail());
-            //newuser.setFirstName(r.getFirstName());
-            //newuser.setLastName(r.getLastName());
             newuser.setDisplayName(r.getDisplayName());
             newuser.setGender(r.getGender());
-            newuser.setUsername(r.getEmail());//da verificare
+            newuser.setUsername(r.getIdUser());//SETTATO IN AUTOMATICO DALL'ID
             newuser.setNationality(r.getNationality());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
             return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
+        }
+        else{//NON SETTO PIU' LA MAIL E LO USERNAME
+            u.setActivatedOn(null);
+            u.setAvatar(null);
+            u.setBadges(null);
+            u.setBirthDate(null);
+            u.setCounterBadges(Integer.MIN_VALUE);
+            u.setCounterCheckIns(Integer.SIZE);
+            u.setCounterFriends(Integer.MIN_VALUE);
+            u.setDescription(null);
+            u.setDisplayName(null);
+            u.setEnableNotification(true);
+            u.setEnableNotification(true);
+            u.setFavorites(null);
+            u.setFirstName(null);
+            u.setGender(Integer.SIZE);
+            u.setHashBeerlist(null);
+            u.setHashFriendlist(null);
+            u.setHashNotificationlist(null);
+            u.setLastLoginOn(null);
+            u.setLastName(null);
+            u.setLiked(null);
+            u.setNationality(null);
+            u.setRole(Integer.SIZE);
+            u.setShareFacebook(true);
+            u.setShareTwitter(true);
+            u.setStatus(Integer.SIZE);
+            //FAREUPDATE
         }
         return createResultDTOEmptyResponse(ErrorCodes.REG_FAILED);
     }
