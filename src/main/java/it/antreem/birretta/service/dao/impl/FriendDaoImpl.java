@@ -119,7 +119,11 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         ArrayList<FriendsRelation> myFriends = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(idUser, maxElemet);
         for(FriendsRelation friendRelation: myFriends)
         {
-            User user = DaoFactory.getInstance().getUserDao().findById(friendRelation.getIdUser2());
+            User user = DaoFactory.getInstance().getUserDao().findUserByIdUser(friendRelation.getIdUser2());
+            if(user==null)
+            {
+                log.error("FriendDaoImpl - getAllMyFriends - utente non trovato: " +friendRelation.getIdUser2());
+            }
             Friend friend = createFriendFromUserAndRelation(user,friendRelation);
             list.add(friend);
         }
