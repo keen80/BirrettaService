@@ -114,9 +114,9 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         return list;
     }
      @Override
-    public ArrayList<Friend> getAllMyFriends(int maxElemet, String id_user) {
+    public ArrayList<Friend> getAllMyFriends(int maxElemet, String idUser) {
         ArrayList<Friend> list= new ArrayList<Friend>();
-        ArrayList<FriendsRelation> myFriends = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(id_user, maxElemet);
+        ArrayList<FriendsRelation> myFriends = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(idUser, maxElemet);
         for(FriendsRelation friendRelation: myFriends)
         {
             User user = DaoFactory.getInstance().getUserDao().findById(friendRelation.getIdUser2());
