@@ -53,7 +53,10 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
 
     @Override
     public Activity findById(String id) throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet.");
+         DBObject obj = findById(id, ACTIVITY_COLLNAME);
+        if (obj == null) return null;
+        Activity a = createActivityFromDBObject(obj);
+        return a;
     }
 
     @Override

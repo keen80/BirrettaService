@@ -54,7 +54,10 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
 
     @Override
     public Notification findById(String id) throws DaoException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        DBObject obj = findById(id, NOTIFICATION_COLLNAME);
+        if (obj == null) return null;
+        Notification n = createNotificationFromDBObject(obj);
+        return n;
     }
 
     @Override
@@ -89,7 +92,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
             DBCollection friendsrelations = db.getCollection(NOTIFICATION_COLLNAME);
             n.setStatus(NotificationStatusCodes.READ.getStatus());
             DBObject obj= createDBObjectFromNotification(n);
-             WriteResult wr = friendsrelations.update(new BasicDBObject().append("_id", n.getIdNotification()),obj);
+             WriteResult wr = friendsrelations.update(new BasicDBObject().append("_id", new ObjectId(n.getIdNotification())),obj);
            if(wr.getN()<1)
            {
                log.error("impossibile fare update");
@@ -179,7 +182,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
             db.requestStart();
             DBCollection nottab = db.getCollection(NOTIFICATION_COLLNAME);
             BasicDBObject req = new BasicDBObject();
-            req.put("_id", id);
+            req.put("_id", new ObjectId(id));
             int a = nottab.remove(req).getN();
             return a;
         }
