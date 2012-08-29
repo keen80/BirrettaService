@@ -11,9 +11,9 @@ import java.util.Date;
  * @author Stefano
  */
 public class UpdateUserRequestDTO {
-    //private String displayName;
-    private String firstName;
-    private String lastName;
+    private String displayName;
+    //private String firstName;
+    //private String lastName;
     //private String description;
     private String email;
     private Integer gender = 0;
@@ -25,26 +25,18 @@ public class UpdateUserRequestDTO {
         return idUser;
     }
 
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     public void setIdUser(String idUser) {
         this.idUser = idUser;
     }
     
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
     public String getEmail() {
         return email;
     }

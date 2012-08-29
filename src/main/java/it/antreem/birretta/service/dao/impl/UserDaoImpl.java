@@ -54,6 +54,40 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
             }
         }
     }
+    
+    @Override
+    public User findUserByIdUser(String idUser) throws DaoException 
+    {
+        log.debug("UserDaoImpl - findUserByIdUser - idUser: "+idUser);
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection users = db.getCollection(USERS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("idUser", idUser);
+            DBCursor cur = users.find(query);
+            
+            while (cur.hasNext()){
+                DBObject _u = cur.next();
+                User u = createUserFromDBObject(_u);
+                assert u.getIdUser().equals(idUser);
+                return u;
+            }
+            
+            return null;
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
 
     @Override
     public List<User> findUsers(String username, String first, String last) throws DaoException 

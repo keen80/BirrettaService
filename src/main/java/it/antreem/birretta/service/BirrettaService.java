@@ -225,8 +225,9 @@ public class BirrettaService
             newuser.setIdUser(r.getIdUser());
             newuser.setBirthDate(r.getBirthDate());
             newuser.setEmail(r.getEmail());
-            newuser.setFirstName(r.getFirstName());
-            newuser.setLastName(r.getLastName());
+            //newuser.setFirstName(r.getFirstName());
+            //newuser.setLastName(r.getLastName());
+            newuser.setDisplayName(r.getDisplayName());
             newuser.setGender(r.getGender());
             newuser.setUsername(r.getEmail());//da verificare
             newuser.setNationality(r.getNationality());
@@ -1022,7 +1023,7 @@ public class BirrettaService
         String myid = c.getIdRequested();
         String friendid = c.getIdRequestor();
         
-        //ERRATO ELIMINARE LA NOTIFICA
+        //ELIMINARE LA NOTIFICA
         ArrayList<Notification> an = DaoFactory.getInstance().getNotificationDao().findByUser(myid);
         for(int i =0 ;i<an.size();i++){
             Notification n = an.get(i);
