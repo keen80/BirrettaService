@@ -58,7 +58,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     @Override
     public User findUserByIdUser(String idUser) throws DaoException 
     {
-        log.debug("UserDaoImpl - findUserByIdUser - idUser: "+idUser);
+        log.info("UserDaoImpl - findUserByIdUser - idUser: "+idUser);
         DB db = null;
         try
         {

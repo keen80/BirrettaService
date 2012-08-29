@@ -171,7 +171,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
     @Override
     public int deleteNotificationByMongoID(String id) throws DaoException 
     {
-        log.debug("NotificationDaoImpl - deleteNotificationByMongoID - id: "+id);
+        log.info("NotificationDaoImpl - deleteNotificationByMongoID - id: "+id);
         DB db = null;
         try
         {

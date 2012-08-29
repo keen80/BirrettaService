@@ -922,8 +922,8 @@ public class BirrettaService
         String myid = c.getIdRequested();
         String frndid = c.getIdRequestor();
         
-        User me = DaoFactory.getInstance().getUserDao().findById(myid);
-        User frnd = DaoFactory.getInstance().getUserDao().findById(frndid);
+        User me = DaoFactory.getInstance().getUserDao().findUserByIdUser(myid);
+        User frnd = DaoFactory.getInstance().getUserDao().findUserByIdUser(frndid);
         
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
