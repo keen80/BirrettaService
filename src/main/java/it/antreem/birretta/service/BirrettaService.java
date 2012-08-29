@@ -222,7 +222,10 @@ public class BirrettaService
     @POST
     @Path("/saveUser")
     @Produces("application/json")
-    public ResultDTO saveUser(UpdateUserRequestDTO r){
+    public ResultDTO saveUser(UpdateUserRequestDTO r,@Context HttpServletRequest httpReq){
+        if (!r.getIdUser().equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
         User u = DaoFactory.getInstance().getUserDao().findUserByIdUser(r.getIdUser());
         if(u==null){
             User newuser = new User();
@@ -304,9 +307,10 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listFriend_jsonp (
 	@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user,
-	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+	@DefaultValue("callback") @QueryParam("callback") String callbackName,
+        @Context HttpServletRequest httpReq)
     {
-		return new JSONPObject(callbackName,listFriend(_maxElemet,id_user));
+		return new JSONPObject(callbackName,listFriend(_maxElemet,id_user,httpReq));
 	}
      /**
      * Restituisce i miei amici e i relativi dettagli in formato JSON.
@@ -314,9 +318,17 @@ public class BirrettaService
     @GET
     @Path("/listFriend")
     @Produces("application/json")
-    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser)
+    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser, @Context HttpServletRequest httpReq)
     {
         log.info("reuest list of "+_maxElemet+" friend of "+idUser);
+        if (idUser == null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+        }
+        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+     
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
         ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,idUser);
    //     ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
@@ -331,9 +343,10 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listFriendActivity_jsonp (
 	@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser,
-	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+	@DefaultValue("callback") @QueryParam("callback") String callbackName,
+        @Context HttpServletRequest httpReq)
     {
-		return new JSONPObject(callbackName,listFriendActivity(_maxElemet,idUser));
+		return new JSONPObject(callbackName,listFriendActivity(_maxElemet,idUser,httpReq));
 	}
      /**
      * Restituisce le attività dei miei amici in formato JSON.
@@ -341,9 +354,18 @@ public class BirrettaService
     @GET
     @Path("/listFriendActivity")
     @Produces("application/json")
-    public ResultDTO listFriendActivity (@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser)
+    public ResultDTO listFriendActivity (@QueryParam("maxElement") final String _maxElemet,
+        @QueryParam("idUser") final String idUser,
+        @Context HttpServletRequest httpReq)
     {
         log.info("reuest list of "+_maxElemet+"activity of friend of "+idUser);
+         if (idUser == null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+        }
+        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
         //trovo i miei amici(compresi quelli in pending)
         ArrayList<FriendsRelation> friendList = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(idUser, maxElemet);
@@ -618,7 +640,8 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listNotification_jsonp (
 	@QueryParam("id_user") final String id_user,
-	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+	@DefaultValue("callback") @QueryParam("callback") String callbackName,
+        @Context HttpServletRequest httpReq)
     {
 		return new JSONPObject(callbackName,listDrink(id_user));
 	}
@@ -628,8 +651,16 @@ public class BirrettaService
     @GET
     @Path("/listNotification")
     @Produces("application/json")
-    public ResultDTO listNotification (@QueryParam("idUser") final String idUser)
+    public ResultDTO listNotification (@QueryParam("idUser") final String idUser,
+    @Context HttpServletRequest httpReq)
     {
+         if (idUser == null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+        }
+        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
         log.info("reuest list of "+idUser+" notifications");
         ArrayList<Notification> list = DaoFactory.getInstance().getNotificationDao().findByUser(idUser);
        
@@ -644,9 +675,10 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listMyActivity_jsonp (
 	@QueryParam("idUser") final String idUser,
-	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+	@DefaultValue("callback") @QueryParam("callback") String callbackName,
+        @Context HttpServletRequest httpReq)
     {
-		return new JSONPObject(callbackName,listMyActivity(idUser));
+		return new JSONPObject(callbackName,listMyActivity(idUser,httpReq));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
@@ -654,9 +686,17 @@ public class BirrettaService
     @GET
     @Path("/listMyActivity")
     @Produces("application/json")
-    public ResultDTO listMyActivity (@QueryParam("idUser") final String idUser)
+    public ResultDTO listMyActivity (@QueryParam("idUser") final String idUser,
+                                     @Context HttpServletRequest httpReq )
     {
         log.info("request list of "+idUser+" activity");
+         if (idUser == null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+        }
+        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
         ArrayList<Activity> list = DaoFactory.getInstance().getActivityDao().findByUser(idUser);
        
         return createResultDTOResponseOk(list);
@@ -1123,6 +1163,7 @@ public class BirrettaService
 	@DefaultValue("callback") @QueryParam("callback") String callbackName) {
         return new JSONPObject(callbackName,setNotificationRead(idNotification,httpReq));
     }
+    
     @GET
     @Path("/setNotificationRead")
     @Consumes("application/json")

@@ -1,7 +1,9 @@
 package it.antreem.birretta.service.util;
 
 import it.antreem.birretta.service.dao.DaoFactory;
+import it.antreem.birretta.service.dto.ResultDTO;
 import it.antreem.birretta.service.model.Session;
+import it.antreem.birretta.service.model.json.Status;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.*;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * Filtro per il controllo della sessione attiva e, per ora, unica modalit&agrave;
@@ -101,7 +104,18 @@ public class SessionFilter implements Filter {
             HttpServletResponse res = (HttpServletResponse) response;
             res.setContentType("application/json");
             PrintWriter pw = res.getWriter();
-            pw.println("{ \"error\" : { \"code\": 999, \"title\": \"Generic Error\", \"desc\" : \"Generic server-side error.\", \"actionType\": null } }");
+            ObjectMapper mapper = new ObjectMapper();
+            ResultDTO errorResult = new ResultDTO();
+            Status status = new Status();
+            status.setCode(999);
+            status.setMsg("Generic server-side error");
+            status.setSuccess(false);
+            it.antreem.birretta.service.model.json.Response errorResponse = new it.antreem.birretta.service.model.json.Response(status, null, null);
+            errorResult.setResponse(errorResponse);
+            mapper.writeValue(pw, errorResult);
+             res.addHeader("Access-Control-Allow-Headers", "origin,x-requested-with,content-type");
+             res.addHeader("Access-Control-Allow-Origin", "*");
+            // pw.println("{ \"error\" : { \"code\": 999, \"title\": \"Generic Error\", \"desc\" : \"Generic server-side error.\", \"actionType\": null } }");
             return;
         }
         

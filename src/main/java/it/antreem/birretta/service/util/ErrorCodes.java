@@ -34,6 +34,7 @@ public enum ErrorCodes
     FRND_MISSED_PARAM(225, "Parametri mancanti"),
     FRND_REFUSE_ERROR(226, "Impossibile Rifiutare"),
     UPDATE_NOTIFICANION_ERROR_00(227, "Notifica non presente"),
+    USER_NULL(224, "Utente non fornito"),
     WARN_FRNDREQ_01(297, "Richiesta eseguita gia' eseguita e pendente"),
     WARN_FRNDREQ_02(298, "Amicizia gia' confermata"),
     WARN_FRNDCONFIRM_00(299,"Richiesta di amicizia non presente"),
