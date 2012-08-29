@@ -227,38 +227,37 @@ public class BirrettaService
             newuser.setEmail(r.getEmail());
             newuser.setDisplayName(r.getDisplayName());
             newuser.setGender(r.getGender());
-            newuser.setUsername(r.getIdUser());//SETTATO IN AUTOMATICO DALL'ID
+            newuser.setUsername(r.getIdUser());//SETTATO IN AUTOMATICO DALL'IDUSER
             newuser.setNationality(r.getNationality());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
             return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
         }
         else{//NON SETTO PIU' LA MAIL E LO USERNAME
-            u.setActivatedOn(null);
-            u.setAvatar(null);
-            u.setBadges(null);
-            u.setBirthDate(null);
-            u.setCounterBadges(Integer.MIN_VALUE);
-            u.setCounterCheckIns(Integer.SIZE);
-            u.setCounterFriends(Integer.MIN_VALUE);
-            u.setDescription(null);
-            u.setDisplayName(null);
-            u.setEnableNotification(true);
-            u.setEnableNotification(true);
-            u.setFavorites(null);
-            u.setFirstName(null);
-            u.setGender(Integer.SIZE);
-            u.setHashBeerlist(null);
-            u.setHashFriendlist(null);
-            u.setHashNotificationlist(null);
-            u.setLastLoginOn(null);
-            u.setLastName(null);
-            u.setLiked(null);
-            u.setNationality(null);
-            u.setRole(Integer.SIZE);
-            u.setShareFacebook(true);
-            u.setShareTwitter(true);
-            u.setStatus(Integer.SIZE);
-            //FAREUPDATE
+            if(r.getActivatedOn()!=null) u.setActivatedOn(r.getActivatedOn());
+            if(r.getAvatar()!=null) u.setAvatar(r.getAvatar());
+            if(r.getBadges()!=null) u.setBadges(r.getBadges());
+            if(r.getBirthDate()!=null)u.setBirthDate(r.getBirthDate());
+            if(r.getCounterBadges()!=null)u.setCounterBadges(r.getCounterBadges());
+            if(r.getCounterCheckIns()!=null)u.setCounterCheckIns(r.getCounterCheckIns());
+            if(r.getCounterFriends()!=null)u.setCounterFriends(r.getCounterFriends());
+            if(r.getDescription()!=null)u.setDescription(r.getDescription());
+            if(r.getDisplayName()!=null)u.setDisplayName(r.getDisplayName());
+            if(r.isEnableNotification()!=null)u.setEnableNotification(r.isEnableNotification());
+            if(r.getFavorites()!=null)u.setFavorites(r.getFavorites());
+            if(r.getFirstName()!=null)u.setFirstName(r.getFirstName());
+            if(r.getGender()!=null)u.setGender(r.getGender());
+            if(r.getHashBeerlist()!=null)u.setHashBeerlist(r.getHashBeerlist());
+            if(r.getHashFriendlist()!=null)u.setHashFriendlist(r.getHashFriendlist());
+            if(r.getHashNotificationlist()!=null)u.setHashNotificationlist(r.getHashNotificationlist());
+            if(r.getLastLoginOn()!=null)u.setLastLoginOn(r.getLastLoginOn());
+            if(r.getLastName()!=null)u.setLastName(r.getLastName());
+            if(r.getLiked()!=null)u.setLiked(r.getLiked());
+            if(r.getNationality()!=null)u.setNationality(r.getNationality());
+            if(r.getRole()!=null)u.setRole(r.getRole());
+            if(r.isShareFacebook()!=null)u.setShareFacebook(r.isShareFacebook());
+            if(r.isShareTwitter()!=null)u.setShareTwitter(r.isShareTwitter());
+            if(r.getStatus()!=null)u.setStatus(r.getStatus());
+            DaoFactory.getInstance().getUserDao().updateUser(u);
         }
         return createResultDTOEmptyResponse(ErrorCodes.REG_FAILED);
     }

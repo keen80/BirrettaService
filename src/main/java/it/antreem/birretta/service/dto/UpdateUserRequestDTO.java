@@ -23,9 +23,9 @@ public class UpdateUserRequestDTO {
     private String nationality;
     private Date birthDate;
     private String avatar = "resources/images/defaultAvatar.jpg";
-    private boolean shareFacebook = false;
-    private boolean shareTwitter = false;
-    private boolean enableNotification = false;
+    private Boolean shareFacebook = false;
+    private Boolean shareTwitter = false;
+    private Boolean enableNotification = false;
     private Integer role;
     private Integer status;
     private String pwdHash;
@@ -81,27 +81,27 @@ public class UpdateUserRequestDTO {
         this.avatar = avatar;
     }
 
-    public boolean isShareFacebook() {
+    public Boolean isShareFacebook() {
         return shareFacebook;
     }
 
-    public void setShareFacebook(boolean shareFacebook) {
+    public void setShareFacebook(Boolean shareFacebook) {
         this.shareFacebook = shareFacebook;
     }
 
-    public boolean isShareTwitter() {
+    public Boolean isShareTwitter() {
         return shareTwitter;
     }
 
-    public void setShareTwitter(boolean shareTwitter) {
+    public void setShareTwitter(Boolean shareTwitter) {
         this.shareTwitter = shareTwitter;
     }
 
-    public boolean isEnableNotification() {
+    public Boolean isEnableNotification() {
         return enableNotification;
     }
 
-    public void setEnableNotification(boolean enableNotification) {
+    public void setEnableNotification(Boolean enableNotification) {
         this.enableNotification = enableNotification;
     }
 

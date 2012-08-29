@@ -147,7 +147,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
             db.requestStart();
             DBCollection users = db.getCollection(USERS_COLLNAME);
             BasicDBObject user = createDBObjectFromUser(u);
-            return users.update(new BasicDBObject().append("username", u.getUsername()),user).getN();
+            return users.update(new BasicDBObject().append("idUser", u.getIdUser()),user).getN();
         }
         catch(MongoException ex){
             log.error(ex.getLocalizedMessage(), ex);
@@ -159,6 +159,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
             }
         }
     }
+    
     @Override
     public int saveUser(User u) throws DaoException 
     {
