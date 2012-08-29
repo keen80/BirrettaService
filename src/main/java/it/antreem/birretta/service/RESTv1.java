@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package it.antreem.birretta.service;
 
 import java.io.IOException;
@@ -14,7 +10,7 @@ import org.jboss.resteasy.spi.interception.MessageBodyWriterContext;
 import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 
 /**
- *
+ * classe che viene utilizzata da RestEasy pe rimpostare i campi dell'header e risolvere problemi di crossdomain request
  * @author gmorlini
  */
 @Path("/bserv")
@@ -25,6 +21,7 @@ public class RESTv1 implements RESTInterfaceV1, MessageBodyWriterInterceptor
     @Override
     public void write(final MessageBodyWriterContext context) throws IOException, WebApplicationException
     {   
+        //per impostare i campi dell'header nelle post
         System.out.println("write RESTv1");
         context.getHeaders().add(RESTInterfaceV1.ACCESS_CONTROL_ALLOW_HEADERS, "origin");
         context.getHeaders().add(RESTInterfaceV1.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
@@ -48,22 +45,5 @@ public class RESTv1 implements RESTInterfaceV1, MessageBodyWriterInterceptor
 
         return retValue.build();
     }
-    
-    @POST
-    @Path("/{path:.*}")
-    public Response handleCORSRequestPOST(@HeaderParam(RESTInterfaceV1.ACCESS_CONTROL_REQUEST_METHOD) final String requestMethod, @HeaderParam(RESTInterfaceV1.ACCESS_CONTROL_REQUEST_HEADERS) final String requestHeaders)
-    {
-           System.out.println("write handleCORSRequest POST");
-        final ResponseBuilder retValue = Response.ok();
-
-        if (requestHeaders != null)
-            retValue.header(RESTInterfaceV1.ACCESS_CONTROL_ALLOW_HEADERS, requestHeaders);
-
-        if (requestMethod != null)
-            retValue.header(RESTInterfaceV1.ACCESS_CONTROL_ALLOW_METHODS, requestMethod);
-
-        retValue.header(RESTInterfaceV1.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
-
-        return retValue.build();
-    }
+ 
 }

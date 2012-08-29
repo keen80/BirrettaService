@@ -1,7 +1,7 @@
 package it.antreem.birretta.service;
 
 /**
- *
+ * nome dei campi dell'header
  * @author gmorlini
  */
 interface RESTInterfaceV1 {
