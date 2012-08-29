@@ -301,10 +301,10 @@ public class BirrettaService
     @Path("/listFriendActivity_jsonp")
     @Produces("application/json")
     public JSONPObject listFriendActivity_jsonp (
-	@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user,
+	@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
-		return new JSONPObject(callbackName,listFriendActivity(_maxElemet,id_user));
+		return new JSONPObject(callbackName,listFriendActivity(_maxElemet,idUser));
 	}
      /**
      * Restituisce le attività dei miei amici in formato JSON.
@@ -312,12 +312,12 @@ public class BirrettaService
     @GET
     @Path("/listFriendActivity")
     @Produces("application/json")
-    public ResultDTO listFriendActivity (@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user)
+    public ResultDTO listFriendActivity (@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser)
     {
-        log.info("reuest list of "+_maxElemet+"activity of friend of "+id_user);
+        log.info("reuest list of "+_maxElemet+"activity of friend of "+idUser);
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
         //trovo i miei amici(compresi quelli in pending)
-        ArrayList<FriendsRelation> friendList = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(id_user, maxElemet);
+        ArrayList<FriendsRelation> friendList = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(idUser, maxElemet);
         //per ognuno dei quali trovo le attività(se non sono in stato pending)
         ArrayList<Activity> list= new ArrayList<Activity>();
         for(FriendsRelation fr: friendList)
@@ -614,10 +614,10 @@ public class BirrettaService
     @Path("/listMyActivity_jsonp")
     @Produces("application/json")
     public JSONPObject listMyActivity_jsonp (
-	@QueryParam("id_user") final String id_user,
+	@QueryParam("idUser") final String idUser,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
-		return new JSONPObject(callbackName,listMyActivity(id_user));
+		return new JSONPObject(callbackName,listMyActivity(idUser));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
@@ -625,10 +625,10 @@ public class BirrettaService
     @GET
     @Path("/listMyActivity")
     @Produces("application/json")
-    public ResultDTO listMyActivity (@QueryParam("id_user") final String id_user)
+    public ResultDTO listMyActivity (@QueryParam("idUser") final String idUser)
     {
-        log.info("request list of "+id_user+" activity");
-        ArrayList<Activity> list = DaoFactory.getInstance().getActivityDao().findByUser(id_user);
+        log.info("request list of "+idUser+" activity");
+        ArrayList<Activity> list = DaoFactory.getInstance().getActivityDao().findByUser(idUser);
        
         return createResultDTOResponseOk(list);
         
