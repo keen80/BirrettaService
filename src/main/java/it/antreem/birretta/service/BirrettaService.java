@@ -599,10 +599,10 @@ public class BirrettaService
     @GET
     @Path("/listNotification")
     @Produces("application/json")
-    public ResultDTO listNotification (@QueryParam("id_user") final String id_user)
+    public ResultDTO listNotification (@QueryParam("idUser") final String idUser)
     {
-        log.info("reuest list of "+id_user+" activity");
-        ArrayList<Notification> list = DaoFactory.getInstance().getNotificationDao().findByUser(id_user);
+        log.info("reuest list of "+idUser+" notifications");
+        ArrayList<Notification> list = DaoFactory.getInstance().getNotificationDao().findByUser(idUser);
        
         return createResultDTOResponseOk(list);
         
