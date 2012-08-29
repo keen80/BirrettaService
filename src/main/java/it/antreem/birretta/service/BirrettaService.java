@@ -919,8 +919,9 @@ public class BirrettaService
             return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
         
-        String myid = c.getIdRequested();
         String frndid = c.getIdRequestor();
+        String myid = c.getIdRequested();
+        
         
         User me = DaoFactory.getInstance().getUserDao().findUserByIdUser(myid);
         User frnd = DaoFactory.getInstance().getUserDao().findUserByIdUser(frndid);
@@ -931,7 +932,7 @@ public class BirrettaService
         }
         
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
-        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
+        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(frndid, myid);
         if(fr == null){
             return  createResultDTOEmptyResponse(ErrorCodes.WARN_FRNDCONFIRM_00);
         }
@@ -939,7 +940,7 @@ public class BirrettaService
         DaoFactory.getInstance().getFriendRelationDao().updateFriendsRelation(fr);
         
         //CERCO LA RELAZIONE DI AMICIZIA INVERSA E LA METTO A TRUE, SE NON C'E' LA CREO
-        FriendsRelation fr_inv = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(frndid, myid);
+        FriendsRelation fr_inv = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
         if(fr_inv == null){
             FriendsRelation friendsRelation = new FriendsRelation();
             friendsRelation.setFriend(true);
