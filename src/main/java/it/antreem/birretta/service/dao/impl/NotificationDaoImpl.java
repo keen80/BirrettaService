@@ -28,10 +28,10 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
         {
             db = getDB();
             db.requestStart();
-            DBCollection beers = db.getCollection(NOTIFICATION_COLLNAME);
+            DBCollection notifications = db.getCollection(NOTIFICATION_COLLNAME);
             BasicDBObject query = new BasicDBObject();
             query.put("idUser", user);
-            DBCursor cur = beers.find(query);
+            DBCursor cur = notifications.find(query);
             
             while (cur.hasNext()){
                 DBObject _b = cur.next();
@@ -39,7 +39,7 @@ public class NotificationDaoImpl extends AbstractMongoDao implements Notificatio
                 list.add(act);
             }
             
-            return null;
+            return list;
         }
         catch(MongoException ex){
             log.error(ex.getLocalizedMessage(), ex);
