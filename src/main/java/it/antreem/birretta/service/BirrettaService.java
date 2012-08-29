@@ -222,7 +222,7 @@ public class BirrettaService
         User u = DaoFactory.getInstance().getUserDao().findUserByUsername(r.getEmail());
         if(u==null){
             User newuser = new User();
-            newuser.setIdUser(r.getEmail());
+            newuser.setIdUser(r.getIdUser());
             newuser.setBirthDate(r.getBirthDate());
             newuser.setEmail(r.getEmail());
             newuser.setFirstName(r.getFirstName());

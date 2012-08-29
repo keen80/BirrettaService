@@ -19,7 +19,16 @@ public class UpdateUserRequestDTO {
     private Integer gender = 0;
     private String nationality;
     private Date birthDate;
+    private String idUser;
 
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
+    }
+    
     public String getFirstName() {
         return firstName;
     }
