@@ -221,8 +221,9 @@ public class BirrettaService
     
     @POST
     @Path("/saveUser")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public ResultDTO saveUser(UpdateUserRequestDTO r,@Context HttpServletRequest httpReq){
+    public Object saveUser(@Form UpdateUserRequestDTO r,@Context HttpServletRequest httpReq){
         if (!r.getIdUser().equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
@@ -237,7 +238,8 @@ public class BirrettaService
             newuser.setUsername(r.getIdUser());//SETTATO IN AUTOMATICO DALL'IDUSER
             newuser.setNationality(r.getNationality());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
-            return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
+            //return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
+            return new SuccessPost();
         }
         else{//NON SETTO PIU' LA MAIL E LO USERNAME
             if(r.getActivatedOn()!=null) u.setActivatedOn(r.getActivatedOn());
@@ -265,8 +267,8 @@ public class BirrettaService
             if(r.isShareTwitter()!=null)u.setShareTwitter(r.isShareTwitter());
             if(r.getStatus()!=null)u.setStatus(r.getStatus());
             DaoFactory.getInstance().getUserDao().updateUser(u);
+            return new SuccessPost();
         }
-        return createResultDTOEmptyResponse(ErrorCodes.REG_FAILED);
     }
     
      /**

@@ -5,40 +5,68 @@
 package it.antreem.birretta.service.dto;
 
 import java.util.Date;
+import javax.ws.rs.FormParam;
 
 /**
  *
  * @author Stefano
  */
 public class UpdateUserRequestDTO {
-    
+    @FormParam("idUser")
     private String idUser;
+    @FormParam("username")
     private String username;
+    @FormParam("displayName")
     private String displayName;
+    @FormParam("firstName")
     private String firstName;
+    @FormParam("lastName")
     private String lastName;
+    @FormParam("description")
     private String description;
+    @FormParam("email")
     private String email;
+    @FormParam("gender")
     private Integer gender = 0;
+    @FormParam("nationality")
     private String nationality;
+    @FormParam("birthDate")
     private Date birthDate;
+    @FormParam("avatar")
     private String avatar = "resources/images/defaultAvatar.jpg";
+    @FormParam("shareFacebook")
     private Boolean shareFacebook = false;
+    @FormParam("shareTwitter")
     private Boolean shareTwitter = false;
+    @FormParam("enableNotification")
     private Boolean enableNotification = false;
+    @FormParam("role")
     private Integer role;
+    @FormParam("status")
     private Integer status;
+    @FormParam("pwdHash")
     private String pwdHash;
+    @FormParam("activatedOn")
     private Date activatedOn;
+    @FormParam("lastLoginOn")
     private Date lastLoginOn;
+    @FormParam("badges")
     private String badges = "";
+    @FormParam("favorites")
     private String favorites = "";
+    @FormParam("liked")
     private String liked = "";
+    @FormParam("counterCheckIns")
     private Integer counterCheckIns = 0;
+    @FormParam("counterFriends")
     private Integer counterFriends = 0;
+    @FormParam("counterBadges")
     private Integer counterBadges = 0;
+    @FormParam("hashBeerlist")
     private String hashBeerlist;
+    @FormParam("hashFriendlist")
     private String hashFriendlist;
+    @FormParam("hashNotificationlist")
     private String hashNotificationlist;
 
     public String getUsername() {
