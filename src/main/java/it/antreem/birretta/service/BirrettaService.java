@@ -8,6 +8,9 @@ import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
+import it.antreem.birretta.service.model.Badge;
+import it.antreem.birretta.service.model.Notification;
+import it.antreem.birretta.service.model.json.*;
 import it.antreem.birretta.service.util.ActivityCodes;
 import it.antreem.birretta.service.util.ErrorCodes;
 import it.antreem.birretta.service.util.JsonHandler;
@@ -27,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.map.util.JSONPObject;
 import java.util.Collections;
+import org.jboss.resteasy.annotations.Form;
 /**
  * BirrettaService
  */
@@ -659,11 +663,20 @@ public class BirrettaService
         
     }
     @POST
-    @Path("/insertBeer")
-    @Consumes("application/json")
+    @Path("/insertBeer_jsonp")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public ResultDTO insertBeer(Beer b) 
+    public JSONPObject insertBeer_jsonp(@Form Beer b,@DefaultValue("callback") @QueryParam("callback") String callbackName) 
     {
+        return new JSONPObject(callbackName,insertBeer(b));
+    }
+    @POST
+    @Path("/insertBeer")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("application/json")
+    public Object insertBeer(@Form Beer b) 
+    {
+        log.info("received insertBeer"+b.getName());
         // Pre-conditions
         if (b == null){
             return createResultDTOEmptyResponse(ErrorCodes.INSBEER_WRONG_PARAM);
@@ -691,7 +704,8 @@ public class BirrettaService
         a.setType(ActivityCodes.BEER_CREATED.getType());
         a.setDisplayName(b.getUsername());
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
-        return createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00);
+      //  return createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00);
+        return new SuccessPost();
     }
     @POST
     @Path("/insertListBeer")
@@ -1118,6 +1132,10 @@ public class BirrettaService
         Notification n = DaoFactory.getInstance().getNotificationDao().findById(idNotification);
         if(n==null){
             return createResultDTOEmptyResponse(ErrorCodes.UPDATE_NOTIFICANION_ERROR_00);
+        }
+         // Blocco richieste di un utente per un altro
+        if (n.getIdUser() == null || !n.getIdUser().equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         n.setStatus(NotificationStatusCodes.READ.getStatus());
         DaoFactory.getInstance().getNotificationDao().setNotificationRead(n);

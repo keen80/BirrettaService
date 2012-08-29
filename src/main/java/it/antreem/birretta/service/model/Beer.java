@@ -1,16 +1,23 @@
 package it.antreem.birretta.service.model;
 
+import javax.ws.rs.FormParam;
+
 /**
  *
  * @author alessio
  */
 public class Beer extends MongoDBObject
 {
+    @FormParam("name")
     private String name;
+    @FormParam("brewery")
     private String brewery;
+     @FormParam("beerstyle")
     private int beerstyle;
     private int beertype;
+    @FormParam("nationality")
     private String nationality;
+    @FormParam("grad")
     private String grad;
     private String idBeer;
     private String idUser;
@@ -18,6 +25,7 @@ public class Beer extends MongoDBObject
     private byte[] image;
     private String status;
     private String insertedOn;
+    @FormParam("description")
     private String param1;
     private String param2;
     private String param3;

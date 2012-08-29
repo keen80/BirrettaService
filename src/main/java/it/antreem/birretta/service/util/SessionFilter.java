@@ -106,8 +106,9 @@ public class SessionFilter implements Filter {
         }
         
         //cross domain..
-        ((HttpServletResponse) response).addHeader("Access-Control-Allow-Origin", "*");
-         ((HttpServletResponse) response).addHeader("Access-Control-Allow-Headers", "x-requested-with");        
+    //    ((HttpServletResponse) response).addHeader("Access-Control-Allow-Origin", "*");
+    //     ((HttpServletResponse) response).addHeader("Access-Control-Allow-Headers", "origin,x-requested-with,content-type");        
+    //     log.info("send response: "+((HttpServletResponse) response).toString());
         doAfterProcessing(request, response);
     }
 

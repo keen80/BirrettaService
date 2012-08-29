@@ -232,7 +232,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
     {
         BasicDBObject _b = new BasicDBObject();
         _b.put("name", b.getName().trim());
-        _b.put("idBeer",b.getIdBeer().trim());
+        _b.put("idBeer",b.getIdBeer());
         _b.put("brewery", b.getBrewery());
         _b.put("beerstyle", b.getBeerstyle());
         _b.put("beertype", b.getBeertype());
