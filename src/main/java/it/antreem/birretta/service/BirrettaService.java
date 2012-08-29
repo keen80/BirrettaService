@@ -1095,7 +1095,7 @@ public class BirrettaService
             return createResultDTOEmptyResponse(ErrorCodes.UPDATE_NOTIFICANION_ERROR_00);
         }
         n.setStatus(NotificationStatusCodes.READ.getStatus());
-        
+        DaoFactory.getInstance().getNotificationDao().setNotificationRead(n);
         return createResultDTOEmptyResponse(InfoCodes.OK_NOTIFICATION_00);
     }
     
