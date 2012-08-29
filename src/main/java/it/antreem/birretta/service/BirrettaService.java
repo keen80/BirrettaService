@@ -856,13 +856,13 @@ public class BirrettaService
         String myid = c.getIdRequestor();
         String frndid = c.getIdRequested();
         
-        User me = DaoFactory.getInstance().getUserDao().findById(myid);
+        User me = DaoFactory.getInstance().getUserDao().findUserByIdUser(myid);
         String username = me.getUsername();
         if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
-        User frnd = DaoFactory.getInstance().getUserDao().findById(frndid);
+        User frnd = DaoFactory.getInstance().getUserDao().findUserByIdUser(frndid);
         if (frnd == null){
             return createResultDTOEmptyResponse(ErrorCodes.USER_NOT_FOUND);
         }
