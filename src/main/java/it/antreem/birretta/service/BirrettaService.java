@@ -925,6 +925,11 @@ public class BirrettaService
         User me = DaoFactory.getInstance().getUserDao().findUserByIdUser(myid);
         User frnd = DaoFactory.getInstance().getUserDao().findUserByIdUser(frndid);
         
+        String username = me.getUsername();
+        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        
         //IMPOSTO A TRUE LA RELATION DI AMICIZIA
         FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
         if(fr == null){
