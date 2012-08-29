@@ -285,11 +285,11 @@ public class BirrettaService
     @GET
     @Path("/listFriend")
     @Produces("application/json")
-    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user)
+    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser)
     {
-        log.info("reuest list of "+_maxElemet+" friend of "+id_user);
+        log.info("reuest list of "+_maxElemet+" friend of "+idUser);
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
-        ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,id_user);
+        ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,idUser);
    //     ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
         return createResultDTOResponseOk(list);  
     }
