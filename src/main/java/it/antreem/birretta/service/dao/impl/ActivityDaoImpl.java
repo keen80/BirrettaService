@@ -117,9 +117,9 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
         a.setStatus((Integer) obj.get("status"));
         a.setLike((Integer) obj.get("like"));
         a.setJumpTo((String)obj.get("jumpTo"));
-        String date=(String) obj.get("date");
-        if(date!=null && !date.equals(""))
-              a.setDate(new Date(date));
+        Object date= obj.get("date");
+        if(date!=null && obj.get("date").getClass().equals(Date.class))
+              a.setDate((Date)date);
         return a;
     }
     
