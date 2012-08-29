@@ -32,7 +32,7 @@ public enum ErrorCodes
     FINDLOCNEAR_WRONG_PARAM(223, "Specificare entrambe longitudine e latitudine"),
     USER_NOT_FOUND(224, "Amici immaginari non ammessi"),
     FRND_MISSED_PARAM(225, "Parametri mancanti"),
-    FRND_REFUSE_ERROR(226, "Amicizia non presente"),
+    FRND_REFUSE_ERROR(226, "Impossibile Rifiutare"),
     UPDATE_NOTIFICANION_ERROR_00(227, "Notifica non presente"),
     WARN_FRNDREQ_01(297, "Richiesta eseguita gia' eseguita e pendente"),
     WARN_FRNDREQ_02(298, "Amicizia gia' confermata"),

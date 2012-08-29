@@ -886,21 +886,21 @@ public class BirrettaService
         
         //crea oggetto notifica e salvo notifica
         Notification n = new Notification();
-        n.setIdFriend(frndid);
+        n.setIdFriend(myid);
         String friendName;
-        if(frnd.getDisplayName()!=null && !frnd.getDisplayName().trim().equals("")){
-            friendName = frnd.getDisplayName();
+        if(me.getDisplayName()!=null && !me.getDisplayName().trim().equals("")){
+            friendName = me.getDisplayName();
         }
-        else if((frnd.getLastName()==null && frnd.getFirstName()==null) 
-                || (frnd.getLastName().trim().equals("") && frnd.getFirstName().trim().equals("")) ){
-            friendName = frnd.getUsername();
+        else if((me.getLastName()==null && me.getFirstName()==null) 
+                || (me.getLastName().trim().equals("") && me.getFirstName().trim().equals("")) ){
+            friendName = me.getUsername();
         }
         else{
-            String firstname = frnd.getFirstName()==null?"": frnd.getFirstName();
-            String lastname = frnd.getLastName()==null?"": frnd.getLastName();
+            String firstname = me.getFirstName()==null?"": me.getFirstName();
+            String lastname = me.getLastName()==null?"": me.getLastName();
             friendName = firstname + " "+ lastname;
         }
-        n.setIdUser(myid);
+        n.setIdUser(frndid);
         n.setFriendName(friendName);
         n.setType(NotificationCodes.FRIEND_REQUEST.getType());
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
@@ -1026,8 +1026,15 @@ public class BirrettaService
             return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
         }
         //viene impostato a read la notifica di richiesta d'amicizia
-        String myid = c.getIdRequested();
+        
         String friendid = c.getIdRequestor();
+        String myid = c.getIdRequested();
+        
+        User me = DaoFactory.getInstance().getUserDao().findUserByIdUser(myid);
+        String username = me.getUsername();
+        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
         
         //ELIMINARE LA NOTIFICA
         ArrayList<Notification> an = DaoFactory.getInstance().getNotificationDao().findByUser(myid);
@@ -1036,16 +1043,17 @@ public class BirrettaService
             if(n.getIdFriend().equals(friendid) && n.getType()==NotificationCodes.FRIEND_REQUEST.getType()){
                 DaoFactory.getInstance().getNotificationDao().deleteNotificationByMongoID(n.getId().toString());
             }
+            return createResultDTOEmptyResponse(InfoCodes.OK_FRNDREFUSE_00);
         }
-        
-        FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(friendid, myid);
+        return createResultDTOEmptyResponse(ErrorCodes.FRND_REFUSE_ERROR);
+        /*FriendsRelation fr = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(friendid, myid);
         if(fr!=null){
             DaoFactory.getInstance().getFriendRelationDao().deleteFriendship(friendid, myid);
             return createResultDTOEmptyResponse(InfoCodes.OK_FRNDREFUSE_00);
         }
         else{
             return createResultDTOEmptyResponse(ErrorCodes.FRND_REFUSE_ERROR);
-        }
+        }*/
         /*User me = DaoFactory.getInstance().getUserDao().findById(id1);
         String username = me.getUsername();
         if (username != null && username.equals(httpReq.getHeader("btUsername")))
