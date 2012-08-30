@@ -15,6 +15,7 @@ public class Location extends MongoDBObject
     private ArrayList<String> categories;
     private String address;
     private String country;
+    private String cc;
     private String city;
 
     public String getCity() {
@@ -92,5 +93,13 @@ public class Location extends MongoDBObject
         this.idLocation = id;
     }
 
+    public String getCc() {
+        return cc;
+    }
+
+    public void setCc(String cc) {
+        this.cc = cc;
+    }
+    
     
 }

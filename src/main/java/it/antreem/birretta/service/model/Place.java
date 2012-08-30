@@ -14,6 +14,7 @@ public class Place {
     private String url;
     private String category;
     private Integer drinkedIn;
+    private String country;
     
     public String getCategory() {
         return category;
@@ -69,6 +70,14 @@ public class Place {
 
     public void setDrinkedIn(Integer drinkedIn) {
         this.drinkedIn = drinkedIn;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
     
 }

@@ -97,6 +97,7 @@ public class JsonHandler
                     l.setAddress((String) location.get("address"));
                     l.setCity((String) location.get("city"));
                     l.setCountry((String) location.get("country"));
+                    l.setCc((String) location.get("cc"));
                     ArrayList<String> cats=new ArrayList<String>();
                     for (Object o : ((ArrayList) (venue.get("categories")))) {
                         LinkedHashMap category = (LinkedHashMap) o;

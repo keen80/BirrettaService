@@ -1234,6 +1234,7 @@ public class BirrettaService
             p.setLng(l.getPos().get(1).toString());
             p.setCategory((l.getCategories()!=null?l.getCategories().get(0):null));
             p.setUrl(l.getUrl());
+            p.setCountry(l.getCountry());
             list.add(p);
         }
         return list;
