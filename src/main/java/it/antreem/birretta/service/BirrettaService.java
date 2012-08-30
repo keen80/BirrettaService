@@ -107,20 +107,20 @@ public class BirrettaService
     
     @POST
     @Path("/logout")
-    @Consumes("application/json")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public Response logout(LogoutRequestDTO req, @Context HttpServletRequest httpReq) 
+    public Object logout(@Form LogoutRequestDTO req, @Context HttpServletRequest httpReq) 
     {
         // Pre-conditions
         if (req == null)
         {
             log.debug("Parametri di logout passati a null. Errore.");
-            return createJsonErrorResponse(ErrorCodes.LOOUT_FAILED);
+            return createResultDTOEmptyResponse(ErrorCodes.LOOUT_FAILED);
         }
         
         // Blocco richieste di un utente per un altro
         if (!req.getUsername().equals(httpReq.getHeader("btUsername"))){
-            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
         // Delete any existing session
@@ -132,8 +132,8 @@ public class BirrettaService
         GenericResultDTO res = new GenericResultDTO();
         res.setSuccess(true);
         res.setMessage("Logout eseguito con successo");
-        
-        return createJsonOkResponse(res);
+       return new SuccessPost(); 
+     //   return createJsonOkResponse(res);
     }
     
     /**
@@ -784,40 +784,52 @@ public class BirrettaService
      */
     @POST
     @Path("/checkIn")
-    @Consumes("application/json")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public ResultDTO checkIn(CheckInRequestDTO c, @Context HttpServletRequest httpReq) 
+    public Object checkIn(@Form CheckInRequestDTO c, @Context HttpServletRequest httpReq) 
     {
         // Pre-conditions + controllo validita' parametri
         if (c == null){
             return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
-        if (c.getUsername() == null || c.getIdBeer() == null || c.getIdLocation() == null){
-            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+        if (c.getIdUser() == null) {
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+        }
+        if( c.getIdBeer() == null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_NULL_BEER);
+        }    
+        if( c.getIdLocation() == null){
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_NULL_PLACE);
         }
         /* Puo' esserci una bevuta senza voto? per ora si'...
         // TODO: Eventuale check di check-in senza voto
-        if (c.getIdFeedback() != null && (c.getScore() < 0 || c.getScore() > 10)){
+        if (c.getIdFeedback() == null || c.getRate() ==null || (new Integer(c.getRate()) < 0 || new Integer(c.getScore()) > 10)){
             return createJsonErrorResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
         */
         // Blocco richieste di un utente per un altro
-        if (!c.getUsername().equals(httpReq.getHeader("btUsername"))){
+        if (!c.getIdUser().equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
-        // Recupero dati necessari (utente dovrebbe essere ok perche' ha passato il controllo precedente)
-        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(c.getUsername());
+        // Recupero dati necessari e controllo esistenza su db degli oggetti interessati
+        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(c.getIdUser());
+        if(u==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NOT_FOUND);
+        }
         Beer b = DaoFactory.getInstance().getBeerDao().findById(c.getIdBeer());
+        if(b==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_MISSING_BEER);
+        }
         Location l = DaoFactory.getInstance().getLocationDao().findById(c.getIdLocation());
-        
-        // Controllo che location e birra effettivamente esistano
-        if (b == null){
-            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
+        if(l==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_MISSING_PLACE);
         }
-        if (l == null){
-            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
-        }
+
         
         // Controllo che negli ultimi 10 minuti non ci siano piu' di tre bevute
         List<Drink> lastDrinks = DaoFactory.getInstance().getDrinkDao().findRecentDrinks(u.getUsername(), 10);
@@ -833,49 +845,38 @@ public class BirrettaService
          //  d.setPlaceName(c.getPlaceName());
         //verificare esistenza location e impostare nome
         d.setIdUser(u.getIdUser());
-        //verificare esistenza utnete e set nome
+        d.setDisplayName(generateDysplayName(u));
         d.setImage(c.getPicture());
-     
+        d.setRate(new Integer(c.getRate()));
+        d.setRate2(new Integer(c.getRate1()));
+        d.setRate3(new Integer(c.getRate2()));
         d.setInsertedOn(new Date());
-        
         // Scrittura su DB
         DaoFactory.getInstance().getDrinkDao().saveDrink(d);
                 
         // Ricerca di nuovi badge e premi da assegnare scatenati da questo check-in
-        List<Badge> newBadges = Utils.checkBadges(c.getUsername());
+        List<Badge> newBadges = Utils.checkBadges(c.getIdUser());
         if (newBadges != null && !newBadges.isEmpty()){
-            DaoFactory.getInstance().getBadgeDao().saveUserBadges(c.getUsername(), newBadges);
+            DaoFactory.getInstance().getBadgeDao().saveUserBadges(c.getIdUser(), newBadges);
         }
         
         // Controllo mayorships + notifiche a chi le ha perdute
         // TODO: controllo mayorships + notifiche a chi le ha perdute
-        //TODO: creare attività
+
          //inserimento attività
         Activity a=new Activity();
         a.setBeerName(b.getName());
         a.setIdBeer(b.getIdBeer());
         a.setDate(new Date());
         a.setType(ActivityCodes.CHECKIN.getType());
-        a.setDisplayName(b.getUsername());
         a.setIdPlace(l.getIdLocation());
         a.setPlaceName(l.getName());
         a.setIdUser(u.getIdUser());
-        String displayName;
-        if(u.getDisplayName()!=null && !u.getDisplayName().trim().equals("")){
-            displayName = u.getDisplayName();
-        }
-        else if((u.getLastName()==null && u.getFirstName()==null) 
-                || (u.getLastName().trim().equals("") && u.getFirstName().trim().equals("")) ){
-            displayName = u.getUsername();
-        }
-        else{
-            String firstname = u.getFirstName()==null?"": u.getFirstName();
-            String lastname = u.getLastName()==null?"": u.getLastName();
-            displayName = firstname + " "+ lastname;
-        }
-        a.setDisplayName(displayName);
+        a.setDisplayName(generateDysplayName(u));
+        
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
-        return createResultDTOEmptyResponse(InfoCodes.OK_CHECKIN_00);
+        //return createResultDTOEmptyResponse(InfoCodes.OK_CHECKIN_00);
+        return new SuccessPost();
     }
     
     
@@ -927,9 +928,9 @@ public class BirrettaService
     
     @POST
     @Path("/frndReq")
-    @Consumes("application/json")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public ResultDTO frndReq(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    public Object frndReq(@Form FriendReqDTO c, @Context HttpServletRequest httpReq) 
     {
         if (c == null){
             return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
@@ -970,32 +971,38 @@ public class BirrettaService
         Notification n = new Notification();
         n.setIdFriend(myid);
         String friendName;
-        if(me.getDisplayName()!=null && !me.getDisplayName().trim().equals("")){
-            friendName = me.getDisplayName();
-        }
-        else if((me.getLastName()==null && me.getFirstName()==null) 
-                || (me.getLastName().trim().equals("") && me.getFirstName().trim().equals("")) ){
-            friendName = me.getUsername();
-        }
-        else{
-            String firstname = me.getFirstName()==null?"": me.getFirstName();
-            String lastname = me.getLastName()==null?"": me.getLastName();
-            friendName = firstname + " "+ lastname;
-        }
+        friendName = generateDysplayName(me);
         n.setIdUser(frndid);
         n.setFriendName(friendName);
         n.setType(NotificationCodes.FRIEND_REQUEST.getType());
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n);
-        
-        return  createResultDTOEmptyResponse(InfoCodes.OK_FRNDREQ_00);
+        return new SuccessPost();
+       // return  createResultDTOEmptyResponse(InfoCodes.OK_FRNDREQ_00);
+    }
+
+    private String generateDysplayName(User me) {
+        String displayName;
+        if(me.getDisplayName()!=null && !me.getDisplayName().trim().equals("")){
+            displayName = me.getDisplayName();
+        }
+        else if((me.getLastName()==null && me.getFirstName()==null) 
+                || (me.getLastName().trim().equals("") && me.getFirstName().trim().equals("")) ){
+            displayName = me.getUsername();
+        }
+        else{
+            String firstname = me.getFirstName()==null?"": me.getFirstName();
+            String lastname = me.getLastName()==null?"": me.getLastName();
+            displayName = firstname + " "+ lastname;
+        }
+        return displayName;
     }
     
     @POST
     @Path("/frndConfirm")
-    @Consumes("application/json")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public ResultDTO frndConfirm(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    public Object frndConfirm(@Form FriendReqDTO c, @Context HttpServletRequest httpReq) 
     {
         if (c == null){
             return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);
@@ -1094,15 +1101,15 @@ public class BirrettaService
         n2.setType(NotificationCodes.FRIEND_CONFIRM.getType());
         n2.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n2);
-       
-        return createResultDTOEmptyResponse(InfoCodes.OK_FRNDCONFIRM_00);
+        return new SuccessPost();
+        //return createResultDTOEmptyResponse(InfoCodes.OK_FRNDCONFIRM_00);
     }
     
     @POST
     @Path("/frndRefuse")
-    @Consumes("application/json")
+    @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public ResultDTO frndRefuse(FriendReqDTO c, @Context HttpServletRequest httpReq) 
+    public Object frndRefuse(@Form FriendReqDTO c, @Context HttpServletRequest httpReq) 
     {
         if (c == null){
             return createResultDTOEmptyResponse(ErrorCodes.FRND_MISSED_PARAM);

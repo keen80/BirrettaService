@@ -1,5 +1,7 @@
 package it.antreem.birretta.service.dto;
 
+import javax.ws.rs.FormParam;
+
 /*
 {
   "username":"alessio"
@@ -7,6 +9,7 @@ package it.antreem.birretta.service.dto;
  */
 public class LogoutRequestDTO 
 {
+    @FormParam("username")
     private String username;
 
     public String getUsername() {

@@ -1,5 +1,7 @@
 package it.antreem.birretta.service.dto;
 
+import javax.ws.rs.FormParam;
+
 /*
 {
   "username":"alessio",
@@ -16,11 +18,23 @@ package it.antreem.birretta.service.dto;
  */
 public class CheckInRequestDTO 
 {
-    private String username;
+
+    @FormParam("username")
+    private String idUser;
+    @FormParam("idBeer")
     private String idBeer;
+    @FormParam("idLocation")
     private String idLocation;
+    @FormParam("idFeedback")
     private String idFeedback;
+    @FormParam("picture")
     private String picture;
+    @FormParam("rate")
+    private String rate;
+    @FormParam("rate1")
+    private String rate1;
+    @FormParam("rate2")
+    private String rate2;
 
     public String getPicture() {
         return picture;
@@ -54,11 +68,36 @@ public class CheckInRequestDTO
         this.idFeedback = idFeedback;
     }
 
-    public String getUsername() {
-        return username;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    public String getRate1() {
+        return rate1;
+    }
+
+    public void setRate1(String rate1) {
+        this.rate1 = rate1;
+    }
+
+    public String getRate2() {
+        return rate2;
+    }
+
+    public void setRate2(String rate2) {
+        this.rate2 = rate2;
+    }
+    
 }
