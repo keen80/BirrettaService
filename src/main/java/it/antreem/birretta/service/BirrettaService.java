@@ -1,5 +1,6 @@
 package it.antreem.birretta.service;
 
+import it.antreem.birretta.service.dto.Place;
 import it.antreem.birretta.service.model.json.Body;
 import it.antreem.birretta.service.model.json.Metadata;
 import it.antreem.birretta.service.model.json.Status;
@@ -459,6 +460,7 @@ public class BirrettaService
         log.info("foursquare loc "+findLocationNear.size());
         ArrayList<Place> places= convertToPlace(findLocationNear);
         //TODO: aggiunta per ogni place del numero di bevute(drink)
+        addDrinkedIn(places);
         return createResultDTOResponseOk(places);
     }
     
@@ -614,6 +616,41 @@ public class BirrettaService
      * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
      */
     @GET
+    @Path("/listBeerByPlace_jsonp")
+    @Produces("application/json")
+    public JSONPObject listBeerByPlace_jsonp (
+	@QueryParam("maxElement") final String _maxElemet,
+        @QueryParam("idLocation") String idLocation,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listBeerByPlace(_maxElemet,idLocation));
+	}
+     /**
+     * Restituisce le birre bevute in un place con tutti i relativi dettagli in formato JSON.
+     */
+    @GET
+    @Path("/listBeerByPlace")
+    @Produces("application/json")
+    public ResultDTO listBeerByPlace (@QueryParam("maxElement") final String _maxElemet,
+                                      @QueryParam("idLocation") String idLocation)
+    {
+        if(idLocation==null)
+            return createResultDTOResponseFail(ErrorCodes.NULL_PLACE);
+        log.info("listBeerByPlace - request list of "+_maxElemet+" beer for place "+idLocation);
+        ArrayList<Beer> list=new ArrayList<Beer>();
+        int maxElement = _maxElemet == null ? -1 : new Integer(_maxElemet);
+        ArrayList<Drink> listDrink= DaoFactory.getInstance().getDrinkDao().listDrinksByPlace(idLocation,maxElement);
+        for(Drink d : listDrink)
+        {
+            //da verificare metodo reperimento birre
+            list.add(DaoFactory.getInstance().getBeerDao().findBeerByName(d.getBeerName()));
+        }
+        return createResultDTOResponseOk(list);
+    }
+    /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
+     */
+    @GET
     @Path("/listDrink_jsonp")
     @Produces("application/json")
     public JSONPObject listDrink_jsonp (
@@ -630,12 +667,13 @@ public class BirrettaService
     @Produces("application/json")
     public ResultDTO listDrink (@QueryParam("maxElement") final String _maxElemet)
     {
-        log.info("request list of "+_maxElemet+" drink");
+        log.info("listDrink - request list of "+_maxElemet+" drink");
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
         ArrayList<Drink> list = DaoFactory.getInstance().getDrinkDao().getDrinksList(maxElemet);
         return createResultDTOResponseOk(list);
         
     }
+    
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
      */
@@ -798,10 +836,10 @@ public class BirrettaService
         }
         if( c.getIdBeer() == null)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_NULL_BEER);
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_BEER);
         }    
         if( c.getIdLocation() == null){
-            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_NULL_PLACE);
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_PLACE);
         }
         /* Puo' esserci una bevuta senza voto? per ora si'...
         // TODO: Eventuale check di check-in senza voto
@@ -823,12 +861,12 @@ public class BirrettaService
         Beer b = DaoFactory.getInstance().getBeerDao().findById(c.getIdBeer());
         if(b==null)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_MISSING_BEER);
+            return createResultDTOEmptyResponse(ErrorCodes.MISSING_BEER);
         }
         Location l = DaoFactory.getInstance().getLocationDao().findById(c.getIdLocation());
         if(l==null)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_MISSING_PLACE);
+            return createResultDTOEmptyResponse(ErrorCodes.MISSING_PLACE);
         }
 
         
@@ -860,6 +898,8 @@ public class BirrettaService
         if (newBadges != null && !newBadges.isEmpty()){
             DaoFactory.getInstance().getBadgeDao().saveUserBadges(c.getIdUser(), newBadges);
         }
+        //INCREMENTO CONTEGGIO CHECKIN
+        u.setCounterCheckIns(u.getCounterCheckIns()+1);
         
         // Controllo mayorships + notifiche a chi le ha perdute
         // TODO: controllo mayorships + notifiche a chi le ha perdute
@@ -1028,6 +1068,12 @@ public class BirrettaService
         }
         fr.setFriend(true);
         DaoFactory.getInstance().getFriendRelationDao().updateFriendsRelation(fr);
+        
+        //INCREMENTO COUNTER AMICI
+        me.setCounterFriends(me.getCounterFriends()+1);
+        frnd.setCounterFriends(frnd.getCounterFriends()+1);
+        DaoFactory.getInstance().getUserDao().updateUser(me);
+        DaoFactory.getInstance().getUserDao().updateUser(frnd);
         
         //CERCO LA RELAZIONE DI AMICIZIA INVERSA E LA METTO A TRUE, SE NON C'E' LA CREO
         FriendsRelation fr_inv = DaoFactory.getInstance().getFriendRelationDao().getFriendsRelation(myid, frndid);
@@ -1235,7 +1281,7 @@ public class BirrettaService
             p.setLng(l.getPos().get(1).toString());
             p.setCategory((l.getCategories()!=null?l.getCategories().get(0):null));
             p.setUrl(l.getUrl());
-            p.setCountry(l.getCountry());
+            p.setCc(l.getCc());
             list.add(p);
         }
         return list;
@@ -1324,5 +1370,12 @@ public class BirrettaService
         ErrorDTO err = Utils.createError(e, actionType);
         Response.ResponseBuilder builder = Response.ok(err, MediaType.APPLICATION_JSON);
         return builder.build();
+    }
+
+    private void addDrinkedIn(ArrayList<Place> places) {
+       for(Place place: places)
+       {
+           place.setDrinkedIn(DaoFactory.getInstance().getDrinkDao().countDrinksByPlace(place.getIdPlace()));
+       }
     }
 }

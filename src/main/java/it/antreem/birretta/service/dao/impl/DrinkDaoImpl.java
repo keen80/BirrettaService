@@ -201,6 +201,51 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao
             }
         }
     }
+     @Override
+    public int countDrinksByPlace(String idLocation) throws DaoException 
+     {
+         return getDrinksByPlace(idLocation).count();
+     }
+    
+    @Override
+    public ArrayList<Drink> listDrinksByPlace(String idLocation,int limit) {
+        ArrayList<Drink> list = new ArrayList<Drink>();
+        DBCursor cur =null;
+        if(limit>0)
+               cur = getDrinksByPlace(idLocation).limit(limit);
+        else
+               cur = getDrinksByPlace(idLocation);
+        
+        while (cur.hasNext()) {
+            DBObject _d = cur.next();
+            Drink d = createDrinkFromDBObject(_d);
+            list.add(d);
+        }
+        return list;
+    }
+     
+    private DBCursor getDrinksByPlace(String idLocation) throws DaoException 
+    {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection drinks = db.getCollection(DRINKS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("idLocation", idLocation);
+            return drinks.find(query);
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
     
     @Override
     public ArrayList<Drink> getDrinksList(Integer maxElement) throws DaoException 
