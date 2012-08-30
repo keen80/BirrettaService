@@ -211,7 +211,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
              u.setBirthDate((Date)birthDate);
         
         u.setAvatar((String)obj.get("avatar"));
-        
+        u.setDescription((String)obj.get("description"));
         u.setShareFacebook((obj.get("shareFacebook")!=null ? (Boolean) obj.get("shareFacebook") : false));
         u.setShareTwitter((obj.get("shareFacebook")!=null ? (Boolean)obj.get("shareTwitter"): false));
         u.setEnableNotification(obj.get("enableNotification")!=null?(Boolean)obj.get("enableNotification"): false );
@@ -219,13 +219,13 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         u.setStatus((Integer) obj.get("status"));
         u.setPwdHash((String) obj.get("pwdHash"));
         
-        String activatedOn=(String)obj.get("activatedOn");
-        if(activatedOn!=null && !activatedOn.equals(""))
-                u.setActivatedOn(new Date(activatedOn));
+        Object activatedOn=(Object)obj.get("activatedOn");
+        if(activatedOn!=null && obj.get("activatedOn").getClass().equals(Date.class))
+                u.setActivatedOn((Date)obj.get("activatedOn"));
         
-        String lastLoginOn=(String)obj.get("lastLoginOn");
-        if(lastLoginOn!=null && !lastLoginOn.equals(""))
-                u.setActivatedOn(new Date(lastLoginOn));
+        Object lastLoginOn=(Object)obj.get("lastLoginOn");
+        if(lastLoginOn!=null && obj.get("lastLoginOn").getClass().equals(Date.class))
+                u.setActivatedOn((Date)obj.get("lastLoginOn"));
         
         u.setBadges((String)obj.get("badges"));
         u.setFavorites((String) obj.get("favorites"));
@@ -243,15 +243,37 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
     protected static BasicDBObject createDBObjectFromUser (User u)
     {
         BasicDBObject _u = new BasicDBObject();
-        _u.put("username", u.getUsername());
-        _u.put("idUser", u.getIdUser());
-     //   _u.put("age", u.getAge());
-        _u.put("email", u.getEmail());
-        _u.put("firstName", u.getFirstName().trim());
-        _u.put("lastName", u.getLastName().trim());
+        //campi chiave:
+        _u.put("username", u.getUsername().trim());
+        _u.put("idUser", u.getIdUser().trim());
+        _u.put("email", u.getEmail().trim());
+        //campi che devono essere sempre presenti:
         _u.put("gender",u.getGender());
         _u.put("nationality",u.getNationality());
         _u.put("birthDate",u.getBirthDate());
+        _u.put("activatedOn", u.getActivatedOn());
+        //opzionali
+        _u.put("firstName", u.getFirstName());
+        _u.put("lastName", u.getLastName());
+        _u.put("displayName", u.getDisplayName());
+        _u.put("description", u.getDescription());
+        _u.put("avatar", u.getAvatar());
+        _u.put("shareFacebook", u.isShareFacebook());
+        _u.put("shareTwitter", u.isShareTwitter());
+        _u.put("shareNotification", u.isEnableNotification());
+        _u.put("role", u.getRole());
+        _u.put("status", u.getStatus());
+        _u.put("pwdHash", u.getPwdHash());
+        _u.put("lastLoginOn", u.getLastLoginOn());
+        _u.put("badges", u.getBadges());
+        _u.put("favorites",u.getFavorites());
+        _u.put("liked", u.getLiked());
+        _u.put("couterCheckIns",u.getCounterCheckIns());
+        _u.put("couterFriends", u.getCounterFriends());
+        _u.put("counterBadges", u.getCounterBadges());
+        _u.put("hashBeerList",u.getHashBeerlist());
+        _u.put("hashFriendList",u.getHashFriendlist());
+        _u.put("hashNotificationList", u.getHashNotificationlist());
         //_u.put("pwdHash", u.getPwdHash());
        // _u.put("sex", u.getSex());
         return _u;

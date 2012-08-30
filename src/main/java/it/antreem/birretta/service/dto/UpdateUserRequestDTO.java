@@ -4,6 +4,7 @@
  */
 package it.antreem.birretta.service.dto;
 
+import it.antreem.birretta.service.util.DateAdapter;
 import java.util.Date;
 import javax.ws.rs.FormParam;
 
@@ -31,7 +32,7 @@ public class UpdateUserRequestDTO {
     @FormParam("nationality")
     private String nationality;
     @FormParam("birthDate")
-    private Date birthDate;
+    private DateAdapter birthDate;
     @FormParam("avatar")
     private String avatar = "resources/images/defaultAvatar.jpg";
     @FormParam("shareFacebook")
@@ -285,11 +286,11 @@ public class UpdateUserRequestDTO {
         this.nationality = nationality;
     }
 
-    public Date getBirthDate() {
+    public DateAdapter getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(DateAdapter birthDate) {
         this.birthDate = birthDate;
     }
     

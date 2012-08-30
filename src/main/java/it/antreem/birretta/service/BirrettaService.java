@@ -232,12 +232,13 @@ public class BirrettaService
         if(u==null){
             User newuser = new User();
             newuser.setIdUser(r.getIdUser());
-            newuser.setBirthDate(r.getBirthDate());
+            newuser.setBirthDate(r.getBirthDate().getDate());
             newuser.setEmail(r.getEmail());
             newuser.setDisplayName(r.getDisplayName());
             newuser.setGender(r.getGender());
             newuser.setUsername(r.getIdUser());//SETTATO IN AUTOMATICO DALL'IDUSER
             newuser.setNationality(r.getNationality());
+            newuser.setActivatedOn(new Date());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
             //return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
             return new SuccessPost();
@@ -246,7 +247,7 @@ public class BirrettaService
             if(r.getActivatedOn()!=null) u.setActivatedOn(r.getActivatedOn());
             if(r.getAvatar()!=null) u.setAvatar(r.getAvatar());
             if(r.getBadges()!=null) u.setBadges(r.getBadges());
-            if(r.getBirthDate()!=null)u.setBirthDate(r.getBirthDate());
+            if(r.getBirthDate()!=null)u.setBirthDate(r.getBirthDate().getDate());
             if(r.getCounterBadges()!=null)u.setCounterBadges(r.getCounterBadges());
             if(r.getCounterCheckIns()!=null)u.setCounterCheckIns(r.getCounterCheckIns());
             if(r.getCounterFriends()!=null)u.setCounterFriends(r.getCounterFriends());
