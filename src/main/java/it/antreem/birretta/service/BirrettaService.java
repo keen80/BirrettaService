@@ -1398,8 +1398,8 @@ public class BirrettaService
         Body body =new Body();
         body.setList(list);
         Metadata metaData = new Metadata();
-        metaData.setBadge("OK", 1, "Notification OK");
-        metaData.setNotification("OK", 1, "Notification OK");
+   //     metaData.setBadge("OK", 1, "Notification OK");
+     //   metaData.setNotification("OK", 1, "Notification OK");
         it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, body, metaData);
         result.setResponse(response);
         return result;
