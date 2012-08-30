@@ -34,7 +34,7 @@ public enum ErrorCodes
     FRND_MISSED_PARAM(225, "Parametri mancanti"),
     FRND_REFUSE_ERROR(226, "Impossibile Rifiutare"),
     UPDATE_NOTIFICANION_ERROR_00(227, "Notifica non presente"),
-    USER_NULL(228, "Utente non fornito"),
+    NULL_USER(228, "Utente non fornito"),
     NULL_BEER(229, "IdBeer non valorizzato"),
     MISSING_BEER(230, "Birra non esistente"),
     NULL_PLACE(231, "idPlace non valorizzato"),

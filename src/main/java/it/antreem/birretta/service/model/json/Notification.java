@@ -6,7 +6,7 @@ package it.antreem.birretta.service.model.json;
 
 /**
  *
- * @author ADMIN
+ * @author gmorlini
  */
 public class Notification {
      private String code;

@@ -25,4 +25,6 @@ public interface DrinkDao
     public int countDrinksByPlace(String idLocation) throws DaoException;
     
     public ArrayList<Drink> listDrinksByPlace(String idLocation,int limit) throws DaoException;
+
+    public ArrayList<Drink> findDrinksByUsernameAndPlace(ArrayList<String> idUsers, String idPlace, int maxElemet);
 }

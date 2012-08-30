@@ -1,19 +1,19 @@
 package it.antreem.birretta.service.model.json;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author gmorlini
  */
-public class Body<T> {
-    private ArrayList<T> list;
+public class Body {
+    private List list;
 
-    public ArrayList<T> getList() {
+    public List getList() {
         return list;
     }
 
-    public void setList(ArrayList<T> list) {
+    public void setList(List list) {
         this.list = list;
     }
     

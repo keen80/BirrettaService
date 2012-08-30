@@ -328,7 +328,7 @@ public class BirrettaService
         log.info("reuest list of "+_maxElemet+" friend of "+idUser);
         if (idUser == null)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
         else if (!idUser.equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
@@ -366,7 +366,7 @@ public class BirrettaService
         log.info("reuest list of "+_maxElemet+"activity of friend of "+idUser);
          if (idUser == null)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
         else if (!idUser.equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
@@ -600,7 +600,7 @@ public class BirrettaService
         status.setCode(100);
         status.setMsg("Status OK");
         status.setSuccess(true);
-        Body body =new Body<Beer>();
+        Body body =new Body();
         body.setList(list);
         Metadata metaData = new Metadata();
    //     metaData.setBadge("OK", 1, "Notification OK");
@@ -620,10 +620,10 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listBeerByPlace_jsonp (
 	@QueryParam("maxElement") final String _maxElemet,
-        @QueryParam("idLocation") String idLocation,
+        @QueryParam("idPlace") String idPlace,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
-		return new JSONPObject(callbackName,listBeerByPlace(_maxElemet,idLocation));
+		return new JSONPObject(callbackName,listBeerByPlace(_maxElemet,idPlace));
 	}
      /**
      * Restituisce le birre bevute in un place con tutti i relativi dettagli in formato JSON.
@@ -632,14 +632,14 @@ public class BirrettaService
     @Path("/listBeerByPlace")
     @Produces("application/json")
     public ResultDTO listBeerByPlace (@QueryParam("maxElement") final String _maxElemet,
-                                      @QueryParam("idLocation") String idLocation)
+                                      @QueryParam("idPlace") String idPlace)
     {
-        if(idLocation==null)
+        if(idPlace==null)
             return createResultDTOResponseFail(ErrorCodes.NULL_PLACE);
-        log.info("listBeerByPlace - request list of "+_maxElemet+" beer for place "+idLocation);
+        log.info("listBeerByPlace - request list of "+_maxElemet+" beer for place "+idPlace);
         ArrayList<Beer> list=new ArrayList<Beer>();
         int maxElement = _maxElemet == null ? -1 : new Integer(_maxElemet);
-        ArrayList<Drink> listDrink= DaoFactory.getInstance().getDrinkDao().listDrinksByPlace(idLocation,maxElement);
+        ArrayList<Drink> listDrink= DaoFactory.getInstance().getDrinkDao().listDrinksByPlace(idPlace,maxElement);
         for(Drink d : listDrink)
         {
             //da verificare metodo reperimento birre
@@ -647,8 +647,56 @@ public class BirrettaService
         }
         return createResultDTOResponseOk(list);
     }
-    /**
+     /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSONP.
+     */
+    @GET
+    @Path("/listDrinkedBeerOfMyFriend_jsonp")
+    @Produces("application/json")
+    public JSONPObject listDrinkedBeerOfMyFriend_jsonp (
+	@QueryParam("maxElement") final String _maxElemet,
+        @QueryParam("idPlace") final String idPlace,
+         @QueryParam("idUser") final String idUser,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+		return new JSONPObject(callbackName,listDrinkedBeerOfMyFriend_jsonp(_maxElemet, idPlace, idUser, callbackName));
+	}
+     /**
+     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     */
+    @GET
+    @Path("/listDrinkedBeerOfMyFriend")
+    @Produces("application/json")
+    public ResultDTO listDrinkedBeerOfMyFriend (@QueryParam("maxElement") final String _maxElemet,
+        @QueryParam("idPlace") final String idPlace,
+         @QueryParam("idUser") final String idUser, @Context HttpServletRequest httpReq)
+    {
+        if(idPlace==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_PLACE);
+        }
+        if(idUser==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
+        }
+        if(!idUser.equals(httpReq.getHeaders("btUsername").toString()))
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+            }
+        log.info("listDrinkedBeerOfMyFriend -"+idUser+" request list of "+_maxElemet+" drink");
+        int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
+        ArrayList<FriendsRelation> myFriends = DaoFactory.getInstance().getFriendRelationDao().getMyFriends(idUser, -1);
+        ArrayList<String> idFriends=new ArrayList<String>();
+        for (FriendsRelation fr: myFriends)
+        {
+            idFriends.add(fr.getIdUser2());
+        }
+        List<Drink> list = DaoFactory.getInstance().getDrinkDao().findDrinksByUsernameAndPlace(idFriends,idPlace,maxElemet);
+        return createResultDTOResponseOk(list);
+        
+    }
+    /**
+     * Restituisce tutte le bevute con tutti i relativi dettagli in formato JSONP.
      */
     @GET
     @Path("/listDrink_jsonp")
@@ -660,7 +708,7 @@ public class BirrettaService
 		return new JSONPObject(callbackName,listDrink(_maxElemet));
 	}
      /**
-     * Restituisce le birre con tutti i relativi dettagli in formato JSON.
+     * Restituisce tutte le bevute con tutti i relativi dettagli in formato JSON.
      */
     @GET
     @Path("/listDrink")
@@ -698,7 +746,7 @@ public class BirrettaService
     {
          if (idUser == null)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
         else if (!idUser.equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
@@ -734,7 +782,7 @@ public class BirrettaService
         log.info("request list of "+idUser+" activity");
          if (idUser == null)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
         else if (!idUser.equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
@@ -832,7 +880,7 @@ public class BirrettaService
             return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
         }
         if (c.getIdUser() == null) {
-            return createResultDTOEmptyResponse(ErrorCodes.USER_NULL);
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
         if( c.getIdBeer() == null)
         {
@@ -1341,7 +1389,7 @@ public class BirrettaService
         result.setResponse(response);
         return result;
      }
-     private ResultDTO createResultDTOResponseOk(ArrayList list) {
+     private ResultDTO createResultDTOResponseOk(List list) {
         ResultDTO result = new ResultDTO();
         Status status= new Status();
         status.setCode(100);
