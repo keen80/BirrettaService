@@ -1,5 +1,6 @@
 package it.antreem.birretta.service.model;
 
+import it.antreem.birretta.service.util.DateAdapter;
 import java.util.Date;
 
 /**
@@ -16,12 +17,12 @@ public class Friend {
     private String email;
     private Integer gender = 0;
     private String nationality;
-    private Date birthDate;
+    private String birthDate;
     private String avatar = "resources/images/defaultAvatar.jpg";
     private Integer role;
     private Integer status;//valorizzato dinamicamente in base a friendrelations(non amico, pending, amico)
-    private Date activatedOn;
-    private Date lastLoginOn;
+    private String activatedOn;
+    private String lastLoginOn;
     private String badges = "";
     private String favorites = "";
     private String liked = "";
@@ -29,11 +30,11 @@ public class Friend {
     private Integer counter_friends = 0;
     private Integer counter_badges = 0;
 
-    public Date getActivatedOn() {
+    public String getActivatedOn() {
         return activatedOn;
     }
 
-    public void setActivatedOn(Date activatedOn) {
+    public void setActivatedOn(String activatedOn) {
         this.activatedOn = activatedOn;
     }
 
@@ -53,11 +54,11 @@ public class Friend {
         this.badges = badges;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -141,11 +142,11 @@ public class Friend {
         this.idUser = idUser;
     }
 
-    public Date getLastLoginOn() {
+    public String getLastLoginOn() {
         return lastLoginOn;
     }
 
-    public void setLastLoginOn(Date lastLoginOn) {
+    public void setLastLoginOn(String lastLoginOn) {
         this.lastLoginOn = lastLoginOn;
     }
 

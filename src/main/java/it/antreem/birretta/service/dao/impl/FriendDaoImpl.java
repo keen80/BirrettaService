@@ -7,6 +7,7 @@ import it.antreem.birretta.service.dao.FriendDao;
 import it.antreem.birretta.service.model.Friend;
 import it.antreem.birretta.service.model.FriendsRelation;
 import it.antreem.birretta.service.model.User;
+import it.antreem.birretta.service.util.DateAdapter;
 import it.antreem.birretta.service.util.FriendStatusCodes;
 import java.util.ArrayList;
 import java.util.Date;
@@ -143,10 +144,13 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         f.setGender((Integer) obj.get("gender"));
         f.setNationality((String)obj.get("nationality"));
         
-        String birthDate=(String)obj.get("birthDate");
-        if(birthDate!=null && !birthDate.equals(""))
-             f.setBirthDate(new Date(birthDate));
-        
+        Object birthDate= obj.get("birthDate");
+        if(birthDate!=null)
+        {
+            DateAdapter da=new DateAdapter();
+            da.setDate((Date) birthDate);
+             f.setBirthDate(da.toString());
+        }
         f.setAvatar((String)obj.get("avatar"));
         
       
@@ -154,13 +158,21 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         f.setStatus((Integer) obj.get("status"));
       
         
-        String activatedOn=(String)obj.get("activatedOn");
-        if(activatedOn!=null && !activatedOn.equals(""))
-                f.setActivatedOn(new Date(activatedOn));
+        Object activatedOn=obj.get("activatedOn");
+        if(activatedOn!=null)
+        {
+            DateAdapter da=new DateAdapter();
+            da.setDate((Date) activatedOn);
+                f.setActivatedOn(da.toString());
+        }
         
-        String lastLoginOn=(String)obj.get("lastLoginOn");
-        if(lastLoginOn!=null && !lastLoginOn.equals(""))
-                f.setActivatedOn(new Date(lastLoginOn));
+        Object lastLoginOn=obj.get("lastLoginOn");
+        if(lastLoginOn!=null)
+        {
+            DateAdapter da=new DateAdapter();
+            da.setDate((Date) lastLoginOn);
+                f.setActivatedOn(da.toString());
+        }
         
         f.setBadges((String)obj.get("badges"));
         f.setFavorites((String) obj.get("favorites"));
@@ -193,7 +205,9 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         f.setEmail(user.getEmail());
         f.setGender(user.getGender());
         f.setNationality(user.getNationality());
-        f.setBirthDate(user.getBirthDate());
+        DateAdapter da = new DateAdapter();
+        da.setDate(user.getBirthDate());
+        f.setBirthDate(da.toString());
         f.setAvatar(user.getAvatar());
         f.setRole(user.getRole());
 
@@ -208,8 +222,12 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         }
 
         f.setStatus(status);
-        f.setActivatedOn(user.getActivatedOn());
-        f.setActivatedOn(user.getLastLoginOn());
+        DateAdapter da1 = new DateAdapter();
+        da1.setDate(user.getActivatedOn());
+        f.setActivatedOn(da1.toString());
+        DateAdapter da2 = new DateAdapter();
+        da2.setDate(user.getLastLoginOn());
+        f.setActivatedOn(da2.toString());
         f.setBadges(user.getBadges());
         f.setFavorites(user.getFavorites());
         f.setLiked(user.getLiked());
