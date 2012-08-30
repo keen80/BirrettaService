@@ -11,6 +11,8 @@ import org.jboss.resteasy.spi.interception.MessageBodyWriterInterceptor;
 
 /**
  * classe che viene utilizzata da RestEasy pe rimpostare i campi dell'header e risolvere problemi di crossdomain request
+ * 
+ * 
  * @author gmorlini
  */
 @Path("/bserv")
