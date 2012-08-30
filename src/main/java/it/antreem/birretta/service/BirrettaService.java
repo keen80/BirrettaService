@@ -33,6 +33,7 @@ import java.util.Collections;
 import org.jboss.resteasy.annotations.Form;
 /**
  * BirrettaService
+ * 
  */
 @Path("/bserv")
 public class BirrettaService
