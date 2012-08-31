@@ -1287,6 +1287,54 @@ public class BirrettaService
         DaoFactory.getInstance().getNotificationDao().setNotificationRead(n);
         return createResultDTOEmptyResponse(InfoCodes.OK_NOTIFICATION_00);
     }
+    /*
+     * sendFeedback
+     */
+    
+    @POST
+    @Path("/saveFeedback")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("application/json")
+    public Object saveFeedback(@Form FeedbackDTO feedback, @Context HttpServletRequest httpReq)
+    {
+        if (feedback.getIdUser() == null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
+        }
+         // Blocco richieste di un utente per un altro
+         if (feedback.getIdUser().equals(httpReq.getHeader("btUsername"))){
+            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        }
+        Feedback f=new Feedback();
+        f.setIdActivity(feedback.getIdActivity());
+        f.setIdUser(feedback.getIdUser());
+        f.setInsertedOn(new Date());
+        f.setType(feedback.getType());
+        f.setComment(feedback.getComment());
+        if(DaoFactory.getInstance().getFeedbackDao().saveFeedback(f)>0)
+            return new SuccessPost();
+        else
+            return createResultDTOEmptyResponse(ErrorCodes.SAVE_FEEDBACK_ERROR);
+    }
+    /*
+     * getFeedback
+     */
+    
+    @GET
+    @Path("/getFeedback")
+    @Produces("application/json")
+    public ResultDTO getFeedback (@QueryParam("idActivity") final String idActivity, 
+                                 @Context HttpServletRequest httpReq) {
+        if(idActivity==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_ACTIVITY);
+        }
+        List<Feedback> list = DaoFactory.getInstance().getFeedbackDao().findByIdActivity(idActivity);
+        return createResultDTOResponseOk(list);
+    }
+    
+    
+    
     
     @GET
     @Path("/findFrndReqs")

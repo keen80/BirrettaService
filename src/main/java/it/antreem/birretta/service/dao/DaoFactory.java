@@ -79,4 +79,7 @@ public final class DaoFactory
     public NotificationDao getNotificationDao() throws DaoException {
         return instanciateDao(NotificationDaoImpl.class);
     }
+    public FeedbackDao getFeedbackDao() throws DaoException {
+        return instanciateDao(FeedbackDaoImpl.class);
+    }
 }

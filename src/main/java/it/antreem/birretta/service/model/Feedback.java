@@ -12,7 +12,7 @@ public class Feedback extends MongoDBObject{
     private String idUser;
     private String idActivity;
     private String type;//rate o altro
-    private Integer like;
+    private Integer like=0;
     private Date insertedOn;
 
     public String getComment() {
@@ -24,12 +24,12 @@ public class Feedback extends MongoDBObject{
     }
 
     public String getIdFeedback() {
-        return idFeedback;
+        return super.getId().toString();
     }
-
+/*
     public void setIdFeedback(String idFeedback) {
         this.idFeedback = idFeedback;
-    }
+    }*/
 
     public String getIdActivity() {
         return idActivity;
