@@ -157,8 +157,60 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
         
         return list;
     }
-    
-    
+    @Override
+    public Object findByIdLocation(String idLocation) {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection users = db.getCollection(LOCATIONS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("idLocation", idLocation);
+            DBCursor cur = users.find(query);
+            
+            while (cur.hasNext()){
+                DBObject _l = cur.next();
+                Location l = createLocationFromDBObject(_l);
+                assert l.getIdLocation().equals(idLocation);
+                return l;
+            }
+            
+            return null;
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
+      @Override
+    public int updateLocation(Location l) {
+         DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection locations = db.getCollection(LOCATIONS_COLLNAME);
+             DBObject _l = createDBObjectFromLocation(l);
+            return locations.update(new BasicDBObject("idLocation",l.getIdLocation()), _l).getN();
+            
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
+
     protected static Location createLocationFromDBObject(DBObject obj)
     {
         Location l = new Location();
@@ -191,4 +243,7 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
 
         return _l;
     }
+
+  
+    
 }

@@ -101,13 +101,17 @@ public class JsonHandler
                     ArrayList<String> cats=new ArrayList<String>();
                     for (Object o : ((ArrayList) (venue.get("categories")))) {
                         LinkedHashMap category = (LinkedHashMap) o;
+                        //id: (String) category.get("id")
                         cats.add((String) category.get("name"));
+                        //TOTO: aggiungere gestione categorie
                     }
                     l.setCategories(cats);
                    
                     //attenzione ai duplicati:to do usare id
-                    if(DaoFactory.getInstance().getLocationDao().findLocationsByNameLike(l.getName()).isEmpty())
+                    if(DaoFactory.getInstance().getLocationDao().findByIdLocation(l.getIdLocation())==null)
                          DaoFactory.getInstance().getLocationDao().saveLocation(l);
+                    else
+                        DaoFactory.getInstance().getLocationDao().updateLocation(l);
                          
                     list.add(l);
                 }

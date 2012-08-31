@@ -83,6 +83,7 @@ public class Location extends MongoDBObject
     }
 
     public String getIdLocation() {
+        //utilizzo id FourSquare
         return idLocation;
     }
       /*
