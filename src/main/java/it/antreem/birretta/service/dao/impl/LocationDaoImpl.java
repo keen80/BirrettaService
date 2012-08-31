@@ -158,7 +158,7 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
         return list;
     }
     @Override
-    public Object findByIdLocation(String idLocation) {
+    public Location findByIdLocation(String idLocation) {
         DB db = null;
         try
         {
@@ -232,7 +232,7 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
     protected static BasicDBObject createDBObjectFromLocation (Location l)
     {
         BasicDBObject _l = new BasicDBObject();
-        _l.put("id_location", l.getIdLocation());
+        _l.put("idLocation", l.getIdLocation());
         _l.put("name", l.getName().trim());
         _l.put("url", l.getUrl());
         _l.put("pos", l.getPos());

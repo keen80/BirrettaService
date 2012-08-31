@@ -899,7 +899,7 @@ public class BirrettaService
         */
         // Blocco richieste di un utente per un altro
         if (!c.getIdUser().equals(httpReq.getHeader("btUsername"))){
-   //         return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
         // Recupero dati necessari e controllo esistenza su db degli oggetti interessati
@@ -913,7 +913,7 @@ public class BirrettaService
         {
             return createResultDTOEmptyResponse(ErrorCodes.MISSING_BEER);
         }
-        Location l = DaoFactory.getInstance().getLocationDao().findById(c.getIdPlace());
+        Location l = DaoFactory.getInstance().getLocationDao().findByIdLocation(c.getIdPlace());
         if(l==null)
         {
             return createResultDTOEmptyResponse(ErrorCodes.MISSING_PLACE);
@@ -936,9 +936,16 @@ public class BirrettaService
         d.setIdUser(u.getIdUser());
         d.setDisplayName(generateDysplayName(u));
         d.setImage(c.getImage());
-        d.setRate(new Integer(c.getRate()));
-        d.setRate2(new Integer(c.getRate1()));
-        d.setRate3(new Integer(c.getRate2()));
+        if (c.getRate() != null) {
+            d.setRate(new Integer(c.getRate()));
+        }
+        if (c.getRate1() != null) {
+            d.setRate2(new Integer(c.getRate1()));
+        }
+        if (c.getRate2() != null) {
+            log.info("rate2: "+c.getRate2());
+           // d.setRate3(new Integer(c.getRate2()));
+        }
         d.setInsertedOn(new Date());
         // Scrittura su DB
         DaoFactory.getInstance().getDrinkDao().saveDrink(d);
@@ -1390,7 +1397,7 @@ public class BirrettaService
             p.setPlaceName(l.getName());
             p.setLat(l.getPos().get(0).toString());
             p.setLng(l.getPos().get(1).toString());
-            p.setCategory((l.getCategories()!=null?l.getCategories().get(0):null));
+            p.setCategory((l.getCategories()!=null&& l.getCategories().size()>0?l.getCategories().get(0):null));
             p.setUrl(l.getUrl());
             p.setCc(l.getCc());
             list.add(p);

@@ -15,7 +15,7 @@ public interface LocationDao
     public List<Location> findLocationNear(Double lat, Double lon, Double radius) throws DaoException;
     public int saveLocation(Location l) throws DaoException;
 
-    public Object findByIdLocation(String name)throws DaoException;
+    public Location findByIdLocation(String name)throws DaoException;
 
     public int updateLocation(Location l)throws DaoException;
 }

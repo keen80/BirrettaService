@@ -268,8 +268,8 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         _u.put("badges", u.getBadges());
         _u.put("favorites",u.getFavorites());
         _u.put("liked", u.getLiked());
-        _u.put("couterCheckIns",u.getCounterCheckIns());
-        _u.put("couterFriends", u.getCounterFriends());
+        _u.put("counterCheckIns",u.getCounterCheckIns());
+        _u.put("counterFriends", u.getCounterFriends());
         _u.put("counterBadges", u.getCounterBadges());
         _u.put("hashBeerList",u.getHashBeerlist());
         _u.put("hashFriendList",u.getHashFriendlist());

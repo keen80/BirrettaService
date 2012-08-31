@@ -21,9 +21,9 @@ public class Beer extends MongoDBObject
     private String grad;
     private String idBeer;
     private String idUser;
-    private String username;
-    private byte[] image;
+    private String image;
     private String status;
+    private String username;
     private String insertedOn;
     @FormParam("description")
     private String param1;
@@ -126,11 +126,11 @@ public class Beer extends MongoDBObject
         this.name = name;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
