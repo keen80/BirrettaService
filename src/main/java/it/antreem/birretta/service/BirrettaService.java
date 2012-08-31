@@ -247,7 +247,8 @@ public class BirrettaService
         else{//NON SETTO PIU' LA MAIL E LO USERNAME
             if(r.getActivatedOn()!=null) u.setActivatedOn(r.getActivatedOn());
             if(r.getAvatar()!=null) u.setAvatar(r.getAvatar());
-            if(r.getBadges()!=null) u.setBadges(r.getBadges());
+            //BADGE NON SARANNO MAI INSERITI  A PARTIRE DA UNA REQUEST ESTERNA
+//            if(r.getBadges()!=null) u.setBadges(r.getBadges());
             if(r.getBirthDate()!=null)u.setBirthDate(r.getBirthDate().getDate());
             if(r.getCounterBadges()!=null)u.setCounterBadges(r.getCounterBadges());
             if(r.getCounterCheckIns()!=null)u.setCounterCheckIns(r.getCounterCheckIns());
@@ -875,6 +876,7 @@ public class BirrettaService
     @Produces("application/json")
     public Object checkIn(@Form CheckInRequestDTO c, @Context HttpServletRequest httpReq) 
     {
+        log.info("richiesta check-in: "+c.getIdUser());
         // Pre-conditions + controllo validita' parametri
         if (c == null){
             return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
@@ -886,7 +888,7 @@ public class BirrettaService
         {
             return createResultDTOEmptyResponse(ErrorCodes.NULL_BEER);
         }    
-        if( c.getIdLocation() == null){
+        if( c.getIdPlace() == null){
             return createResultDTOEmptyResponse(ErrorCodes.NULL_PLACE);
         }
         /* Puo' esserci una bevuta senza voto? per ora si'...
@@ -897,7 +899,7 @@ public class BirrettaService
         */
         // Blocco richieste di un utente per un altro
         if (!c.getIdUser().equals(httpReq.getHeader("btUsername"))){
-            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+   //         return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
         // Recupero dati necessari e controllo esistenza su db degli oggetti interessati
@@ -911,7 +913,7 @@ public class BirrettaService
         {
             return createResultDTOEmptyResponse(ErrorCodes.MISSING_BEER);
         }
-        Location l = DaoFactory.getInstance().getLocationDao().findById(c.getIdLocation());
+        Location l = DaoFactory.getInstance().getLocationDao().findById(c.getIdPlace());
         if(l==null)
         {
             return createResultDTOEmptyResponse(ErrorCodes.MISSING_PLACE);
@@ -928,12 +930,12 @@ public class BirrettaService
         Drink d = new Drink();
         d.setIdBeer(c.getIdBeer());
         //verificare esistenza birra e impostare nome
-        d.setIdPlace(c.getIdLocation());
+        d.setIdPlace(c.getIdPlace());
          //  d.setPlaceName(c.getPlaceName());
         //verificare esistenza location e impostare nome
         d.setIdUser(u.getIdUser());
         d.setDisplayName(generateDysplayName(u));
-        d.setImage(c.getPicture());
+        d.setImage(c.getImage());
         d.setRate(new Integer(c.getRate()));
         d.setRate2(new Integer(c.getRate1()));
         d.setRate3(new Integer(c.getRate2()));
@@ -942,10 +944,10 @@ public class BirrettaService
         DaoFactory.getInstance().getDrinkDao().saveDrink(d);
                 
         // Ricerca di nuovi badge e premi da assegnare scatenati da questo check-in
-        List<Badge> newBadges = Utils.checkBadges(c.getIdUser());
-        if (newBadges != null && !newBadges.isEmpty()){
-            DaoFactory.getInstance().getBadgeDao().saveUserBadges(c.getIdUser(), newBadges);
-        }
+        BadgeFinder finder= new BadgeFinder();
+        List<Badge> newBadges = finder.checkNewBadge(u);
+        
+      
         //INCREMENTO CONTEGGIO CHECKIN
         u.setCounterCheckIns(u.getCounterCheckIns()+1);
         
@@ -964,7 +966,12 @@ public class BirrettaService
         a.setDisplayName(generateDysplayName(u));
         
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
-        //return createResultDTOEmptyResponse(InfoCodes.OK_CHECKIN_00);
+        
+        //CREAZIONE RESPONSE
+        ResultDTO result= createResultDTOEmptyResponse(InfoCodes.OK_CHECKIN_00);
+        //AGGIUNTA NUOVI BADGES
+        result.getResponse().getMetaData().setBadge(newBadges);
+        //return result;
         return new SuccessPost();
     }
     
@@ -988,18 +995,26 @@ public class BirrettaService
     }
     
     @GET
-    @Path("/findMyBadges")
+    @Path("/findBadgesUser")
     @Produces("application/json")
-    public Response findMyBadges (@QueryParam("username") final String username, 
+    public ResultDTO findBadgesUser (@QueryParam("idUser") final String idUser, 
                                   @Context HttpServletRequest httpReq)
     {
         // Blocco richieste di un utente per un altro
-        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
-            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
+        if (idUser == null ){
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
+        User u= DaoFactory.getInstance().getUserDao().findUserByIdUser(idUser);
+        if(u==null)
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NOT_FOUND);
         
-        List<Badge> list = DaoFactory.getInstance().getBadgeDao().findUserBadges(username);
-        return createJsonOkResponse(list);
+        List<Badge> list = new ArrayList<Badge>();
+        for (int idBadge : u.getBadges())
+        {
+            list.add(DaoFactory.getInstance().getBadgeDao().findByIdBadge(idBadge));
+        }
+                
+        return createResultDTOResponseOk(list);
     }
     
     @GET
@@ -1414,10 +1429,11 @@ public class BirrettaService
         Status status= new Status();
         status.setCode(e.getCode());
         status.setMsg(e.getMessage());
-        status.setSuccess(false);
+        status.setSuccess(true);
         Metadata metaData = new Metadata();
         it.antreem.birretta.service.model.json.Response response = new it.antreem.birretta.service.model.json.Response(status, null, metaData);
         result.setResponse(response);
+        log.error(e.getCode()+" - "+ e.getTitle()+" - "+e.getMessage());
         return result;
      }
       /*

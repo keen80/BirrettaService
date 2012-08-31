@@ -227,7 +227,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         if(lastLoginOn!=null && obj.get("lastLoginOn").getClass().equals(Date.class))
                 u.setActivatedOn((Date)obj.get("lastLoginOn"));
         
-        u.setBadges((String)obj.get("badges"));
+        u.setBadges((List<Integer>)obj.get("badges"));
         u.setFavorites((String) obj.get("favorites"));
         u.setLiked((String)obj.get("liked"));
         u.setCounterCheckIns((Integer)obj.get("counterCheckIns"));

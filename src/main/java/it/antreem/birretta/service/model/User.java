@@ -1,6 +1,8 @@
 package it.antreem.birretta.service.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class User extends MongoDBObject {
 
@@ -23,7 +25,7 @@ public class User extends MongoDBObject {
     private String pwdHash;
     private Date activatedOn;
     private Date lastLoginOn;
-    private String badges = "";
+    private List<Integer> badges=null;
     private String favorites = "";
     private String liked = "";
     private Integer counterCheckIns = 0;
@@ -49,11 +51,14 @@ public class User extends MongoDBObject {
         this.avatar = avatar;
     }
 
-    public String getBadges() {
-        return badges;
+    public List<Integer> getBadges() {
+        if(badges==null)
+            return new ArrayList<Integer>();
+        else
+             return badges;
     }
 
-    public void setBadges(String badges) {
+    public void setBadges(List<Integer> badges) {
         this.badges = badges;
     }
 

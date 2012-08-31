@@ -23,7 +23,7 @@ public class Friend {
     private Integer status;//valorizzato dinamicamente in base a friendrelations(non amico, pending, amico)
     private String activatedOn;
     private String lastLoginOn;
-    private String badges = "";
+//    private String badges = "";
     private String favorites = "";
     private String liked = "";
     private Integer counter_checkIns = 0;
@@ -46,14 +46,14 @@ public class Friend {
         this.avatar = avatar;
     }
 
-    public String getBadges() {
+ /*   public String getBadges() {
         return badges;
     }
 
     public void setBadges(String badges) {
         this.badges = badges;
     }
-
+*/
     public String getBirthDate() {
         return birthDate;
     }

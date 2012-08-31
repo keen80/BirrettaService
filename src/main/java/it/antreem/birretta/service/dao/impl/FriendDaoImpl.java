@@ -174,7 +174,7 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
                 f.setActivatedOn(da.toString());
         }
         
-        f.setBadges((String)obj.get("badges"));
+//        f.setBadges((String)obj.get("badges"));
         f.setFavorites((String) obj.get("favorites"));
         f.setLiked((String)obj.get("liked"));
         f.setCounter_checkIns((Integer)obj.get("counterCheckIns"));
@@ -228,7 +228,8 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         DateAdapter da2 = new DateAdapter();
         da2.setDate(user.getLastLoginOn());
         f.setActivatedOn(da2.toString());
-        f.setBadges(user.getBadges());
+        //rimosso lista badge richiesta a parte
+      //  f.setBadges(user.getBadges());
         f.setFavorites(user.getFavorites());
         f.setLiked(user.getLiked());
         f.setCounter_checkIns(user.getCounterCheckIns());

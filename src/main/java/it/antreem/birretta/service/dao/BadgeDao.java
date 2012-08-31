@@ -10,8 +10,7 @@ import java.util.List;
 public interface BadgeDao 
 {
     public Badge findById(String id) throws DaoException;
-    public Badge findByCod(String cod) throws DaoException;
-    public List<Badge> findUserBadges(String username) throws DaoException;
-    public boolean hasBadge(String username, String badgeCode) throws DaoException;
-    public int saveUserBadges(String username, List<Badge> badges) throws DaoException;
+    public List<Badge> findByCod(int cod) throws DaoException;
+    public Badge findByIdBadge(int idBadge) throws DaoException;
+    public int saveBadge(Badge b) throws DaoException ;
 }

@@ -59,6 +59,7 @@ public class JsonHandler
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         }*/
+        //imola
         findLocationNear(44.355263,11.711079,10.0);
     }
     /*

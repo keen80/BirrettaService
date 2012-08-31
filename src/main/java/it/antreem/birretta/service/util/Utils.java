@@ -62,18 +62,4 @@ public class Utils
         return error;
     }
     
-    /*
-     * Logica di assegnazione dei badge. Modificare eventualmente in futuro.
-     */
-    public static List<Badge> checkBadges(String username)
-    {
-        List<Badge> badges = new ArrayList<Badge>();
-        
-        if (DaoFactory.getInstance().getDrinkDao().countDrinksByUsername(username) >= 10
-                && !DaoFactory.getInstance().getBadgeDao().hasBadge(username, Badge.COD_10_BEERS)){
-            badges.add(DaoFactory.getInstance().getBadgeDao().findByCod(Badge.COD_10_BEERS));
-        }
-        
-        return badges;
-    }
 }

@@ -11,29 +11,56 @@ package it.antreem.birretta.service.model;
 public class Badge extends MongoDBObject
 {
     public final static String COD_10_BEERS = "bdg_10_beers";
-    
-    private String cod;
-    private String message;
+    private int idBadge;
+    private int cod;
+    private String name;
+    private int category;
+    private String image;
     // private Integer score; ??
     // private Object prerequisito; ??
 
-    public String getCod() {
+    public int getCod() {
         return cod;
     }
 
-    public void setCod(String cod) {
+    public void setCod(int cod) {
         this.cod = cod;
     }
 
-    public String getMessage() {
-        return message;
+    public int getCategory() {
+        return category;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setCategory(int category) {
+        this.category = category;
     }
-    
+    /*
     public String getIdBadge(){
         return super.getId().toString();
+    }*/
+
+    public int getIdBadge() {
+        return idBadge;
     }
+
+    public void setIdBadge(int idBadge) {
+        this.idBadge = idBadge;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
 }

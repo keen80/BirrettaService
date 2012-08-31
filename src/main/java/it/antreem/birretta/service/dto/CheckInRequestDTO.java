@@ -19,16 +19,14 @@ import javax.ws.rs.FormParam;
 public class CheckInRequestDTO 
 {
 
-    @FormParam("username")
+    @FormParam("idUser")
     private String idUser;
     @FormParam("idBeer")
     private String idBeer;
-    @FormParam("idLocation")
-    private String idLocation;
-    @FormParam("idFeedback")
-    private String idFeedback;
-    @FormParam("picture")
-    private String picture;
+    @FormParam("idPlace")
+    private String idPlace;
+    @FormParam("image")
+    private String image;
     @FormParam("rate")
     private String rate;
     @FormParam("rate1")
@@ -36,12 +34,12 @@ public class CheckInRequestDTO
     @FormParam("rate2")
     private String rate2;
 
-    public String getPicture() {
-        return picture;
+    public String getImage() {
+        return image;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setImage(String image) {
+        this.image = image;
     }
     
     public String getIdBeer() {
@@ -52,22 +50,13 @@ public class CheckInRequestDTO
         this.idBeer = idBeer;
     }
 
-    public String getIdLocation() {
-        return idLocation;
+    public String getIdPlace() {
+        return idPlace;
     }
 
-    public void setIdLocation(String idLocation) {
-        this.idLocation = idLocation;
+    public void setIdPlace(String idPlace) {
+        this.idPlace = idPlace;
     }
-
-    public String getIdFeedback() {
-        return idFeedback;
-    }
-
-    public void setIdFeedback(String idFeedback) {
-        this.idFeedback = idFeedback;
-    }
-
     public String getIdUser() {
         return idUser;
     }
