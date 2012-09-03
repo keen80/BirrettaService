@@ -641,10 +641,14 @@ public class BirrettaService
         ArrayList<Beer> list=new ArrayList<Beer>();
         int maxElement = _maxElemet == null ? -1 : new Integer(_maxElemet);
         ArrayList<Drink> listDrink= DaoFactory.getInstance().getDrinkDao().listDrinksByPlace(idPlace,maxElement);
+        log.info("listBeerByPlace - find "+listDrink.size()+" drink for place");
         for(Drink d : listDrink)
         {
             //da verificare metodo reperimento birre
-            list.add(DaoFactory.getInstance().getBeerDao().findBeerByName(d.getBeerName()));
+            Beer beer=DaoFactory.getInstance().getBeerDao().findById(d.getIdBeer());
+            log.info("brewery of ("+d.getIdBeer()+")-"+beer.getName()+" is "+beer.getBrewery());
+            list.add(beer);
+            
         }
         return createResultDTOResponseOk(list);
     }
@@ -939,16 +943,16 @@ public class BirrettaService
         if (c.getRate() != null) {
             d.setRate(new Integer(c.getRate()));
         }
-        if (c.getRate1() != null) {
-            d.setRate2(new Integer(c.getRate1()));
-        }
         if (c.getRate2() != null) {
-            log.info("rate2: "+c.getRate2());
-           // d.setRate3(new Integer(c.getRate2()));
+            d.setRate2(new Integer(c.getRate2()));
+        }
+        if (c.getRate3() != null) {
+            log.info("rate2: "+c.getRate3());
+            d.setRate3(new Integer(c.getRate3()));
         }
         d.setInsertedOn(new Date());
-        // Scrittura su DB
-        DaoFactory.getInstance().getDrinkDao().saveDrink(d);
+
+    
                 
         // Ricerca di nuovi badge e premi da assegnare scatenati da questo check-in
         BadgeFinder finder= new BadgeFinder();
@@ -957,7 +961,7 @@ public class BirrettaService
       
         //INCREMENTO CONTEGGIO CHECKIN
         u.setCounterCheckIns(u.getCounterCheckIns()+1);
-        
+       
         // Controllo mayorships + notifiche a chi le ha perdute
         // TODO: controllo mayorships + notifiche a chi le ha perdute
 
@@ -972,6 +976,9 @@ public class BirrettaService
         a.setIdUser(u.getIdUser());
         a.setDisplayName(generateDysplayName(u));
         
+         // Scrittura su DB - gestione transazione?
+        DaoFactory.getInstance().getDrinkDao().saveDrink(d);
+        DaoFactory.getInstance().getUserDao().updateUser(u);  
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
         
         //CREAZIONE RESPONSE

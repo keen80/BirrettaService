@@ -165,8 +165,11 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
         }
 
         while (cur.hasNext()) {
+            
             DBObject _d = cur.next();
+            log.info("listDrinksByPlace - "+ _d);
             Drink d = createDrinkFromDBObject(_d);
+            log.info("listDrinksByPlace - "+ d);
             list.add(d);
         }
         return list;
@@ -265,9 +268,9 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
         d.setRate((Integer) obj.get("rate"));
         d.setRate((Integer) obj.get("rate2"));
         d.setRate((Integer) obj.get("rate3"));
-        String date = (String) obj.get("insertedOn");
-        if (date != null && !date.equals("")) {
-            d.setInsertedOn(new Date(date));
+        Object date = (Object) obj.get("insertedOn");
+        if (date != null &&date.getClass().equals(Date.class)) {
+            d.setInsertedOn((Date)date);
         }
         return d;
 
@@ -279,7 +282,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
         _d.put("displayName", d.getDisplayName());
         _d.put("image", d.getImage());
         _d.put("idUser", d.getIdUser());
-        _d.put("idBer", d.getIdBeer());
+        _d.put("idBeer", d.getIdBeer());
          //nel db non c'è nessun place ma solo location, problema dovuto a utilizzo oggetto sia per DTO che per modello
         _d.put("idLocation", d.getIdPlace());
         _d.put("beerName", d.getBeerName());

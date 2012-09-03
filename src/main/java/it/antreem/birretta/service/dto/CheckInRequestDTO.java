@@ -29,10 +29,10 @@ public class CheckInRequestDTO
     private String image;
     @FormParam("rate")
     private String rate;
-    @FormParam("rate1")
-    private String rate1;
     @FormParam("rate2")
     private String rate2;
+    @FormParam("rate3")
+    private String rate3;
 
     public String getImage() {
         return image;
@@ -73,20 +73,20 @@ public class CheckInRequestDTO
         this.rate = rate;
     }
 
-    public String getRate1() {
-        return rate1;
-    }
-
-    public void setRate1(String rate1) {
-        this.rate1 = rate1;
-    }
-
     public String getRate2() {
         return rate2;
     }
 
     public void setRate2(String rate2) {
         this.rate2 = rate2;
+    }
+
+    public String getRate3() {
+        return rate3;
+    }
+
+    public void setRate3(String rate3) {
+        this.rate3 = rate3;
     }
     
 }

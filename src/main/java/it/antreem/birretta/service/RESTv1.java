@@ -24,7 +24,7 @@ public class RESTv1 implements RESTInterfaceV1, MessageBodyWriterInterceptor
     public void write(final MessageBodyWriterContext context) throws IOException, WebApplicationException
     {   
         //per impostare i campi dell'header nelle post
-        System.out.println("write RESTv1");
+        System.out.println("RESTv1 -  write cross-domain headers..");
         context.getHeaders().add(RESTInterfaceV1.ACCESS_CONTROL_ALLOW_HEADERS, "origin");
         context.getHeaders().add(RESTInterfaceV1.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
         context.proceed();      
