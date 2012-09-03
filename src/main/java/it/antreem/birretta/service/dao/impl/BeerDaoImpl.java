@@ -6,6 +6,7 @@ import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.model.Beer;
 import it.antreem.birretta.service.model.json.BeerSingle;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
@@ -207,20 +208,26 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
          * Da vedere come gestire valori nulli, vuoti..
          */
         
-        b.setName((String) obj.get("name"));
-        b.setBrewery((String) obj.get("brewery"));
+        b.setName(obj.get("name").toString());
+        b.setBrewery(obj.get("brewery").toString());
         b.setBeerstyle((Integer)obj.get("beerstyle"));
         b.setBeertype((Integer)obj.get("beertype"));
         b.setNationality((String) obj.get("nationality"));
-        b.setGrad((String) obj.get("grad"));
+        b.setGrad((String)obj.get("grad"));
         // id fisico del db
         b.setId((ObjectId) obj.get("_id")); 
-        b.setIdBeer((String)obj.get("idBeer"));
-        b.setIdUser((String) obj.get("idUser"));
-        b.setUsername((String) obj.get("username"));
-        b.setImage((String) obj.get("image"));
+    //    b.setIdBeer(((ObjectId) obj.get("_id")).toString());
+        // b.setIdBeer((String)obj.get("idBeer"));
+        b.setIdUser((String)obj.get("idUser"));
+        b.setUsername((String)obj.get("username"));
+        b.setImage((String)obj.get("image"));
         b.setStatus((String)obj.get("status"));
-        b.setInsertedOn((String)obj.get("insertedOn"));
+        //gestione data da sistemare in base a formato scelto.. vedere DateAdapter
+        Object insertedOn=obj.get("insertedOn");
+        if(insertedOn!=null && insertedOn.getClass().equals(Date.class))
+            b.setInsertedOn((Date)insertedOn);
+        else if(insertedOn!=null && insertedOn.getClass().equals(String.class))
+            b.setInsertedOn(new Date(obj.get("insertedOn").toString()));
         b.setParam1((String) obj.get("param1"));
         b.setParam2((String)obj.get("param2"));
         b.setParam3((String)obj.get("param3"));
@@ -232,7 +239,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
     {
         BasicDBObject _b = new BasicDBObject();
         _b.put("name", b.getName().trim());
-        _b.put("idBeer",b.getIdBeer());
+//        _b.put("idBeer",b.getIdBeer());
         _b.put("brewery", b.getBrewery());
         _b.put("beerstyle", b.getBeerstyle());
         _b.put("beertype", b.getBeertype());

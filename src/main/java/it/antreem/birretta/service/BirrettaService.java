@@ -14,7 +14,7 @@ import it.antreem.birretta.service.model.Notification;
 import it.antreem.birretta.service.model.json.*;
 import it.antreem.birretta.service.util.ActivityCodes;
 import it.antreem.birretta.service.util.ErrorCodes;
-import it.antreem.birretta.service.util.JsonHandler;
+import it.antreem.birretta.service.util.FoursquareJsonProxy;
 import it.antreem.birretta.service.util.NotificationCodes;
 import it.antreem.birretta.service.util.NotificationStatusCodes;
 import it.antreem.birretta.service.util.Utils;
@@ -453,13 +453,16 @@ public class BirrettaService
             return createResultDTOResponseFail(ErrorCodes.INSLOC_WRONG_PARAM);
         }
         log.info("request loc");
-        ArrayList<Location> findLocationNear = JsonHandler.findLocationNear(lat, lon, radius);
+       
       // modalità solo da mongoDB
       //  List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
-     //   ArrayList<Location> arrayList= new ArrayList<Location>();
-     //   arrayList.addAll(list);
-        log.info("foursquare loc "+findLocationNear.size());
+      //  ArrayList<Location> arrayList= new ArrayList<Location>();
+      //  arrayList.addAll(list);
+
+         ArrayList<Location> findLocationNear = FoursquareJsonProxy.findLocationNear(lat, lon, radius);
+                 log.info("foursquare loc "+findLocationNear.size());
         ArrayList<Place> places= convertToPlace(findLocationNear);
+     //   ArrayList<Place> places= convertToPlace(arrayList);
         //TODO: aggiunta per ogni place del numero di bevute(drink)
         addDrinkedIn(places);
         return createResultDTOResponseOk(places);

@@ -1,5 +1,6 @@
 package it.antreem.birretta.service.model;
 
+import java.util.Date;
 import javax.ws.rs.FormParam;
 
 /**
@@ -24,7 +25,7 @@ public class Beer extends MongoDBObject
     private String image;
     private String status;
     private String username;
-    private String insertedOn;
+    private Date insertedOn;
     @FormParam("description")
     private String param1;
     private String param2;
@@ -54,11 +55,11 @@ public class Beer extends MongoDBObject
         this.idUser = idUser;
     }
 
-    public String getInsertedOn() {
+    public Date getInsertedOn() {
         return insertedOn;
     }
 
-    public void setInsertedOn(String insertedOn) {
+    public void setInsertedOn(Date insertedOn) {
         this.insertedOn = insertedOn;
     }
 
@@ -143,11 +144,11 @@ public class Beer extends MongoDBObject
     }
     
     public String getIdBeer(){
-        return idBeer;
+        return super.getId().toString();
     }
-
+    /*
     public void setIdBeer(String idBeer) {
         this.idBeer = idBeer;
-    }
+    }*/
 
 }

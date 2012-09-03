@@ -259,11 +259,11 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
         d.setId((ObjectId) obj.get("_id"));
         d.setDisplayName((String) obj.get("displayName"));
         d.setImage((String) obj.get("image"));
-        d.setIdUser((String) obj.get("idUser"));
-        d.setIdBeer((String) obj.get("idBeer"));
+        d.setIdUser((String) obj.get("idUser").toString());
+        d.setIdBeer((String) obj.get("idBeer").toString());
         //nel db non c'è nessun place ma solo location, problema dovuto a utilizzo oggetto sia per DTO che per modello
         d.setIdPlace((String) obj.get("idLocation"));
-        d.setBeerName((String) obj.get("beerName"));
+        d.setBeerName((String) obj.get("beerName").toString());
         d.setPlaceName((String) obj.get("locationName"));
         d.setRate((Integer) obj.get("rate"));
         d.setRate((Integer) obj.get("rate2"));

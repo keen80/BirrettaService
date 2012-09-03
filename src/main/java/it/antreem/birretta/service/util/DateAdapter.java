@@ -16,7 +16,7 @@ public class DateAdapter {
      public DateAdapter()
      {}
     public DateAdapter(String str) throws ParseException {
-        this.date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(str);
+        this.date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(str);
     }
     
     public Date getDate() {
@@ -30,7 +30,7 @@ public class DateAdapter {
     @Override
     public String toString() {
         if (date != null) {
-            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(date);
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(date);
         } else {
             return null;
         }
