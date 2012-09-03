@@ -951,7 +951,9 @@ public class BirrettaService
             d.setRate3(new Integer(c.getRate3()));
         }
         d.setInsertedOn(new Date());
-
+         // Scrittura su DB - gestione transazione?
+        DaoFactory.getInstance().getDrinkDao().saveDrink(d);
+       
     
                 
         // Ricerca di nuovi badge e premi da assegnare scatenati da questo check-in
@@ -961,7 +963,7 @@ public class BirrettaService
       
         //INCREMENTO CONTEGGIO CHECKIN
         u.setCounterCheckIns(u.getCounterCheckIns()+1);
-       
+        DaoFactory.getInstance().getUserDao().updateUser(u);  
         // Controllo mayorships + notifiche a chi le ha perdute
         // TODO: controllo mayorships + notifiche a chi le ha perdute
 
@@ -976,17 +978,15 @@ public class BirrettaService
         a.setIdUser(u.getIdUser());
         a.setDisplayName(generateDysplayName(u));
         
-         // Scrittura su DB - gestione transazione?
-        DaoFactory.getInstance().getDrinkDao().saveDrink(d);
-        DaoFactory.getInstance().getUserDao().updateUser(u);  
+        
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
         
         //CREAZIONE RESPONSE
         ResultDTO result= createResultDTOEmptyResponse(InfoCodes.OK_CHECKIN_00);
         //AGGIUNTA NUOVI BADGES
         result.getResponse().getMetaData().setBadge(newBadges);
-        //return result;
-        return new SuccessPost();
+        return result;
+       // return new SuccessPost();
     }
     
     

@@ -10,6 +10,7 @@ public class Activity extends MongoDBObject{
 
     private String idActivity;
     private String image;
+    private String avatar;
     private String displayName;
     private String idUser;
     private String idBeer;
@@ -143,6 +144,14 @@ public class Activity extends MongoDBObject{
 
     public void setJumpTo(String jumpTo) {
         this.jumpTo = jumpTo;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
     
 }
