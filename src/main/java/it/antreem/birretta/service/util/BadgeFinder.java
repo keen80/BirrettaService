@@ -149,6 +149,7 @@ public class BadgeFinder {
          }
         
          //BADGE_NAME = 5 - DRINKER_OPENSPACE
+         //name like Outdoors
          
          //BADGE_NAME = 6 - DRINKER_HOME
           if(!oldBadges.contains(BadgeEnum.DRINKER_HOME_25.getIdBadge()))
