@@ -136,7 +136,7 @@ public class LocationDaoImpl extends AbstractMongoDao implements LocationDao
             db.requestStart();
             DBCollection users = db.getCollection(LOCATIONS_COLLNAME);
             BasicDBObject query = new BasicDBObject();
-            query.put("pos", JSON.parse("{$near : [ " + lon + "," + lat + " ] , $maxDistance : " + radius + "}"));
+            query.put("pos", JSON.parse("{$near : [ " + lat  + "," +  lon + " ] , $maxDistance : " + radius + "}"));
             DBCursor cur = users.find(query).limit(10);
             
             while (cur.hasNext()){

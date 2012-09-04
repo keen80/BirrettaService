@@ -13,6 +13,7 @@ public interface LocationCategoryDao {
     public String ID_RESTAURANT="4bf58dd8d48988d1c4941735";
     public String ID_OTHER_OUTDOORS="4bf58dd8d48988d162941735";
     public String ID_PIZZA="4bf58dd8d48988d1ca941735";
+    public String ID_HOME="4bf58dd8d48988d103941735";
     public List<LocationCategory> findLocationCategoryByNameLike(String cod) throws DaoException;
     public LocationCategory findLocationCategoryByIdCategory(String cod) throws DaoException;
     public LocationCategory findById(String id) throws DaoException;

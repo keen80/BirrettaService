@@ -1,23 +1,11 @@
 package it.antreem.birretta.service;
 
-import it.antreem.birretta.service.dto.Place;
-import it.antreem.birretta.service.model.json.Body;
-import it.antreem.birretta.service.model.json.Metadata;
-import it.antreem.birretta.service.model.json.Status;
-import it.antreem.birretta.service.model.json.BeerSingle;
-import it.antreem.birretta.service.dao.DaoException;
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
 import it.antreem.birretta.service.model.Badge;
 import it.antreem.birretta.service.model.Notification;
 import it.antreem.birretta.service.model.json.*;
-import it.antreem.birretta.service.util.ActivityCodes;
-import it.antreem.birretta.service.util.ErrorCodes;
-import it.antreem.birretta.service.util.FoursquareJsonProxy;
-import it.antreem.birretta.service.util.NotificationCodes;
-import it.antreem.birretta.service.util.NotificationStatusCodes;
-import it.antreem.birretta.service.util.Utils;
 import it.antreem.birretta.service.util.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
