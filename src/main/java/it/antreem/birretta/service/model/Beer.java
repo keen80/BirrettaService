@@ -20,6 +20,8 @@ public class Beer extends MongoDBObject
     private String nationality;
     @FormParam("grad")
     private String grad;
+    @FormParam("color")
+    private int color;
     private String idBeer;
     private String idUser;
     private String image;
@@ -151,4 +153,12 @@ public class Beer extends MongoDBObject
         this.idBeer = idBeer;
     }*/
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+    
 }

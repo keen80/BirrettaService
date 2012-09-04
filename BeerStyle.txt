@@ -1,0 +1,14 @@
+"beerstyles": [
+{"text": "LAMBIC", "value": "11" },
+{"text": "LAGER - PALE (CHIARA)NSPICED/HERBS", "value": "3" },
+{"text": "STRONG LAGER", "value": "2" },
+{"text": "ALE - BRITISH STYLE etc", "value": "0" },
+{"text": "ALE - BELGIAN STYLE etc", "value": "8" },
+{"text": "LAGER - DARK (SCURA)", "value": "10" },
+{"text": "SPECIAL", "value": "5" },
+{"text": "LAGER - AMBER (ROSSA)", "value": "7" },
+{"text": "ALE/LAGER HYBRID", "value": "9" },
+{"text": "LAGER - PALE (CHIARA)", "value": "1" },
+{"text": "WHEAT (GRANO)", "value": "6" },
+{"text": "STOUT/PORTER", "value": "4" }
+],

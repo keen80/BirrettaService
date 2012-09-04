@@ -140,7 +140,7 @@ public class FoursquareJsonProxy {
         String str;
         while ((str = in.readLine()) != null) {
             // str is one line of text; readLine() strips the newline character(s)
-            System.out.println("response: \n" + str);
+          //  System.out.println("response: \n" + str);
             DynaBeen dynaBeen = (DynaBeen) PojoMapper.fromJson(str, DynaBeen.class);
             for (Object obj : ((ArrayList) ((LinkedHashMap) dynaBeen.any().get("response")).get("venues"))) {
                 LinkedHashMap venue = (LinkedHashMap) obj;
@@ -196,17 +196,17 @@ public class FoursquareJsonProxy {
         BufferedWriter writer = new BufferedWriter(file);
         List<LocationCategory> findAll = DaoFactory.getInstance().getLocationCategoryDao().findAll();
         writer.write("\"locationCategory\": [\n");
-        System.out.print("\"locationCategory\": [\n");
+       // System.out.print("\"locationCategory\": [\n");
         int i = 0;
         for (LocationCategory loc : findAll) {
 
             //{ "text": "parco", "value": 0},
             writer.write("{\"text\": \"" + loc.getName() + "\", \"value\": \"" + loc.getIdCategory()+ "\" },\n");
-            System.out.print("{\"text\": \"" + loc.getName() + "\", \"value\":" + loc.getIdCategory() + "},\n");
+        //    System.out.print("{\"text\": \"" + loc.getName() + "\", \"value\":" + loc.getIdCategory() + "},\n");
             //rimuovere virgola da ultima category
         }
         writer.write("],\n");
-        System.out.print("],\n");
+      //  System.out.print("],\n");
         System.out.println("save file to "+fileOut.getAbsolutePath());
         writer.close();
         return list;

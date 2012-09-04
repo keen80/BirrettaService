@@ -43,8 +43,8 @@ public class SessionFilter implements Filter {
     private boolean checkSession(HttpServletRequest request)
     {
         // Per le operazioni di login e register non interessa la sessione
-        if (request.getRequestURI().endsWith("/rest/bserv/login") ||
-                request.getRequestURI().endsWith("/rest/bserv/register")){
+        if (request.getRequestURI().endsWith("/rest/bserv/generaToken") ||
+                request.getRequestURI().endsWith("/rest/bserv/saveUser")){
             return true;
         }
         

@@ -11,6 +11,7 @@ import it.antreem.birretta.service.model.Location;
 import it.antreem.birretta.service.util.Utils;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -19,6 +20,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 import javax.ws.rs.core.Response;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -61,7 +65,7 @@ public class Dummytest
     */
           HashMap<String,Integer> beerStyle = new  HashMap<String,Integer>();
         HashMap<String,Integer> beerType = new  HashMap<String,Integer>();
-        
+  //      HashMap<String,Integer> beerColor = new HashMap<String, Integer>();
         //mapping nazioni
      //   BufferedReader nations = new BufferedReader(new FileReader("Birre.csv"));
         BufferedReader in = new BufferedReader(new FileReader("Birre.csv"));
@@ -75,7 +79,7 @@ public class Dummytest
             while ((str = in.readLine()) != null) {
                 String[] array=str.split(";");
                 Beer b = new Beer();
-                if(array[4].equals("SCO") || array[4].equals("WAL")|| array[4].equals("NIRL")||array[4].equals("YUG") || array[4].length()==2 )
+                if(array[4].length()==0 || array[4].equals("SCO") || array[4].equals("WAL")|| array[4].equals("NIRL")||array[4].equals("YUG") || array[4].length()==2 )
                 {
                 b.setNationality(array[4]);
                
@@ -96,10 +100,8 @@ public class Dummytest
                 }else if(array[3].length()>0)
                 {
                      beerType.put(array[3], iType);
-                     b.setBeerstyle(iType++);
+                     b.setBeertype(iType++);
                 }
-                beerType.put(array[3], iStyle);
-                b.setBeertype(iStyle++);
                 //mapping
                 //gradazione non obbligatoria
                if(array.length==6)
@@ -114,7 +116,32 @@ public class Dummytest
                     out.write(str+"\n");
                 }
              }
-            in.close();
-            out.close();
+              
+        generateFile("BeerStyle.txt", beerStyle,"beerstyles");
+        generateFile("BeerType.txt", beerType,"beertype");
+     //   generateFile("BeerColor.txt", beerStyle, "beercolor");
+        in.close();
+        out.close();
+    }
+
+    protected void generateFile(String filename, HashMap<String, Integer> beerStyle,String name) throws IOException {
+        File fileStyle = new File(filename);
+      
+        FileWriter file = new FileWriter(fileStyle);
+        BufferedWriter writer = new BufferedWriter(file);
+       
+        writer.write("\""+name+"\": [\n");
+        // System.out.print("\"locationCategory\": [\n");
+        for (Entry<String, Integer> entry : beerStyle.entrySet()) {
+
+            //{ "text": "parco", "value": 0},
+            writer.write("{\"text\": \"" + entry.getKey()+ "\", \"value\": \"" + entry.getValue() + "\" },\n");
+            //    System.out.print("{\"text\": \"" + loc.getName() + "\", \"value\":" + loc.getIdCategory() + "},\n");
+            //rimuovere virgola da ultima category
+        }
+        writer.write("],\n");
+        //  System.out.print("],\n");
+        System.out.println("save file to " + fileStyle.getAbsolutePath());
+        writer.close();
     }
 }

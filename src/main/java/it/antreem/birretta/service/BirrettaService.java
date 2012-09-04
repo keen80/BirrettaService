@@ -48,41 +48,42 @@ public class BirrettaService
      * In caso di login fallito si ritorna esito negativo (possibile estensione
      * futura con blocco utente, etc.).
      * 
-     * @param c Credenziali dell'utente, ovvero username + password.
+     * @param username idUser
      * @return Esito della login
      */
     @POST
-    @Path("/login")
+    @Path("/generaToken")
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public Response login(@FormParam("username") String username,@FormParam("password") String password) 
+    public ResultDTO generaToken(@FormParam("idUser") String idUser)
+            //,@FormParam("password") String password) 
     {
         // Pre-conditions
-        if (username == null || password==null || username.equals("") || password.equals(""))
+        if (idUser == null || idUser.equals("") )
         {
             log.debug("Credenziali di login passate a null. Errore.");
-            return createJsonErrorResponse(ErrorCodes.LOGIN_FAILED);
+            return createResultDTOEmptyResponse(ErrorCodes.LOGIN_FAILED);
         }
         
         LoginResponseDTO response = new LoginResponseDTO();
         
   //      String username = c.getUsername() != null ? c.getUsername() : "";
    //     String password = c.getPassword() != null ? c.getPassword() : "";
-        String hash = Utils.SHAsum(Utils.SALT.concat(username).concat(password).getBytes());
+   //     String hash = Utils.SHAsum(Utils.SALT.concat(idUser).getBytes());
         
-        log.info("Tentativo di login di username: " + username + " con hash pwd: " + hash); 
+        log.info("Tentativo di login di : " + idUser ); 
         
         /*
          * Login failed
          *  - return an error
          */
-        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
-        if (u == null || !u.getPwdHash().equals(hash)){
+        User u = DaoFactory.getInstance().getUserDao().findUserByIdUser(idUser);
+        if (u == null ){
             response.setSuccess(false);
             response.setMessage("Login fallito. Credenziali utente errate.");
             response.setSessionId(null);
 
-            return createJsonOkResponse(response);
+            return createResultDTOEmptyResponse(ErrorCodes.LOGIN_FAILED);
         }
         
         /*
@@ -90,51 +91,48 @@ public class BirrettaService
          *  - is there an active session? use that one
          *  - else create a new session
          */
-        Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(username);
+        Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(idUser);
         if (s == null) {
             s = new Session();
-            s.setUsername(username);
+            s.setUsername(idUser);
             s.setSid(UUID.randomUUID().toString());
             s.setTimestamp(new Date());
             DaoFactory.getInstance().getSessionDao().saveSession(s);
         }
         
-        response.setSuccess(true);
-        response.setMessage("Login eseguito correttamente.");
-        response.setSessionId(s.getSid());
-        
-        return createJsonOkResponse(response);
+        HashMap<String,String> map=new HashMap<String, String>();
+        map.put("btUsername", idUser);
+        map.put("btSid",s.getSid());
+        ArrayList<HashMap<String,String>> list=new ArrayList <HashMap<String,String>>();
+        list.add(map);
+        return createResultDTOResponseOk(list);
     }
     
     @POST
-    @Path("/logout")
+    @Path("/eliminaToken")
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
-    public Object logout(@Form LogoutRequestDTO req, @Context HttpServletRequest httpReq) 
+    public ResultDTO eliminaToken(@FormParam("idUser") String idUser, @Context HttpServletRequest httpReq) 
     {
         // Pre-conditions
-        if (req == null)
+        if (idUser == null)
         {
             log.debug("Parametri di logout passati a null. Errore.");
             return createResultDTOEmptyResponse(ErrorCodes.LOOUT_FAILED);
         }
         
         // Blocco richieste di un utente per un altro
-        if (!req.getUsername().equals(httpReq.getHeader("btUsername"))){
+        if (!idUser.equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         
         // Delete any existing session
-        Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(req.getUsername());
+        Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(idUser);
         if (s != null){
             DaoFactory.getInstance().getSessionDao().deleteSessionBySid(s.getSid());
         }
-        
-        GenericResultDTO res = new GenericResultDTO();
-        res.setSuccess(true);
-        res.setMessage("Logout eseguito con successo");
-       return new SuccessPost(); 
-     //   return createJsonOkResponse(res);
+
+        return createResultDTOEmptyResponse(InfoCodes.OK);
     }
     
     /**
@@ -241,8 +239,8 @@ public class BirrettaService
             newuser.setNationality(r.getNationality());
             newuser.setActivatedOn(new Date());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
-            //return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
-            return new SuccessPost();
+            return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
+            //return new SuccessPost();
         }
         else{//NON SETTO PIU' LA MAIL E LO USERNAME
             if(r.getActivatedOn()!=null) u.setActivatedOn(r.getActivatedOn());
@@ -271,7 +269,8 @@ public class BirrettaService
             if(r.isShareTwitter()!=null)u.setShareTwitter(r.isShareTwitter());
             if(r.getStatus()!=null)u.setStatus(r.getStatus());
             DaoFactory.getInstance().getUserDao().updateUser(u);
-            return new SuccessPost();
+            //return new SuccessPost();
+           return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
         }
     }
     
@@ -844,8 +843,8 @@ public class BirrettaService
         a.setType(ActivityCodes.BEER_CREATED.getType());
         a.setDisplayName(b.getUsername());
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
-      //  return createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00);
-        return new SuccessPost();
+        return createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00);
+      //  return new SuccessPost();
     }
     @POST
     @Path("/insertListBeer")
@@ -1100,8 +1099,8 @@ public class BirrettaService
         n.setType(NotificationCodes.FRIEND_REQUEST.getType());
         n.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n);
-        return new SuccessPost();
-       // return  createResultDTOEmptyResponse(InfoCodes.OK_FRNDREQ_00);
+       // return new SuccessPost();
+        return  createResultDTOEmptyResponse(InfoCodes.OK_FRNDREQ_00);
     }
 
     private String generateDysplayName(User me) {
@@ -1230,8 +1229,8 @@ public class BirrettaService
         n2.setType(NotificationCodes.FRIEND_CONFIRM.getType());
         n2.setStatus(NotificationStatusCodes.UNREAD.getStatus());
         DaoFactory.getInstance().getNotificationDao().saveNotification(n2);
-        return new SuccessPost();
-        //return createResultDTOEmptyResponse(InfoCodes.OK_FRNDCONFIRM_00);
+        //return new SuccessPost();
+        return createResultDTOEmptyResponse(InfoCodes.OK_FRNDCONFIRM_00);
     }
     
     @POST
@@ -1346,7 +1345,10 @@ public class BirrettaService
         f.setType(feedback.getType());
         f.setComment(feedback.getComment());
         if(DaoFactory.getInstance().getFeedbackDao().saveFeedback(f)>0)
-            return new SuccessPost();
+        {
+           // return new SuccessPost();
+            return createResultDTOEmptyResponse(InfoCodes.OK);
+        }
         else
             return createResultDTOEmptyResponse(ErrorCodes.SAVE_FEEDBACK_ERROR);
     }

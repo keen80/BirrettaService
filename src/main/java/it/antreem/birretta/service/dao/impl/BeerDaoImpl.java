@@ -212,6 +212,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
         b.setBrewery(obj.get("brewery").toString());
         b.setBeerstyle((Integer)obj.get("beerstyle"));
         b.setBeertype((Integer)obj.get("beertype"));
+        b.setColor((Integer)obj.get("color"));
         b.setNationality((String) obj.get("nationality"));
         b.setGrad((String)obj.get("grad"));
         // id fisico del db
@@ -253,7 +254,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
         _b.put("param1", b.getParam1());
         _b.put("param2", b.getParam2());
         _b.put("param3", b.getParam3());
-        
+        _b.put("color", b.getColor());
         return _b;
     }
 

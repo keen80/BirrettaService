@@ -94,8 +94,15 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
 
         BasicDBObject query = new BasicDBObject();
         query.put("idUser", idUser);
-        DBCursor cur = getDrinkBy(query).sort(new BasicDBObject("insertedOn", -1)).limit(limit);
+        DBCursor cur = null;
+        if (limit == null || limit < 0) {
+            cur = getDrinkBy(query).sort(new BasicDBObject("insertedOn", -1));
 
+        } else {
+            cur = getDrinkBy(query).sort(new BasicDBObject("insertedOn", -1)).limit(limit);
+
+        }
+        
         return generateListOfDrink(cur);
     }
 
