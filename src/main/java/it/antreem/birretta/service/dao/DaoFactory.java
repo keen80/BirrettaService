@@ -47,8 +47,8 @@ public final class DaoFactory
         return instanciateDao(GeoLocDaoImpl.class);
     }
     
-    public LocTypeDao getLocTypeDao() throws DaoException {
-        return instanciateDao(LocTypeDaoImpl.class);
+    public LocationCategoryDao getLocationCategoryDao() throws DaoException {
+        return instanciateDao(LocationCategoryDaoImpl.class);
     }
     
     public LocationDao getLocationDao() throws DaoException {

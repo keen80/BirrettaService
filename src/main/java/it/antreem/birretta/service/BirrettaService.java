@@ -414,13 +414,15 @@ public class BirrettaService
     }
     
     @GET
-    @Path("/findLocType")
+    @Path("/findLocationCategory")
     @Produces("application/json")
-    public Response findLocType (@QueryParam("cod") final String _cod)
+    public ResultDTO findLocationCategory (@QueryParam("idCategory") final String _idCategory)
     {
-        String cod = _cod == null ? "" : _cod;
-        List<LocType> list = DaoFactory.getInstance().getLocTypeDao().findLocTypesByCodLike(cod);
-        return createJsonOkResponse(list);
+        String cod = _idCategory == null ? "" : _idCategory;
+        LocationCategory cat =DaoFactory.getInstance().getLocationCategoryDao().findLocationCategoryByIdCategory(cod);
+        List<LocationCategory> list= new ArrayList<LocationCategory>();
+        list.add(cat);
+        return createResultDTOResponseOk(list);
     }
     
     @GET
@@ -453,17 +455,27 @@ public class BirrettaService
             return createResultDTOResponseFail(ErrorCodes.INSLOC_WRONG_PARAM);
         }
         log.info("request loc");
-       
+       ArrayList<Place> places=null;
       // modalità solo da mongoDB
       //  List<Location> list = DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
       //  ArrayList<Location> arrayList= new ArrayList<Location>();
       //  arrayList.addAll(list);
+        try{
+            ArrayList<Location> findLocationNear = FoursquareJsonProxy.findLocationNear(lat, lon, radius);
+            log.info("foursquare loc "+findLocationNear.size());
+                 
+            places= convertToPlace(findLocationNear);
+        }catch(Throwable t)
+        {
+          log.error("fallito reperimento da foursquare! accesso locale");
+          // modalità solo da mongoDB
+          ArrayList<Location> list =(ArrayList<Location>) DaoFactory.getInstance().getLocationDao().findLocationNear(lat, lon, radius);
+          log.info("mongodb loc "+list.size());
+          places= convertToPlace(list);
 
-         ArrayList<Location> findLocationNear = FoursquareJsonProxy.findLocationNear(lat, lon, radius);
-                 log.info("foursquare loc "+findLocationNear.size());
-        ArrayList<Place> places= convertToPlace(findLocationNear);
-     //   ArrayList<Place> places= convertToPlace(arrayList);
-        //TODO: aggiunta per ogni place del numero di bevute(drink)
+        }
+        
+        //aggiunta per ogni place del numero di bevute(drink)
         addDrinkedIn(places);
         return createResultDTOResponseOk(places);
     }
@@ -541,16 +553,6 @@ public class BirrettaService
     {
         String id = _id == null ? "" : _id;
         Location l = DaoFactory.getInstance().getLocationDao().findById(id);
-        return createJsonOkResponse(l);
-    }
-    
-    @GET
-    @Path("/findLocTypeById")
-    @Produces("application/json")
-    public Response findLocTypeById (@QueryParam("id") final String _id)
-    {
-        String id = _id == null ? "" : _id;
-        LocType l = DaoFactory.getInstance().getLocTypeDao().findById(id);
         return createJsonOkResponse(l);
     }
     

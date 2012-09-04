@@ -42,9 +42,19 @@ public class BadgeFinder {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NUM_100);
             }
         }   
-        
+       
         //BADGE_NAME = 1 - DRINK_PUB
-        
+         if(!oldBadges.contains(BadgeEnum.DRINKER_PUB_25))
+         {
+         
+         
+         }
+             
+         //BADGE_NAME = 1 - DRINK_BAR    
+         if(!oldBadges.contains(BadgeEnum.DRINKER_BAR_25))
+         {
+         
+         }
         //finiti i controlli update dell'user
         user.setBadges(newBadges);
         user.setCounterBadges(newBadges.size());
@@ -53,7 +63,13 @@ public class BadgeFinder {
         
         return list;
     }
-
+   /**
+     * Questo metodo aggiorna le liste dei badge di un utente, dei nuovi badges sbloccati e salva su mongoDB
+     * se non presente, per facilitare succesive operazioni di ricerca
+     * @param e BadgeEnum badge in input da aggiungere alle liste
+     * @param list lista di badge che dovrà poi essere restituita nella response del checkIn
+     * @param newBadges lista di idBadges da abbinare all'user
+     */
     private void updateListBadgeLocally(ArrayList<Badge> list, List<Integer> newBadges,BadgeEnum e) {
         //update lista da restituire per indicare nuovi badge sbloccati
         list.add(getBadgeFromEnum(e));
