@@ -61,13 +61,12 @@ public class SessionFilter implements Filter {
         for (String param:requestField)
         {
             String name=param.split("=")[0];
-            String value=param.split("=")[1];
-         if(name.equals("btUsername"))
+         if(name.equals("btUsername") && param.split("=").length>1)
          {
-             username=value;
-         }else if(name.equals("btSid"))
+             username=param.split("=")[1];
+         }else if(name.equals("btSid")&& param.split("=").length>1)
          {
-             sid=value;
+             sid=param.split("=")[1];
          }
         }
         }
