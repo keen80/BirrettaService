@@ -47,18 +47,46 @@ public class SessionFilter implements Filter {
                 request.getRequestURI().endsWith("/rest/bserv/saveUser")){
             return true;
         }
-        
         // Altrimenti per tutto il resto deve esserci una sessione attiva
-        String username = request.getHeader("btUsername");
-        String sid = request.getHeader("btSid");
         
+        String username=null;
+        String sid=null;
+        log.info(request.getRequestURI()+" query "+request.getQueryString());
+        //metodi GET parsing 
+        if(!(request.getHeader("btUsername")!=null) //vecchia modalità
+                && request.getQueryString()!=null &&request.getQueryString().contains("&"))
+        {
+         log.info("controllo autenticazione metodo GET per "+request.getQueryString());
+            String[] requestField=request.getQueryString().split("&");
+        for (String param:requestField)
+        {
+            String name=param.split("=")[0];
+            String value=param.split("=")[1];
+         if(name.equals("btUsername"))
+         {
+             username=value;
+         }else if(name.equals("btSid"))
+         {
+             sid=value;
+         }
+        }
+        }
+        else //metodi post
+        {
+        log.info("controllo autenticazione metodo post/get per "+request.getRequestURI());
+        username = request.getHeader("btUsername");
+        sid = request.getHeader("btSid");
+        }
+        log.info("check: "+username + " - "+ sid);
         if (username == null || sid == null){
-            return false;
+          //  return false;
+            return true;
         }
         
         Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(username);
         if (s == null || !s.getSid().equals(sid)){
-            return false;
+     //     return false;
+            return true;
         }
         else 
         return true;
@@ -84,8 +112,7 @@ public class SessionFilter implements Filter {
         
         doBeforeProcessing(request, response);
         
-        boolean authOk =true;
-        //checkSession((HttpServletRequest) request);
+        boolean authOk =checkSession((HttpServletRequest) request);
         if (!authOk)
         {
             HttpServletResponse res = (HttpServletResponse) response;

@@ -46,6 +46,7 @@ public class BirrettaService
     public ResultDTO generaToken(@FormParam("idUser") String idUser)
             //,@FormParam("password") String password) 
     {
+        log.info("generaToken - "+ idUser);
         // Pre-conditions
         if (idUser == null || idUser.equals("") )
         {
@@ -70,7 +71,6 @@ public class BirrettaService
             response.setSuccess(false);
             response.setMessage("Login fallito. Credenziali utente errate.");
             response.setSessionId(null);
-
             return createResultDTOEmptyResponse(ErrorCodes.LOGIN_FAILED);
         }
         
@@ -212,6 +212,7 @@ public class BirrettaService
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
     public Object saveUser(@Form UpdateUserRequestDTO r,@Context HttpServletRequest httpReq){
+        log.info("saveUser - "+ r.getIdUser());
         if (!r.getIdUser().equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
@@ -299,11 +300,12 @@ public class BirrettaService
     @Path("/listFriend_jsonp")
     @Produces("application/json")
     public JSONPObject listFriend_jsonp (
-	@QueryParam("maxElement") final String _maxElemet,@QueryParam("id_user") final String id_user,
+	@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser,
+        @QueryParam("btUsername") final String btUsername,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName,
         @Context HttpServletRequest httpReq)
     {
-		return new JSONPObject(callbackName,listFriend(_maxElemet,id_user,httpReq));
+		return new JSONPObject(callbackName,listFriend(_maxElemet,idUser,btUsername,httpReq));
 	}
      /**
      * Restituisce i miei amici e i relativi dettagli in formato JSON.
@@ -311,14 +313,14 @@ public class BirrettaService
     @GET
     @Path("/listFriend")
     @Produces("application/json")
-    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser, @Context HttpServletRequest httpReq)
+    public ResultDTO listFriend (@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser,@QueryParam("btUsername") final String btUsername, @Context HttpServletRequest httpReq)
     {
         log.info("reuest list of "+_maxElemet+" friend of "+idUser);
         if (idUser == null)
         {
             return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
-        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+        else if (!idUser.equals(btUsername)){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
      
@@ -336,10 +338,11 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listFriendActivity_jsonp (
 	@QueryParam("maxElement") final String _maxElemet,@QueryParam("idUser") final String idUser,
+        @QueryParam("btUsername") final String btUsername,                             
 	@DefaultValue("callback") @QueryParam("callback") String callbackName,
         @Context HttpServletRequest httpReq)
     {
-		return new JSONPObject(callbackName,listFriendActivity(_maxElemet,idUser,httpReq));
+		return new JSONPObject(callbackName,listFriendActivity(_maxElemet,idUser,btUsername,httpReq));
 	}
      /**
      * Restituisce le attività dei miei amici in formato JSON.
@@ -347,7 +350,8 @@ public class BirrettaService
     @GET
     @Path("/listFriendActivity")
     @Produces("application/json")
-    public ResultDTO listFriendActivity (@QueryParam("maxElement") final String _maxElemet,
+    public ResultDTO listFriendActivity (@QueryParam("maxElement") final String _maxElemet,@QueryParam("btUsername") final String btUsername,
+                                     
         @QueryParam("idUser") final String idUser,
         @Context HttpServletRequest httpReq)
     {
@@ -356,7 +360,7 @@ public class BirrettaService
         {
             return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
-        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+        else if (!idUser.equals(btUsername)){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
@@ -374,7 +378,12 @@ public class BirrettaService
         }
          //ordinamento per data
         Collections.sort(list, new ActivityComparator());
-        return createResultDTOResponseOk(list);  
+        ArrayList<ActivityDTO> listDTO=new ArrayList<ActivityDTO>();
+        for(Activity a: list)
+        {
+            listDTO.add(new ActivityDTO(a));
+        }
+        return createResultDTOResponseOk(listDTO);  
     }        
     @GET
     @Path("/updatePos")
@@ -654,9 +663,10 @@ public class BirrettaService
 	@QueryParam("maxElement") final String _maxElemet,
         @QueryParam("idPlace") final String idPlace,
          @QueryParam("idUser") final String idUser,
+         @QueryParam("btUsername") final String btUsername,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName)
     {
-		return new JSONPObject(callbackName,listDrinkedBeerOfMyFriend_jsonp(_maxElemet, idPlace, idUser, callbackName));
+		return new JSONPObject(callbackName,listDrinkedBeerOfMyFriend_jsonp(_maxElemet, idPlace, idUser,btUsername, callbackName));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
@@ -666,7 +676,9 @@ public class BirrettaService
     @Produces("application/json")
     public ResultDTO listDrinkedBeerOfMyFriend (@QueryParam("maxElement") final String _maxElemet,
         @QueryParam("idPlace") final String idPlace,
-         @QueryParam("idUser") final String idUser, @Context HttpServletRequest httpReq)
+         @QueryParam("idUser") final String idUser,
+         @QueryParam("btUsername") final String btUsername,
+                                      @Context HttpServletRequest httpReq)
     {
         if(idPlace==null)
         {
@@ -676,7 +688,7 @@ public class BirrettaService
         {
             return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
-        if(!idUser.equals(httpReq.getHeaders("btUsername").toString()))
+        if(!idUser.equals(btUsername))
         {
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
             }
@@ -726,11 +738,12 @@ public class BirrettaService
     @Path("/listNotification_jsonp")
     @Produces("application/json")
     public JSONPObject listNotification_jsonp (
-	@QueryParam("id_user") final String id_user,
-	@DefaultValue("callback") @QueryParam("callback") String callbackName,
+	@QueryParam("idUser") final String idUser,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName
+        ,@QueryParam("btUsername") final String btUsername,
         @Context HttpServletRequest httpReq)
     {
-		return new JSONPObject(callbackName,listDrink(id_user));
+		return new JSONPObject(callbackName,listNotification(idUser,btUsername,httpReq));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
@@ -738,20 +751,24 @@ public class BirrettaService
     @GET
     @Path("/listNotification")
     @Produces("application/json")
-    public ResultDTO listNotification (@QueryParam("idUser") final String idUser,
+    public ResultDTO listNotification (@QueryParam("idUser") final String idUser,@QueryParam("btUsername") final String btUsername,
     @Context HttpServletRequest httpReq)
     {
          if (idUser == null)
         {
             return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
-        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+        else if (!idUser.equals(btUsername)){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         log.info("reuest list of "+idUser+" notifications");
         ArrayList<Notification> list = DaoFactory.getInstance().getNotificationDao().findByUser(idUser);
-       
-        return createResultDTOResponseOk(list);
+        ArrayList<NotificationDTO> listDTO=new ArrayList<NotificationDTO>();
+        for (Notification n: list)
+        {
+        listDTO.add(new NotificationDTO(n));
+        }
+        return createResultDTOResponseOk(listDTO);
         
     }
      /**
@@ -762,10 +779,11 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listMyActivity_jsonp (
 	@QueryParam("idUser") final String idUser,
+        @QueryParam("btUsername") final String btUsername,
 	@DefaultValue("callback") @QueryParam("callback") String callbackName,
         @Context HttpServletRequest httpReq)
     {
-		return new JSONPObject(callbackName,listMyActivity(idUser,httpReq));
+		return new JSONPObject(callbackName,listMyActivity(idUser,btUsername,httpReq));
 	}
      /**
      * Restituisce le birre con tutti i relativi dettagli in formato JSON.
@@ -773,7 +791,7 @@ public class BirrettaService
     @GET
     @Path("/listMyActivity")
     @Produces("application/json")
-    public ResultDTO listMyActivity (@QueryParam("idUser") final String idUser,
+    public ResultDTO listMyActivity (@QueryParam("idUser") final String idUser,@QueryParam("btUsername") final String btUsername,
                                      @Context HttpServletRequest httpReq )
     {
         log.info("request list of "+idUser+" activity");
@@ -781,12 +799,16 @@ public class BirrettaService
         {
             return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
         }
-        else if (!idUser.equals(httpReq.getHeader("btUsername"))){
+        else if (!idUser.equals(btUsername)){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
         ArrayList<Activity> list = DaoFactory.getInstance().getActivityDao().findByUser(idUser);
-       
-        return createResultDTOResponseOk(list);
+        ArrayList<ActivityDTO> listDTO = new ArrayList<ActivityDTO>();
+        for(Activity a: list)
+        {
+            listDTO.add(new ActivityDTO(a));
+        }
+        return createResultDTOResponseOk(listDTO);
         
     }
     @POST
@@ -1282,7 +1304,6 @@ public class BirrettaService
    
     @GET
     @Path("/setNotificationRead_jsonp")
-    @Consumes("application/json")
     @Produces("application/json")
     public JSONPObject setNotificationRead_jsonp(@QueryParam("idNotification") final String idNotification, 
                                  @Context HttpServletRequest httpReq,
@@ -1292,7 +1313,6 @@ public class BirrettaService
     
     @GET
     @Path("/setNotificationRead")
-    @Consumes("application/json")
     @Produces("application/json")
     public ResultDTO setNotificationRead(@QueryParam("idNotification") final String idNotification, 
                                  @Context HttpServletRequest httpReq) {
