@@ -286,8 +286,8 @@ public class BirrettaService
         if(username==null)
             return createResultDTOResponseFail(ErrorCodes.FRND_MISSED_PARAM);
         log.info("request details of user: "+username);
-        ArrayList<User> list = new ArrayList<User>();
-        list.add(DaoFactory.getInstance().getUserDao().findUserByUsername(username));
+        ArrayList<Friend> list = new ArrayList<Friend>();
+        list.add(new Friend(DaoFactory.getInstance().getUserDao().findUserByUsername(username)));
         ResultDTO result = createResultDTOResponseOk(list);
         return result;
     }
@@ -1021,6 +1021,15 @@ public class BirrettaService
         List<Drink> list = DaoFactory.getInstance().getDrinkDao().findDrinksByUsername(username, limit);
         return createJsonOkResponse(list);
     }
+    @GET
+    @Path("/findBadgesUser_jsonp")
+    @Produces("application/json")
+    public JSONPObject findBadgesUser_jsonp (@QueryParam("idUser") final String idUser, 
+                                  @Context HttpServletRequest httpReq,
+                                  @DefaultValue("callback") @QueryParam("callback") String callbackName)
+    {
+        return new JSONPObject(callbackName,findBadgesUser(idUser,httpReq));
+    }
     
     @GET
     @Path("/findBadgesUser")
@@ -1039,7 +1048,10 @@ public class BirrettaService
         List<Badge> list = new ArrayList<Badge>();
         for (int idBadge : u.getBadges())
         {
-            list.add(DaoFactory.getInstance().getBadgeDao().findByIdBadge(idBadge));
+            Badge b=DaoFactory.getInstance().getBadgeDao().findByIdBadge(idBadge);
+            if(b.getImage().contains("/g/e"))
+                b.setImage("http://izolaboatshow.com/wp-content/uploads/2012/01/beer-club.jpg");
+            list.add(b);
         }
                 
         return createResultDTOResponseOk(list);

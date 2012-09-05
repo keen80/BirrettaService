@@ -29,7 +29,37 @@ public class Friend {
     private Integer counter_checkIns = 0;
     private Integer counter_friends = 0;
     private Integer counter_badges = 0;
+    
+        public Friend(User u) {
+        idUser = u.getIdUser();
+        username = u.getUsername();
+        displayName = u.getDisplayName();
+        firstName = u.getFirstName();
+        lastName = u.getLastName();
+        description = u.getDescription();
+        email = u.getEmail();
+        gender = u.getGender();
+        nationality = u.getNationality();
+        DateAdapter date = new DateAdapter();
+        date.setDate(u.getBirthDate());
+        birthDate = date.toString();
+        avatar = u.getAvatar();
+        role = u.getRole();
+        status = u.getStatus();//valorizzato dinamicamente in base a friendrelations(non amico, pending, amico)
+        date.setDate(u.getActivatedOn());
+        activatedOn = date.toString();
+        date.setDate(u.getLastLoginOn());
+        lastLoginOn = date.toString();
+//   badges = "";
+        favorites = u.getFavorites();
+        liked = u.getLiked();
+        counter_checkIns = u.getCounterCheckIns();
+        counter_friends = u.getCounterFriends();
+        counter_badges = u.getCounterBadges();
 
+    }
+    public Friend(){
+    }
     public String getActivatedOn() {
         return activatedOn;
     }
