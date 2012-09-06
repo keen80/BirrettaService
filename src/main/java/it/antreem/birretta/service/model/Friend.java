@@ -26,18 +26,12 @@ public class Friend {
 //    private String badges = "";
     private String favorites = "";
     private String liked = "";
-    private Integer counter_checkIns = 0;
-    private Integer counter_friends = 0;
-    private Integer counter_badges = 0;
-    private Integer count_week_checkIns;
+    private Integer counterCheckIns = 0;
+    private Integer counterFriends = 0;
+    private Integer counterBadges = 0;
+    private Integer countWeekCheckIns;
 
-    public Integer getCount_week_checkIns() {
-        return count_week_checkIns;
-    }
-
-    public void setCount_week_checkIns(Integer count_week_checkIns) {
-        this.count_week_checkIns = count_week_checkIns;
-    }
+   
     
         public Friend(User u) {
         idUser = u.getIdUser();
@@ -62,9 +56,9 @@ public class Friend {
 //   badges = "";
         favorites = u.getFavorites();
         liked = u.getLiked();
-        counter_checkIns = u.getCounterCheckIns();
-        counter_friends = u.getCounterFriends();
-        counter_badges = u.getCounterBadges();
+        counterCheckIns = u.getCounterCheckIns();
+        counterFriends = u.getCounterFriends();
+        counterBadges = u.getCounterBadges();
 
     }
     public Friend(){
@@ -101,30 +95,36 @@ public class Friend {
         this.birthDate = birthDate;
     }
 
-    public Integer getCounter_badges() {
-        return counter_badges;
+    public Integer getCounterBadges() {
+        return counterBadges;
     }
 
-    public void setCounter_badges(Integer counter_badges) {
-        this.counter_badges = counter_badges;
+    public void setCounterBadges(Integer counter_badges) {
+        this.counterBadges = counter_badges;
     }
 
-    public Integer getCounter_checkIns() {
-        return counter_checkIns;
+    public Integer getCounterCheckIns() {
+        return counterCheckIns;
     }
 
-    public void setCounter_checkIns(Integer counter_checkIns) {
-        this.counter_checkIns = counter_checkIns;
+    public void setCounterCheckIns(Integer counter_checkIns) {
+        this.counterCheckIns = counter_checkIns;
     }
 
-    public Integer getCounter_friends() {
-        return counter_friends;
+    public Integer getCounterFriends() {
+        return counterFriends;
     }
 
-    public void setCounter_friends(Integer counter_friends) {
-        this.counter_friends = counter_friends;
+    public void setCounterFriends(Integer counter_friends) {
+        this.counterFriends = counter_friends;
+    }
+     public Integer getCountWeekCheckIns() {
+        return countWeekCheckIns;
     }
 
+    public void setCountWeekCheckIns(Integer count_week_checkIns) {
+        this.countWeekCheckIns = count_week_checkIns;
+    }
     public String getDescription() {
         return description;
     }

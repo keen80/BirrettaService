@@ -319,7 +319,16 @@ public class BirrettaService
             return createResultDTOResponseFail(ErrorCodes.FRND_MISSED_PARAM);
         log.info("request details of user: "+username);
         ArrayList<Friend> list = new ArrayList<Friend>();
-        list.add(new Friend(DaoFactory.getInstance().getUserDao().findUserByUsername(username)));
+        Friend data=new Friend(DaoFactory.getInstance().getUserDao().findUserByUsername(username));
+        //aggiunta punteggio(bevute da inizio settimana)
+        Calendar calMon=Calendar.getInstance();      
+        calMon.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calMon.set(Calendar.HOUR_OF_DAY, 0);
+        calMon.set(Calendar.MINUTE, 0);
+        calMon.set(Calendar.MILLISECOND, 0);
+        List<Drink> drinksList = DaoFactory.getInstance().getDrinkDao().findDrinksInInterval(data.getIdUser(),calMon.getTime(),new Date());
+        data.setCountWeekCheckIns(drinksList.size());
+        list.add(data);
         ResultDTO result = createResultDTOResponseOk(list);
         return result;
     }
@@ -358,15 +367,15 @@ public class BirrettaService
      
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
         ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,idUser);
-        Calendar calLun=Calendar.getInstance();
+        //calcolo punteggio per ogni friends (numero bevute settimanali)
+        Calendar calMon=Calendar.getInstance();      
+        calMon.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calMon.set(Calendar.HOUR_OF_DAY, 0);
+        calMon.set(Calendar.MINUTE, 0);
+        calMon.set(Calendar.MILLISECOND, 0);
         for (Friend f : list) {
-            List<Drink> drinksList = DaoFactory.getInstance().getDrinkDao().findDrinksByUsername(btUsername, maxElemet);
-            
-            int count = 0;
-            for (Drink d : drinksList) {
-                if(d.getInsertedOn().after(new Date()));
-            }
-            f.setCount_week_checkIns(count);
+            List<Drink> drinksList = DaoFactory.getInstance().getDrinkDao().findDrinksInInterval(f.getIdUser(),calMon.getTime(),new Date());
+            f.setCountWeekCheckIns(drinksList.size());
         }
    //     ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
         return createResultDTOResponseOk(list);  

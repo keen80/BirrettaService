@@ -131,6 +131,26 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
 
         return generateListOfDrink(cur);
     }
+    @Override
+    public List<Drink> findDrinksInInterval(String idUser, Date after,Date before) throws DaoException {
+        
+
+        User u = DaoFactory.getInstance().getUserDao().findUserByIdUser(idUser);
+        if (u == null) {
+            return new ArrayList<Drink>();
+        }
+        
+        //{ $gt: after, $lt: before } 
+        BasicDBObject intervallo = new BasicDBObject();
+        intervallo.put("$gte", after);
+        intervallo.put("$lt", before);
+        BasicDBObject query = new BasicDBObject();
+        query.put("idUser", idUser);
+        query.put("insertedOn", intervallo);
+        DBCursor cur = getDrinkBy(query);
+
+        return generateListOfDrink(cur);
+    }
 
     @Override
     public int countDrinksByUsername(String username) throws DaoException {

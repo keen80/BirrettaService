@@ -2,6 +2,7 @@ package it.antreem.birretta.service.dao;
 
 import it.antreem.birretta.service.model.Drink;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,4 +28,5 @@ public interface DrinkDao
     public ArrayList<Drink> listDrinksByPlace(String idLocation,int limit) throws DaoException;
 
     public ArrayList<Drink> findDrinksByUsernameAndPlace(ArrayList<String> idUsers, String idPlace, int maxElemet);
+     public List<Drink> findDrinksInInterval(String idUser, Date after,Date before) throws DaoException ;
 }

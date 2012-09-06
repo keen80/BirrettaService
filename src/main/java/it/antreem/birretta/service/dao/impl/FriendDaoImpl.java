@@ -177,9 +177,9 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
 //        f.setBadges((String)obj.get("badges"));
         f.setFavorites((String) obj.get("favorites"));
         f.setLiked((String)obj.get("liked"));
-        f.setCounter_checkIns((Integer)obj.get("counterCheckIns"));
-        f.setCounter_friends((Integer)obj.get("counterFriends"));
-        f.setCounter_badges((Integer)obj.get("counterBadges"));
+        f.setCounterCheckIns((Integer)obj.get("counterCheckIns"));
+        f.setCounterFriends((Integer)obj.get("counterFriends"));
+        f.setCounterBadges((Integer)obj.get("counterBadges"));
         
         /** 
          * campi user non necessari in friend
@@ -232,9 +232,9 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
       //  f.setBadges(user.getBadges());
         f.setFavorites(user.getFavorites());
         f.setLiked(user.getLiked());
-        f.setCounter_checkIns(user.getCounterCheckIns());
-        f.setCounter_friends(user.getCounterFriends());
-        f.setCounter_badges(user.getCounterBadges());
+        f.setCounterCheckIns(user.getCounterCheckIns());
+        f.setCounterFriends(user.getCounterFriends());
+        f.setCounterBadges(user.getCounterBadges());
 
         return f;
     }
