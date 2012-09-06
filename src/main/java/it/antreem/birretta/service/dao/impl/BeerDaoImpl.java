@@ -20,6 +20,7 @@ import org.bson.types.ObjectId;
 public class BeerDaoImpl extends AbstractMongoDao implements BeerDao 
 {
     public final static String BEERS_COLLNAME = "beers";
+    public final static String NEW_BEERS_COLLNAME = "newbeers";
     
     private static final Log log = LogFactory.getLog(BeerDaoImpl.class);
     
@@ -176,7 +177,40 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
         Beer b = createBeerFromDBObject(obj);
         return b;
     }
-
+    
+    @Override
+    public List<Beer> findNewBeerByNameLike(String name) throws DaoException {
+      List<Beer> list = new ArrayList<Beer>();
+        
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection beers = db.getCollection(NEW_BEERS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            Pattern pattern = Pattern.compile(/*"^" + */name.trim(), Pattern.CASE_INSENSITIVE);
+            query.put("name", pattern);
+            DBCursor cur = beers.find(query).limit(10);
+            
+            while (cur.hasNext()){
+                DBObject _b = cur.next();
+                Beer l = createBeerFromDBObject(_b);
+                list.add(l);
+            }
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+        
+        return list;
+    }
     @Override
     public int saveBeer(Beer b) throws DaoException 
     {
@@ -185,7 +219,7 @@ public class BeerDaoImpl extends AbstractMongoDao implements BeerDao
         {
             db = getDB();
             db.requestStart();
-            DBCollection beers = db.getCollection(BEERS_COLLNAME);
+            DBCollection beers = db.getCollection(NEW_BEERS_COLLNAME);
             BasicDBObject beer = createDBObjectFromBeer(b);
             return beers.insert(beer).getN();
         }

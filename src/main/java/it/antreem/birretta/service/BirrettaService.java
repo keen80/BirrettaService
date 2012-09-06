@@ -327,7 +327,7 @@ public class BirrettaService
         calMon.set(Calendar.MINUTE, 0);
         calMon.set(Calendar.MILLISECOND, 0);
         List<Drink> drinksList = DaoFactory.getInstance().getDrinkDao().findDrinksInInterval(data.getIdUser(),calMon.getTime(),new Date());
-        data.setCountWeekCheckIns(drinksList.size());
+        data.setCurrentPoints(drinksList.size());
         list.add(data);
         ResultDTO result = createResultDTOResponseOk(list);
         return result;
@@ -375,7 +375,7 @@ public class BirrettaService
         calMon.set(Calendar.MILLISECOND, 0);
         for (Friend f : list) {
             List<Drink> drinksList = DaoFactory.getInstance().getDrinkDao().findDrinksInInterval(f.getIdUser(),calMon.getTime(),new Date());
-            f.setCountWeekCheckIns(drinksList.size());
+            f.setCurrentPoints(drinksList.size());
         }
    //     ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
         return createResultDTOResponseOk(list);  
@@ -648,13 +648,18 @@ public class BirrettaService
             //details=complete lista completa dettagli birra
         {
         ArrayList<Beer> list = DaoFactory.getInstance().getBeerDao().listBeer(maxElemet);
+         ArrayList<BeerDTO> listDTO=new ArrayList<BeerDTO>();
+         for(Beer b : list)
+         {
+             listDTO.add(new BeerDTO(b));
+         }
         ResultDTO result = new ResultDTO();
         Status status= new Status();
         status.setCode(100);
         status.setMsg("Status OK");
         status.setSuccess(true);
         Body body =new Body();
-        body.setList(list);
+        body.setList(listDTO);
         Metadata metaData = new Metadata();
    //     metaData.setBadge("OK", 1, "Notification OK");
     //    metaData.setNotification("OK", 1, "Notification OK");
@@ -889,17 +894,25 @@ public class BirrettaService
         }
        
         // Controllo duplicati
-        Beer _b = DaoFactory.getInstance().getBeerDao().findBeerByName(b.getName());
-        if (_b != null){
+        List<Beer> _bList = DaoFactory.getInstance().getBeerDao().findNewBeerByNameLike(b.getName());
+        if (!_bList.isEmpty()){
             return createResultDTOEmptyResponse(ErrorCodes.INSBEER_BEER_DUP);
         }
         
         // Inserimento su DB
         DaoFactory.getInstance().getBeerDao().saveBeer(b);
+        List<Beer> findBeersByNameLike = DaoFactory.getInstance().getBeerDao().findNewBeerByNameLike(b.getName());
+        if(findBeersByNameLike.size()>1)
+        {
+            log.error("errore in generazione activity");
+        }else if(findBeersByNameLike.size()<1)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.SAVE_ERROR);
+        }
         //inserimento attività
         Activity a=new Activity();
         a.setBeerName(b.getName());
-        a.setIdBeer(b.getIdBeer());
+        a.setIdBeer(findBeersByNameLike.get(0).getIdBeer());
         a.setDate(new Date());
         a.setType(ActivityCodes.BEER_CREATED.getType());
         a.setDisplayName(b.getUsername());
@@ -945,7 +958,7 @@ public class BirrettaService
     @Produces("application/json")
     public Object checkIn(@Form CheckInRequestDTO c, @Context HttpServletRequest httpReq) 
     {
-        log.info("richiesta check-in: "+c.getIdUser());
+        log.info("richiesta check-in: "+c.getIdUser()+" "+c.getIdPlace()+" "+c.getIdBeer());
         // Pre-conditions + controllo validita' parametri
         if (c == null){
             return createResultDTOEmptyResponse(ErrorCodes.CHECKIN_WRONG_PARAM);
@@ -997,9 +1010,11 @@ public class BirrettaService
         
         // Preparazione oggetto di modello
         Drink d = new Drink();
-        d.setIdBeer(c.getIdBeer());
+        d.setIdBeer(b.getIdBeer());
+        d.setBeerName(b.getName());
         //verificare esistenza birra e impostare nome
         d.setIdPlace(c.getIdPlace());
+        d.setPlaceName(l.getName());
          //  d.setPlaceName(c.getPlaceName());
         //verificare esistenza location e impostare nome
         d.setIdUser(u.getIdUser());

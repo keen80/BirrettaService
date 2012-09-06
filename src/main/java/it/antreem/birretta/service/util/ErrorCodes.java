@@ -45,6 +45,7 @@ public enum ErrorCodes
     WARN_FRNDREQ_01(297, "Richiesta eseguita gia' eseguita e pendente"),
     WARN_FRNDREQ_02(298, "Amicizia gia' confermata"),
     WARN_FRNDCONFIRM_00(299,"Richiesta di amicizia non presente"),
+    SAVE_ERROR(300,"errore nel salvataggio"),
     PUPPA_CODE(9999, "PuppaMessage");
     
     private int code;

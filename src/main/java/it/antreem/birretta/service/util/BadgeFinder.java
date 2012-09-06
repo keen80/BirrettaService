@@ -55,11 +55,12 @@ public class BadgeFinder {
         //BADGE_NAME = 1 - DRINKER_PUB
          if(!oldBadges.contains(BadgeEnum.DRINKER_PUB_25.getIdBadge()))
          {
-             log.info("verifica numero bevute in pub");
+             log.info("verifica numero bevute in pub: ");
              int count=0;
              //Esempio individuazione in base a idLocationCategory
              for(Drink d: myDrinks)
              {
+                 log.info("-- in pub: "+d.getIdPlace());
                  Location l=DaoFactory.getInstance().getLocationDao().findByIdLocation(d.getIdPlace());
                  if(l.getCategories().contains(LocationCategoryDao.ID_PUB))
                  {

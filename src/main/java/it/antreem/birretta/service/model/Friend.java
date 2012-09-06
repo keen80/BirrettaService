@@ -29,7 +29,7 @@ public class Friend {
     private Integer counterCheckIns = 0;
     private Integer counterFriends = 0;
     private Integer counterBadges = 0;
-    private Integer countWeekCheckIns;
+    private Integer currentPoints;
 
    
     
@@ -118,12 +118,12 @@ public class Friend {
     public void setCounterFriends(Integer counter_friends) {
         this.counterFriends = counter_friends;
     }
-     public Integer getCountWeekCheckIns() {
-        return countWeekCheckIns;
+     public Integer getCurrentPoints() {
+        return currentPoints;
     }
 
-    public void setCountWeekCheckIns(Integer count_week_checkIns) {
-        this.countWeekCheckIns = count_week_checkIns;
+    public void setCurrentPoints(Integer count_week_checkIns) {
+        this.currentPoints = count_week_checkIns;
     }
     public String getDescription() {
         return description;

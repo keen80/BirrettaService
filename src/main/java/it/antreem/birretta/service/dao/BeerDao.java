@@ -17,4 +17,5 @@ public interface BeerDao
     public int saveBeer(Beer b) throws DaoException;
     public ArrayList<Beer>  listBeer(int maxElement) throws DaoException ;
     public ArrayList<BeerSingle>  listBeerSingle(int maxElement) throws DaoException ;
+    public List<Beer> findNewBeerByNameLike(String name) throws DaoException ;
 }

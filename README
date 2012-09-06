@@ -31,12 +31,43 @@ lanciare macchina centos,
 verificare che mongod stia eseguendo:service mongod status (restart se necessario)
 lanciare jboss: cd /opt/jboss../bin/standalone.bat -b 0.0.0.0
 prendere nota indirizzo ip macchina centos e impostarlo su pom birrettaservice
-per deploy e copiare war maven in /opt/jboss../standalone/deployments
+per deploy e copiare war maven in /opt/jboss../standalone/deployments: ex:
+scp /gitHub/BirrettaService/target/birrettaservice.war root@192.168.1.9:/opt/jboss-as-7.1.1.Final/standalone/deployments/birrettaservice.war
+
 
 CONFIGURAZIONE INDEX MONGODB(da fare ogni volta..):
 accedere a shell mongoDB(comando #mongo)
-use brrtt;db.locations.ensureIndex( { pos : "2d" } );
+use brrtt;
+db.locations.ensureIndex( { pos : "2d" } );
 
 
 TEST COMANDI MONGODB:
-http://www.mongodb.org/display/DOCS/Schema+Designhttp://www.mongodb.org/display/DOCS/Geospatial+Indexing/http://www.mongodb.org/display/DOCS/Advanced+QueriesLOCALE    Nome    Indirizzo    Posizione    UTENTE    nickname    first_name    last_nameBEVUTA    id_utente    id_locale    birra-- varieshow dbsshow collections-- indice uniquedb.users.ensureIndex({nickname:1},{unique:true});for (i = 0; i < 10; i++) { db.users.save( {nickname: 'user_' + i, first_name: 'First_' + i, last_name: 'Last_' + i, age: 25} ); };db.users.find();for (i=0; i<5;i++) { db.pubs.save({ nome:'Locale_'+i, indirizzo:'via Birrettina n. '+i, loc: [ 0.0+(i+1)*10, 0.0+(i+1)*10] }); };db.pubs.find();-- query di raggio long(-180,180), lat(-90,90)db.pubs.ensureIndex( { loc : "2d" } );db.pubs.find( { loc: { $near: [30,30], $maxDistance : 15 } } );-- relazionivar mypub = db.pubs.find({nome: "Locale_2"}).limit(1).next();var myuser = db.users.find({nickname: "user_5"}).next();db.drinks.save( { id_user: myuser._id, id_pub: mypub._id, desc: "Bella Bevuta!" } );db.drinks.find( {id_user: myuser._id } );// db.users.ensureIndex => sugli id_pub e id_user
+http://www.mongodb.org/display/DOCS/Schema+Design
+http://www.mongodb.org/display/DOCS/Geospatial+Indexing/
+http://www.mongodb.org/display/DOCS/Advanced+Queries
+
+COMANDI MONGO imoprt-export:
+mongoexport -d brrtt -c nomecollezione -o nomefile.json
+mongoimport -d brrtt -c nomecollezione --file nomefile.json
+
+-- varie
+show dbs
+show collections
+
+-- indice unique
+db.users.ensureIndex({nickname:1},{unique:true});
+for (i = 0; i < 10; i++) { db.users.save( {nickname: 'user_' + i, first_name: 'First_' + i, last_name: 'Last_' + i, age: 25} ); };
+db.users.find();
+for (i=0; i<5;i++) { db.pubs.save({ nome:'Locale_'+i, indirizzo:'via Birrettina n. '+i, loc: [ 0.0+(i+1)*10, 0.0+(i+1)*10] }); };
+db.pubs.find();
+
+-- query di raggio long(-180,180), lat(-90,90)
+db.pubs.ensureIndex( { loc : "2d" } );
+db.pubs.find( { loc: { $near: [30,30], $maxDistance : 15 } } );
+
+-- relazioni
+var mypub = db.pubs.find({nome: "Locale_2"}).limit(1).next();
+var myuser = db.users.find({nickname: "user_5"}).next();
+db.drinks.save( { id_user: myuser._id, id_pub: mypub._id, desc: "Bella Bevuta!" } );
+db.drinks.find( {id_user: myuser._id } );
+// db.users.ensureIndex => sugli id_pub e id_user
