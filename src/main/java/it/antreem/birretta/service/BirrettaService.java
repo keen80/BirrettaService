@@ -228,7 +228,24 @@ public class BirrettaService
             newuser.setNationality(r.getNationality());
             newuser.setActivatedOn(new Date());
             DaoFactory.getInstance().getUserDao().saveUser(newuser);
-            return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
+
+            //generazione token
+            Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(r.getIdUser());
+            if (s == null) {
+                s = new Session();
+                s.setUsername(r.getIdUser());
+                s.setSid(UUID.randomUUID().toString());
+                s.setTimestamp(new Date());
+                DaoFactory.getInstance().getSessionDao().saveSession(s);
+            }
+
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("btUsername", r.getIdUser());
+            map.put("btSid", s.getSid());
+            ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+            list.add(map);
+
+            return createResultDTOResponseOk(list);
             //return new SuccessPost();
         }
         else{//NON SETTO PIU' LA MAIL E LO USERNAME
@@ -258,8 +275,23 @@ public class BirrettaService
             if(r.isShareTwitter()!=null)u.setShareTwitter(r.isShareTwitter());
             if(r.getStatus()!=null)u.setStatus(r.getStatus());
             DaoFactory.getInstance().getUserDao().updateUser(u);
-            //return new SuccessPost();
-           return  createResultDTOEmptyResponse(InfoCodes.OK_SAVEUSER_00);
+           //generazione token
+            Session s = DaoFactory.getInstance().getSessionDao().findSessionByUsername(r.getIdUser());
+            if (s == null) {
+                s = new Session();
+                s.setUsername(r.getIdUser());
+                s.setSid(UUID.randomUUID().toString());
+                s.setTimestamp(new Date());
+                DaoFactory.getInstance().getSessionDao().saveSession(s);
+            }
+
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("btUsername", r.getIdUser());
+            map.put("btSid", s.getSid());
+            ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+            list.add(map);
+
+            return createResultDTOResponseOk(list);
         }
     }
     
@@ -326,6 +358,16 @@ public class BirrettaService
      
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
         ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllMyFriends(maxElemet,idUser);
+        Calendar calLun=Calendar.getInstance();
+        for (Friend f : list) {
+            List<Drink> drinksList = DaoFactory.getInstance().getDrinkDao().findDrinksByUsername(btUsername, maxElemet);
+            
+            int count = 0;
+            for (Drink d : drinksList) {
+                if(d.getInsertedOn().after(new Date()));
+            }
+            f.setCount_week_checkIns(count);
+        }
    //     ArrayList<Friend> list = DaoFactory.getInstance().getFriendDao().getAllFriends(maxElemet);
         return createResultDTOResponseOk(list);  
     }

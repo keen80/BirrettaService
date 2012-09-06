@@ -29,6 +29,15 @@ public class Friend {
     private Integer counter_checkIns = 0;
     private Integer counter_friends = 0;
     private Integer counter_badges = 0;
+    private Integer count_week_checkIns;
+
+    public Integer getCount_week_checkIns() {
+        return count_week_checkIns;
+    }
+
+    public void setCount_week_checkIns(Integer count_week_checkIns) {
+        this.count_week_checkIns = count_week_checkIns;
+    }
     
         public Friend(User u) {
         idUser = u.getIdUser();
