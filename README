@@ -14,11 +14,10 @@ Segue una lista di punti che possono essere migliorati ed implementati in modo p
 - Occorre decidere come trattare le immagini ed il trasferimento delle stesse: base64? altro encoding? Per ora si passa un bytearray diretto ma sicuramente non può essere la soluzione finale
 - Si dovranno esplicitare più codici di errore dettagliati, anziché i soli attualmente presenti (troppo generici)
 -
-- generazione notification(inserimento birra, drinks..) e activity(inserimento birra,drinks..) lato server
+
 - sistemare getAllMyFriends
 - badges, likes..
 - gestione relationi friends
-- listFriendActivity
 =====================
 MONGODB
 =====================

@@ -316,10 +316,15 @@ public class BirrettaService
         public ResultDTO detailsUserByUsername(@QueryParam("username") final String username)
     {
         if(username==null)
-            return createResultDTOResponseFail(ErrorCodes.FRND_MISSED_PARAM);
+            return createResultDTOResponseFail(ErrorCodes.NULL_USER);
         log.info("request details of user: "+username);
+        User u=DaoFactory.getInstance().getUserDao().findUserByUsername(username);
+        if(u==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NOT_FOUND);
+        }
         ArrayList<Friend> list = new ArrayList<Friend>();
-        Friend data=new Friend(DaoFactory.getInstance().getUserDao().findUserByUsername(username));
+        Friend data=new Friend(u);
         //aggiunta punteggio(bevute da inizio settimana)
         Calendar calMon=Calendar.getInstance();      
         calMon.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
