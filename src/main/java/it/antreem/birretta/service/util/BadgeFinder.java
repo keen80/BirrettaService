@@ -26,7 +26,7 @@ public class BadgeFinder {
         List<Integer> oldBadges = user.getBadges();
         List<Integer> newBadges = new ArrayList<Integer>();
         newBadges.addAll(oldBadges);
-        List<Drink> myDrinks = DaoFactory.getInstance().getDrinkDao().findDrinksByUsername(user.getUsername(), null);
+        List<Drink> myDrinks = DaoFactory.getInstance().getDrinkDao().findDrinksByIdUser(user.getIdUser(), null);
         
         //BADGE_NAME = 0 - DRINK_NUM
         
@@ -39,15 +39,15 @@ public class BadgeFinder {
         {
             log.info("verifica numero bevute complessive");
             int countDrinksByUsername = myDrinks.size();
-            if (countDrinksByUsername == BadgeEnum.DRINK_NUM_1.getQuantity()) {
+            if (!oldBadges.contains(BadgeEnum.DRINK_NUM_1.getIdBadge()) && countDrinksByUsername == BadgeEnum.DRINK_NUM_1.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NUM_1);
-            } else if (countDrinksByUsername == BadgeEnum.DRINK_NUM_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINK_NUM_5.getIdBadge())  && countDrinksByUsername == BadgeEnum.DRINK_NUM_5.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NUM_5);
-            } else if (countDrinksByUsername == BadgeEnum.DRINK_NUM_10.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINK_NUM_10.getIdBadge())  && countDrinksByUsername == BadgeEnum.DRINK_NUM_10.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NUM_10);
-            } else if (countDrinksByUsername == BadgeEnum.DRINK_NUM_50.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINK_NUM_50.getIdBadge())  && countDrinksByUsername == BadgeEnum.DRINK_NUM_50.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NUM_50);
-            } else if (countDrinksByUsername == BadgeEnum.DRINK_NUM_100.getQuantity()) {
+            } else if ( countDrinksByUsername == BadgeEnum.DRINK_NUM_100.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NUM_100);
             }
         }   
@@ -67,13 +67,13 @@ public class BadgeFinder {
                      count++;
                  }
              }
-             if (count == BadgeEnum.DRINKER_PUB_1.getQuantity()) {
+             if (!oldBadges.contains(BadgeEnum.DRINKER_PUB_1.getIdBadge())  && count == BadgeEnum.DRINKER_PUB_1.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PUB_1);
-            } else if (count == BadgeEnum.DRINKER_PUB_3.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_PUB_3.getIdBadge())  && count == BadgeEnum.DRINKER_PUB_3.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PUB_3);
-            } else if (count == BadgeEnum.DRINKER_PUB_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_PUB_5.getIdBadge())  && count == BadgeEnum.DRINKER_PUB_5.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PUB_5);
-            } else if (count == BadgeEnum.DRINKER_PUB_10.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_PUB_10.getIdBadge())  && count == BadgeEnum.DRINKER_PUB_10.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PUB_10);
             } else if (count == BadgeEnum.DRINKER_PUB_25.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PUB_25);
@@ -93,13 +93,13 @@ public class BadgeFinder {
                      count++;
                  }
              }
-             if (count == BadgeEnum.DRINKER_PIZZA_1.getQuantity()) {
+             if (!oldBadges.contains(BadgeEnum.DRINKER_PIZZA_1.getIdBadge())  && count == BadgeEnum.DRINKER_PIZZA_1.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PIZZA_1);
-            } else if (count == BadgeEnum.DRINKER_PIZZA_3.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_PIZZA_3.getIdBadge()) && count == BadgeEnum.DRINKER_PIZZA_3.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PIZZA_3);
-            } else if (count == BadgeEnum.DRINKER_PIZZA_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_PIZZA_5.getIdBadge()) && count == BadgeEnum.DRINKER_PIZZA_5.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PIZZA_5);
-            } else if (count == BadgeEnum.DRINKER_PIZZA_10.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_PIZZA_10.getIdBadge()) && count == BadgeEnum.DRINKER_PIZZA_10.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PIZZA_10);
             } else if (count == BadgeEnum.DRINKER_PIZZA_25.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_PIZZA_25);
@@ -114,13 +114,13 @@ public class BadgeFinder {
              String name="Restaurant";
              int count=0;
              count = countDrinkWithLocationCategoryNameLike(myDrinks, name);
-             if (count == BadgeEnum.DRINKER_RISTO_1.getQuantity()) {
+             if (!oldBadges.contains(BadgeEnum.DRINKER_RISTO_1.getIdBadge()) && count == BadgeEnum.DRINKER_RISTO_1.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_RISTO_1);
-            } else if (count == BadgeEnum.DRINKER_RISTO_3.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_RISTO_3.getIdBadge()) && count == BadgeEnum.DRINKER_RISTO_3.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_RISTO_3);
-            } else if (count == BadgeEnum.DRINKER_RISTO_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_RISTO_5.getIdBadge()) && count == BadgeEnum.DRINKER_RISTO_5.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_RISTO_5);
-            } else if (count == BadgeEnum.DRINKER_RISTO_10.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_RISTO_10.getIdBadge()) && count == BadgeEnum.DRINKER_RISTO_10.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_RISTO_10);
             } else if (count == BadgeEnum.DRINKER_RISTO_25.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_RISTO_25);
@@ -136,13 +136,13 @@ public class BadgeFinder {
              String name="Bar";
              int count=0;
              count = countDrinkWithLocationCategoryNameLike(myDrinks, name);
-             if (count == BadgeEnum.DRINKER_BAR_1.getQuantity()) {
+             if (!oldBadges.contains(BadgeEnum.DRINKER_BAR_1.getIdBadge()) && count == BadgeEnum.DRINKER_BAR_1.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_BAR_1);
-            } else if (count == BadgeEnum.DRINKER_BAR_3.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_BAR_3.getIdBadge()) && count == BadgeEnum.DRINKER_BAR_3.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_BAR_3);
-            } else if (count == BadgeEnum.DRINKER_BAR_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_BAR_5.getIdBadge()) && count == BadgeEnum.DRINKER_BAR_5.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_BAR_5);
-            } else if (count == BadgeEnum.DRINKER_BAR_10.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_BAR_10.getIdBadge()) && count == BadgeEnum.DRINKER_BAR_10.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_BAR_10);
             } else if (count == BadgeEnum.DRINKER_BAR_25.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_BAR_25);
@@ -166,15 +166,15 @@ public class BadgeFinder {
                      count++;
                  }
              }
-             if (count == BadgeEnum.DRINKER_HOME_1.getQuantity()) {
+             if (!oldBadges.contains(BadgeEnum.DRINKER_HOME_1.getIdBadge()) && count == BadgeEnum.DRINKER_HOME_1.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_HOME_1);
-            } else if (count == BadgeEnum.DRINKER_HOME_3.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_HOME_3.getIdBadge()) && count == BadgeEnum.DRINKER_HOME_3.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_HOME_3);
-            } else if (count == BadgeEnum.DRINKER_HOME_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_HOME_5.getIdBadge()) && count == BadgeEnum.DRINKER_HOME_5.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_HOME_5);
-            } else if (count == BadgeEnum.DRINKER_HOME_10.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_HOME_10.getIdBadge()) && count == BadgeEnum.DRINKER_HOME_10.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_HOME_10);
-            } else if (count == BadgeEnum.DRINKER_HOME_25.getQuantity()) {
+            } else if ( count == BadgeEnum.DRINKER_HOME_25.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_HOME_25);
             }
          }
@@ -187,13 +187,13 @@ public class BadgeFinder {
              String name="Stadium";
              int count=0;
              count = countDrinkWithLocationCategoryNameLike(myDrinks, name);
-             if (count == BadgeEnum.DRINKER_SPORT_1.getQuantity()) {
+             if (!oldBadges.contains(BadgeEnum.DRINKER_SPORT_1.getIdBadge()) && count == BadgeEnum.DRINKER_SPORT_1.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_SPORT_1);
-            } else if (count == BadgeEnum.DRINKER_SPORT_3.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_SPORT_3.getIdBadge()) && count == BadgeEnum.DRINKER_SPORT_3.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_SPORT_3);
-            } else if (count == BadgeEnum.DRINKER_SPORT_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_SPORT_5.getIdBadge()) && count == BadgeEnum.DRINKER_SPORT_5.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_SPORT_5);
-            } else if (count == BadgeEnum.DRINKER_SPORT_10.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINKER_SPORT_10.getIdBadge()) && count == BadgeEnum.DRINKER_SPORT_10.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_SPORT_10);
             } else if (count == BadgeEnum.DRINKER_SPORT_25.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_SPORT_25);
@@ -264,13 +264,13 @@ public class BadgeFinder {
                  }
              }
              log.info("numero bevute di "+user.getUsername()+":"+count);
-              if (count == BadgeEnum.DRINK_NIGHT_2.getQuantity()) {
+              if (!oldBadges.contains(BadgeEnum.DRINK_NIGHT_2.getIdBadge()) && count == BadgeEnum.DRINK_NIGHT_2.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NIGHT_2);
-            } else if (count == BadgeEnum.DRINK_NIGHT_3.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINK_NIGHT_3.getIdBadge()) && count == BadgeEnum.DRINK_NIGHT_3.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NIGHT_3);
-            } else if (count == BadgeEnum.DRINK_NIGHT_4.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINK_NIGHT_4.getIdBadge()) && count == BadgeEnum.DRINK_NIGHT_4.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NIGHT_4);
-            } else if (count == BadgeEnum.DRINK_NIGHT_5.getQuantity()) {
+            } else if (!oldBadges.contains(BadgeEnum.DRINK_NIGHT_5.getIdBadge()) && count == BadgeEnum.DRINK_NIGHT_5.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_SPORT_5);
             } else if (count == BadgeEnum.DRINK_NIGHT_10.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NIGHT_10);
@@ -332,6 +332,7 @@ public class BadgeFinder {
      * @param newBadges lista di idBadges da abbinare all'user
      */
     private void updateListBadgeLocally(ArrayList<Badge> list, List<Integer> newBadges,BadgeEnum e) {
+        log.info("aggiunta badge "+ e.getIdBadge());
         //update lista da restituire per indicare nuovi badge sbloccati
         list.add(getBadgeFromEnum(e));
         //aggiornamento lista badge posseduti da un utente

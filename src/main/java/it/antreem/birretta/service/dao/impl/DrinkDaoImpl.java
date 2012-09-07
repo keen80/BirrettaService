@@ -79,18 +79,8 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
     }
 
     @Override
-    public List<Drink> findDrinksByUsername(String username, Integer limit) throws DaoException {
+    public List<Drink> findDrinksByIdUser(String idUser, Integer limit) throws DaoException {
         List<Drink> list = new ArrayList<Drink>();
-
-        User u = DaoFactory.getInstance().getUserDao().findUserByUsername(username);
-        if (u == null) {
-            return list;
-        }
-        String idUser = u.getIdUser();
-
-        if (limit == null || limit < 0) {
-            limit = 10;
-        }
 
         BasicDBObject query = new BasicDBObject();
         query.put("idUser", idUser);
@@ -101,8 +91,7 @@ public class DrinkDaoImpl extends AbstractMongoDao implements DrinkDao {
         } else {
             cur = getDrinkBy(query).sort(new BasicDBObject("insertedOn", -1)).limit(limit);
 
-        }
-        
+        }       
         return generateListOfDrink(cur);
     }
 

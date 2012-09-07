@@ -48,7 +48,12 @@ http://www.mongodb.org/display/DOCS/Advanced+Queries
 COMANDI MONGO imoprt-export:
 mongoexport -d brrtt -c nomecollezione -o nomefile.json
 mongoimport -d brrtt -c nomecollezione --file nomefile.json
-
+PULIZIA MONGO DA USER
+db.users.remove({"idUser","mail@gmail.com"})
+db.activities.remove({"idUser","mail@gmail.com"})
+db.drinks.remove({"idUser","mail@gmail.com"})
+db.sessions.remove({"idUser","mail@gmail.com"})
+db.notifications.remove({"idUser","mail@gmail.com"})
 -- varie
 show dbs
 show collections

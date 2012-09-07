@@ -773,9 +773,11 @@ public class BirrettaService
     @Produces("application/json")
     public JSONPObject listDrink_jsonp (
 	@QueryParam("maxElement") final String _maxElemet,
-	@DefaultValue("callback") @QueryParam("callback") String callbackName)
+        @QueryParam("idUser") final String idUser,
+	@DefaultValue("callback") @QueryParam("callback") String callbackName,
+             @QueryParam("btUsername") final String btUsername)
     {
-		return new JSONPObject(callbackName,listDrink(_maxElemet));
+		return new JSONPObject(callbackName,listDrink(_maxElemet,idUser,btUsername));
 	}
      /**
      * Restituisce tutte le bevute con tutti i relativi dettagli in formato JSON.
@@ -783,12 +785,23 @@ public class BirrettaService
     @GET
     @Path("/listDrink")
     @Produces("application/json")
-    public ResultDTO listDrink (@QueryParam("maxElement") final String _maxElemet)
+    public ResultDTO listDrink (@QueryParam("maxElement") final String _maxElemet,
+    @QueryParam("idUser") final String idUser,
+     @QueryParam("btUsername") final String btUsername)
     {
-        log.info("listDrink - request list of "+_maxElemet+" drink");
+        log.info("listDrink - request list of "+_maxElemet+" drink of "+idUser);
+        if(idUser==null)
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
+        if(!idUser.equals(btUsername))
+            return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         int maxElemet = _maxElemet == null ? -1 : new Integer(_maxElemet);
-        ArrayList<Drink> list = DaoFactory.getInstance().getDrinkDao().getDrinksList(maxElemet);
-        return createResultDTOResponseOk(list);
+        List<Drink> list = DaoFactory.getInstance().getDrinkDao().findDrinksByIdUser(idUser, maxElemet);
+         List<DrinkDTO> listDTO =new ArrayList<DrinkDTO>();
+         for(Drink d: list)
+         {
+             listDTO.add(new DrinkDTO(d));
+         }
+        return createResultDTOResponseOk(listDTO);
         
     }
     
@@ -922,8 +935,17 @@ public class BirrettaService
         a.setType(ActivityCodes.BEER_CREATED.getType());
         a.setDisplayName(b.getUsername());
         DaoFactory.getInstance().getActivityDao().saveActivity(a);
-        return createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00);
-      //  return new SuccessPost();
+        
+        
+         HashMap<String,Object> map=new HashMap<String, Object>();
+        map.put("success", Boolean.TRUE);
+        map.put("response",createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00));
+        ArrayList<HashMap<String,Object>> list=new ArrayList <HashMap<String,Object>>();
+        list.add(map);
+     //   return list;
+        
+      //  return createResultDTOEmptyResponse(InfoCodes.OK_INSERTBEER_00);
+        return new SuccessPost();
     }
     @POST
     @Path("/insertListBeer")
@@ -1075,23 +1097,6 @@ public class BirrettaService
     }
     
     
-    @GET
-    @Path("/findMyDrinks")
-    @Produces("application/json")
-    public Response findMyDrinks (@QueryParam("username") final String username, 
-                                  @DefaultValue("10") @QueryParam("limit") Integer limit, 
-                                  @Context HttpServletRequest httpReq)
-    {
-        // Blocco richieste di un utente per un altro
-        if (username == null || !username.equals(httpReq.getHeader("btUsername"))){
-            return createJsonErrorResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
-        }
-        if (limit < 0 || limit > 100) {
-            limit = 10;
-        }
-        List<Drink> list = DaoFactory.getInstance().getDrinkDao().findDrinksByUsername(username, limit);
-        return createJsonOkResponse(list);
-    }
     @GET
     @Path("/findBadgesUser_jsonp")
     @Produces("application/json")
