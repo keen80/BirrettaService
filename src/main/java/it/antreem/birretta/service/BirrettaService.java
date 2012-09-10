@@ -1,5 +1,6 @@
 package it.antreem.birretta.service;
 
+import it.antreem.birretta.service.dao.ActivityDao;
 import it.antreem.birretta.service.dao.DaoFactory;
 import it.antreem.birretta.service.dto.*;
 import it.antreem.birretta.service.model.*;
@@ -925,7 +926,7 @@ public class BirrettaService
             log.error("errore in generazione activity");
         }else if(findBeersByNameLike.size()<1)
         {
-            return createResultDTOEmptyResponse(ErrorCodes.SAVE_ERROR);
+            return createResultDTOEmptyResponse(ErrorCodes.SAVE_FAIL);
         }
         //inserimento attività
         Activity a=new Activity();
@@ -1417,9 +1418,35 @@ public class BirrettaService
         return createResultDTOEmptyResponse(InfoCodes.OK_NOTIFICATION_00);
     }
     /*
+     * likeActivity
+     */
+    @GET
+    @Path("/likeActivity")
+    @Produces("application/json")
+    public Object likeActivity(@QueryParam("idActivity") final String idActivity, @Context HttpServletRequest httpReq)
+    {
+        if (idActivity == null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_ACTIVITY);
+        }
+        ActivityDao dao=DaoFactory.getInstance().getActivityDao();
+        Activity activity = dao.findById(idActivity);
+        if(activity==null)
+        {
+            return createResultDTOEmptyResponse(ErrorCodes.MISSING_ACTIVTY);
+        }
+        activity.setLike(activity.getLike()+1);
+        if(dao.updateActivity(activity)>0)
+        {
+           // return new SuccessPost();
+            return createResultDTOEmptyResponse(InfoCodes.OK);
+        }
+        else
+            return createResultDTOEmptyResponse(ErrorCodes.UPDATE_FAIL);
+    }
+    /*
      * sendFeedback
      */
-    
     @POST
     @Path("/saveFeedback")
     @Consumes("application/x-www-form-urlencoded")

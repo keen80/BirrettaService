@@ -80,7 +80,28 @@ public class ActivityDaoImpl extends AbstractMongoDao implements ActivityDao{
             }
         }
     }
-
+    
+    @Override
+    public int updateActivity(Activity activity) {
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection activities = db.getCollection(ACTIVITY_COLLNAME);
+            BasicDBObject a = createDBObjectFromActivity(activity);
+            return activities.update(new BasicDBObject().append("_id",activity.getId()),a).getN();
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
     private BasicDBObject createDBObjectFromActivity(Activity a) {
         BasicDBObject _a = new BasicDBObject();
        // _a.put("idActivity", a.getIdActivity());

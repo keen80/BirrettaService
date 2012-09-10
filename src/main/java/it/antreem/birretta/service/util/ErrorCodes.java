@@ -41,11 +41,13 @@ public enum ErrorCodes
     MISSING_PLACE(232, "Locale non esistente"),
     NULL_ACTIVITY(233,"idActivity non fornita"),
     SAVE_FEEDBACK_ERROR(234,"Impossibile salvare il Feedback"),
-    PROSSIMO_ERRORE(235,""),
+    SAVE_FAIL(235,"errore nel salvataggio"),
+    UPDATE_FAIL(236,"errore nell'update"),
+    MISSING_ACTIVTY(237,"activity non esistente"),
+    PROSSIMO_ERRORE(238,""),
     WARN_FRNDREQ_01(297, "Richiesta eseguita gia' eseguita e pendente"),
     WARN_FRNDREQ_02(298, "Amicizia gia' confermata"),
     WARN_FRNDCONFIRM_00(299,"Richiesta di amicizia non presente"),
-    SAVE_ERROR(300,"errore nel salvataggio"),
     PUPPA_CODE(9999, "PuppaMessage");
     
     private int code;

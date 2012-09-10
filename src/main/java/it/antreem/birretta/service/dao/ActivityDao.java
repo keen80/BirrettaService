@@ -13,4 +13,5 @@ public interface ActivityDao
     public ArrayList<Activity> findByUser(String user) throws DaoException;
     public Activity findById(String id) throws DaoException;
     public int saveActivity(Activity b) throws DaoException;
+    public int updateActivity(Activity activity);
 }
