@@ -15,6 +15,8 @@ import javax.ws.rs.FormParam;
 public class UpdateUserRequestDTO {
     @FormParam("idUser")
     private String idUser;
+    @FormParam("idFacebook")
+    private String idFacebook;
     @FormParam("username")
     private String username;
     @FormParam("displayName")
@@ -70,6 +72,14 @@ public class UpdateUserRequestDTO {
     @FormParam("hashNotificationlist")
     private String hashNotificationlist;
 
+    public String getIdFacebook() {
+        return idFacebook;
+    }
+
+    public void setIdFacebook(String idFacebook) {
+        this.idFacebook = idFacebook;
+    }
+    
     public String getUsername() {
         return username;
     }

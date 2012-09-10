@@ -191,7 +191,38 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         User u = createUserFromDBObject(obj);
         return u;
     }
-    
+     @Override
+    public User findByIdFacebook(String idFacebook) {
+         log.info("UserDaoImpl - findByIdFacebook - idUser: "+idFacebook);
+        DB db = null;
+        try
+        {
+            db = getDB();
+            db.requestStart();
+            DBCollection users = db.getCollection(USERS_COLLNAME);
+            BasicDBObject query = new BasicDBObject();
+            query.put("idFacebook", idFacebook);
+            DBCursor cur = users.find(query);
+            
+            while (cur.hasNext()){
+                DBObject _u = cur.next();
+                User u = createUserFromDBObject(_u);
+                assert u.getIdFacebook().equals(idFacebook);
+                return u;
+            }
+            
+            return null;
+        }
+        catch(MongoException ex){
+            log.error(ex.getLocalizedMessage(), ex);
+            throw new DaoException(ex.getLocalizedMessage(), ex);
+        }
+        finally {
+            if (db != null){
+                db.requestDone();
+            }
+        }
+    }
     protected static User createUserFromDBObject(DBObject obj)
     {
         User u = new User();
@@ -205,7 +236,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         u.setEmail((String)obj.get("email"));
         u.setGender((Integer) obj.get("gender"));
         u.setNationality((String)obj.get("nationality"));
-        
+        u.setIdFacebook((String)obj.get("idUser"));
         Object birthDate= obj.get("birthDate");
         if(birthDate!=null &&  obj.get("birthDate").getClass().equals(Date.class))
              u.setBirthDate((Date)birthDate);
@@ -246,6 +277,7 @@ public class UserDaoImpl extends AbstractMongoDao implements UserDao
         //campi chiave:
         _u.put("username", u.getUsername().trim());
         _u.put("idUser", u.getIdUser().trim());
+        _u.put("idFacebook", u.getIdFacebook());
         _u.put("email", u.getEmail().trim());
         //campi che devono essere sempre presenti:
         _u.put("gender",u.getGender());

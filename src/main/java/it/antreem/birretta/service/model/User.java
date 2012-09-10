@@ -7,6 +7,7 @@ import java.util.List;
 public class User extends MongoDBObject {
 
     private String idUser;
+    private String idFacebook;
     private String username;
     private String displayName;
     private String firstName;
@@ -261,4 +262,13 @@ public class User extends MongoDBObject {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getIdFacebook() {
+        return idFacebook;
+    }
+
+    public void setIdFacebook(String idFacebook) {
+        this.idFacebook = idFacebook;
+    }
+    
 }

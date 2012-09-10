@@ -16,7 +16,9 @@ public class DateAdapter {
      public DateAdapter()
      {}
     public DateAdapter(String str) throws ParseException {
+        System.out.println("from date: "+ str);
         this.date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(str);
+        System.out.println("to date: "+date+ "get timezone: "+date.getTimezoneOffset());
     }
     
     public Date getDate() {

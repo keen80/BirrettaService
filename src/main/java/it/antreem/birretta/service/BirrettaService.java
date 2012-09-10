@@ -213,7 +213,7 @@ public class BirrettaService
     @Consumes("application/x-www-form-urlencoded")
     @Produces("application/json")
     public Object saveUser(@Form UpdateUserRequestDTO r,@Context HttpServletRequest httpReq){
-        log.info("saveUser - "+ r.getIdUser());
+        log.info("saveUser - "+ r.getIdUser()+ " - "+r.getEmail() +" birthDate:"+r.getBirthDate());
         if (!r.getIdUser().equals(httpReq.getHeader("btUsername"))){
             return createResultDTOEmptyResponse(ErrorCodes.REQ_DELEGATION_BLOCKED);
         }
@@ -221,6 +221,7 @@ public class BirrettaService
         if(u==null){
             User newuser = new User();
             newuser.setIdUser(r.getIdUser());
+            newuser.setIdFacebook(r.getIdFacebook());
             newuser.setBirthDate(r.getBirthDate().getDate());
             newuser.setEmail(r.getEmail());
             newuser.setDisplayName(r.getDisplayName());
@@ -590,13 +591,19 @@ public class BirrettaService
     }
     
     @GET
-    @Path("/findUserById")
+    @Path("/findUserByIdFacebook")
     @Produces("application/json")
-    public Response findUserById (@QueryParam("id") final String _id)
+    public ResultDTO findUserByIdFacebook (@QueryParam("idFacebook") final String idFacebook)
     {
-        String id = _id == null ? "" : _id;
-        User u = DaoFactory.getInstance().getUserDao().findById(id);
-        return createJsonOkResponse(u);
+        if(idFacebook == null)
+            return createResultDTOEmptyResponse(ErrorCodes.NULL_USER);
+        User u = DaoFactory.getInstance().getUserDao().findByIdFacebook(idFacebook);
+        if(u == null)
+            return createResultDTOEmptyResponse(ErrorCodes.USER_NOT_FOUND);
+       
+        List<User> list = new ArrayList<User>();
+        list.add(u);
+        return createResultDTOResponseOk(list);
     }
     
     @GET
