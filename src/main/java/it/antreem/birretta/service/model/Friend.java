@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class Friend {
     private String idUser;
+    private String idFacebook;
     private String username;
     private String displayName;
     private String firstName;
@@ -59,10 +60,19 @@ public class Friend {
         counterCheckIns = u.getCounterCheckIns();
         counterFriends = u.getCounterFriends();
         counterBadges = u.getCounterBadges();
-
+        idFacebook= u.getIdFacebook();
     }
     public Friend(){
     }
+
+    public String getIdFacebook() {
+        return idFacebook;
+    }
+
+    public void setIdFacebook(String idFacebook) {
+        this.idFacebook = idFacebook;
+    }
+    
     public String getActivatedOn() {
         return activatedOn;
     }

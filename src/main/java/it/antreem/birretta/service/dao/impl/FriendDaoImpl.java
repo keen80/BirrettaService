@@ -143,7 +143,7 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         f.setEmail((String)obj.get("email"));
         f.setGender((Integer) obj.get("gender"));
         f.setNationality((String)obj.get("nationality"));
-        
+        f.setIdFacebook((String)obj.get("idFacebook"));
         Object birthDate= obj.get("birthDate");
         if(birthDate!=null)
         {
@@ -198,6 +198,7 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         //friend non è un un oggetto mongodb
         //     f.setId((ObjectId) obj.get_id());
         f.setUsername(user.getUsername());
+        f.setIdFacebook(user.getIdFacebook());
         f.setDisplayName(user.getDisplayName());
         f.setFirstName(user.getFirstName());
         f.setLastName(user.getLastName());
@@ -210,7 +211,7 @@ public class FriendDaoImpl extends AbstractMongoDao implements FriendDao
         f.setBirthDate(da.toString());
         f.setAvatar(user.getAvatar());
         f.setRole(user.getRole());
-
+        
         //impostazione status:
         int status = 0;
         if (friendRelation.isFriend()) //richiesta accettata
