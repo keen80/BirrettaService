@@ -34,11 +34,17 @@ per deploy e copiare war maven in /opt/jboss../standalone/deployments: ex:
 scp /gitHub/BirrettaService/target/birrettaservice.war root@192.168.1.9:/opt/jboss-as-7.1.1.Final/standalone/deployments/birrettaservice.war
 
 
+
+
 CONFIGURAZIONE INDEX MONGODB(da fare ogni volta..):
 accedere a shell mongoDB(comando #mongo)
 use brrtt;
 db.locations.ensureIndex( { pos : "2d" } );
 
+
+OPERAZIONI DI GESTIONE
+per prelevare le categorie da mettere in i18n
+scp /opt/jboss-as-7.1.1.Final/bin/LocationCategory.txt morlins@192.168.1.12:locationsCategory.txt
 
 TEST COMANDI MONGODB:
 http://www.mongodb.org/display/DOCS/Schema+Design
@@ -49,11 +55,11 @@ COMANDI MONGO imoprt-export:
 mongoexport -d brrtt -c nomecollezione -o nomefile.json
 mongoimport -d brrtt -c nomecollezione --file nomefile.json
 PULIZIA MONGO DA USER
-db.users.remove({"idUser","mail@gmail.com"})
-db.activities.remove({"idUser","mail@gmail.com"})
-db.drinks.remove({"idUser","mail@gmail.com"})
-db.sessions.remove({"idUser","mail@gmail.com"})
-db.notifications.remove({"idUser","mail@gmail.com"})
+db.users.remove({"idUser":"mail@gmail.com"})
+db.activities.remove({"idUser":"mail@gmail.com"})
+db.drinks.remove({"idUser":"mail@gmail.com"})
+db.sessions.remove({"idUser":"mail@gmail.com"})
+db.notifications.remove({"idUser":"mail@gmail.com"})
 -- varie
 show dbs
 show collections

@@ -150,7 +150,7 @@ public class BadgeFinder {
          }
         
          //BADGE_NAME = 5 - DRINKER_OPENSPACE
-         //name like Outdoors
+         //name like outdoors
          
          //BADGE_NAME = 6 - DRINKER_HOME
           if(!oldBadges.contains(BadgeEnum.DRINKER_HOME_25.getIdBadge()))
@@ -271,7 +271,7 @@ public class BadgeFinder {
             } else if (!oldBadges.contains(BadgeEnum.DRINK_NIGHT_4.getIdBadge()) && count == BadgeEnum.DRINK_NIGHT_4.getQuantity()) {
                updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NIGHT_4);
             } else if (!oldBadges.contains(BadgeEnum.DRINK_NIGHT_5.getIdBadge()) && count == BadgeEnum.DRINK_NIGHT_5.getQuantity()) {
-               updateListBadgeLocally(list, newBadges,BadgeEnum.DRINKER_SPORT_5);
+               updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NIGHT_5);
             } else if (count == BadgeEnum.DRINK_NIGHT_10.getQuantity()) {
                 updateListBadgeLocally(list, newBadges,BadgeEnum.DRINK_NIGHT_10);
             }
